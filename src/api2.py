@@ -26,7 +26,6 @@ from virusTotalApi import download_from_virus_total,get_av_result
 import string
 import random
 from IPython import embed
-from environment import env
 from rq import Queue
 from redis import Redis
 from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read
