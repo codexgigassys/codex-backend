@@ -30,7 +30,7 @@ sudo docker-compose restart
 ```
 
 ### Load files
-To load files on a mass scale, drop them to ```files_to_load``` folder curl execute the following command:
+To load files on a mass scale, drop them to ```files_to_load``` folder and execute the following command:
 ```
 curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ```
@@ -41,7 +41,7 @@ If you want to debug the app it will be easier starting it as:
 ```
 sudo docker-compose --service-ports --rm api
 ```
-and in other terminal:
+and in another terminal:
 ```
 sudo docker-compose --serivce-ports --rm httpd
 ```
