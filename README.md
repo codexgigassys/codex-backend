@@ -9,8 +9,8 @@ The default path of the Mongo database is the parent folder of ```codex-backend`
 
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/)
 ```
-git clone https://github.com/codexgigas/codex-backend
-git clone https://github.com/codexgigas/codex-frontend
+git clone https://github.com/codexgigassys/codex-backend
+git clone https://github.com/codexgigassys/codex-frontend
 cd codex-backend/yara/
 ./setupYarGen.sh
 cd ..
