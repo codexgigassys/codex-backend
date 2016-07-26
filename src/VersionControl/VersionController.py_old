@@ -1,0 +1,103 @@
+import os
+
+class VersionController:
+	
+	def __init__(self):
+		self.version_controler_dic={}
+		self.cant_entrys_not_merge=0
+		self.v_file=None
+		self.v_temporal_file=None
+		self.MAX_TEMP_ENTRY=1000
+		
+	def __delete__(self):
+		if(self.v_file!=None):
+			self.v_file.close()
+		if(self.v_temporal_file!=None):
+			self.v_temporal_file.close()	
+		
+	def loadVersions(self):
+		self.v_file,no_use=self._loadVersions("version.entry",self.v_file)
+		self.v_temporal_file,self.cant_entrys_not_merge=self._loadVersions("version_temporal.entry",self.v_temporal_file)
+		#print(self.cant_entrys_not_merge)
+		return
+	
+	def _loadVersions(self,file_to_load,fd):
+		#lee version.entry, si existe lo carga en memoria, sino lo crea
+		dir="../DB/versions"
+		if(not os.path.exists(dir)):
+			os.makedirs(dir)
+		try:
+			fd=open(dir+"/"+file_to_load,"r+")
+		except:
+			fd=open(dir+"/"+file_to_load,"w+")
+		
+		count=0	
+		while True:
+			aux=fd.readline()
+			if(aux==""):break
+			count+=1
+			line=aux.strip().split('|')
+			#print(line)
+			file_name=line[0]
+			version_dic={}
+			for l in line[1:]:
+				ver_string,number=l.split('-')
+				#print(file_name)
+				version_dic[ver_string]=int(number)
+				
+			self.version_controler_dic[file_name]=version_dic
+		#print(self.version_controler_dic)
+		return fd,count
+	
+	def searchFileVersion(self,file_id):
+		return self.version_controler_dic.get(file_id)
+	
+	def addEntry(self,file_id, version_dic):
+		self.version_controler_dic[file_id]=version_dic
+		self._saveEntry(file_id,version_dic,self.v_temporal_file)
+		self.cant_entrys_not_merge+=1
+		#print(self.cant_entrys_not_merge)
+		if(self.cant_entrys_not_merge>=self.MAX_TEMP_ENTRY):
+			self.v_file.seek(0)
+			for v in self.version_controler_dic:
+				self._saveEntry(v,self.version_controler_dic[v],self.v_file)
+			self.v_file.truncate()
+			self.v_temporal_file.seek(0)
+			self.v_temporal_file.truncate()
+			self.cant_entrys_not_merge=0		
+		return
+				
+	def _saveEntry(self,file_id,version_dic,file_to_write):
+		line=str(file_id)
+		for key in version_dic:
+			line+='|'+str(key)+'-'+str(version_dic[key])
+		file_to_write.write(line+'\n')	
+		
+#****************TEST_CODE******************
+def testCode():
+	vc=VersionController()
+	vc.loadVersions()
+	print(vc.searchFileVersion("prueba1"))
+	
+	dic={}
+	dic["pepe"]=123
+	dic["juan"]=456
+	dic["carlos"]=789
+	vc.addEntry("prueba1",dic)
+	
+	dic={}
+	dic["uno"]=1
+	dic["cuatro"]=4
+	dic["siete"]=7
+	vc.addEntry("prueba2",dic)
+	
+	dic={}
+	dic["la"]=1
+	dic["le"]=2
+	dic["chuza"]=3
+	vc.addEntry("prueba3",dic)
+	
+	
+#****************TEST_EXECUTE******************
+from Utils.test import test
+test("-test_VersionController",testCode)

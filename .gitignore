@@ -1,0 +1,37 @@
+#ignorando archivos backup y compiled python
+*~
+*.pyc
+
+#ignorando archivos en TEMP except test.zip y readme.txt
+TEMP/*
+!TEMP/readme.txt
+
+#ignorando archivos de Visual Studio Code
+.vscode/*
+
+#ignorando la list de 5GB de samples para el benchmark
+benchmark/test_samples/pe/*
+#ignoring log folder
+benchmark/logs
+src/logs.csv
+src/log.log
+src/launcher.log
+logs.csv
+log.log
+src/loadToMongo_log.txt
+src/error_log.txt
+
+#db credentials
+src/secrets.py
+src/environment.py
+
+yara/yarGen-master/
+yara/yara.zip
+yara/binarly-sdk/
+yara/pestudio.zip
+yara/yarGen-master.zip
+
+checkup_results/*.cku
+src/upx_script_linux.log
+benchmark/test_samples.zip
+to_load/*

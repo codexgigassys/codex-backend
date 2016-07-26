@@ -1,0 +1,4 @@
+lxml
+naiveBayesClassifier
+pefile
+scandir
