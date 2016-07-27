@@ -32,6 +32,7 @@ from Utils.Functions import call_with_output,clean_hash,process_file,log_event,r
 import re
 from Utils.InfoExtractor import *
 from loadToMongo import *
+import cgi
 
 tmp_folder="/tmp/mass_download/"
 
@@ -190,7 +191,7 @@ def search():
         limit=0
     else:
         limit=int(str_lim)
-    callback_name = request.query.callback
+    callback_name = cgi.escape(request.query.callback)
     print "callback="+str(callback_name)
     res=SearchModule.search_by_id(data,limit,columns)
     add_list_to_process_queue(res[0:10]) 
