@@ -179,7 +179,7 @@ def translate_id(id,str_value):
         value = None
     return path,value
 
-def search_by_id(data,limit,columns=[],search_on_vt=True):
+def search_by_id(data,limit,columns=[],search_on_vt=False):
     #fecha - mime - empaquetado se necesitan para estadisticas 
     if(len(columns)==0):
         retrieve={"file_id":1,"description":1,"size":1,

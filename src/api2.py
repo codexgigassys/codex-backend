@@ -449,6 +449,9 @@ def api_batch_process_file():
         data="1="+str(hash_id)
         res=SearchModule.search_by_id(data,1,[],False)
         if(len(res)==0):
+            not_found.append(hash_id)
+            continue
+            """
             print "downloading "+str(hash_id)+" from vt"
             sha1=SearchModule.add_file_from_vt(hash_id)
             if(sha1==None):
@@ -457,6 +460,7 @@ def api_batch_process_file():
                 continue
             else:
                 downloaded_from_vt+=1
+            """
         else:    
             sha1=res[0]["sha1"]
 
