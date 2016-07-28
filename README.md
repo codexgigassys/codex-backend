@@ -51,10 +51,11 @@ This way the app does not run in the background and you can use ```embed()``` fr
 
 Codex extracts the file metadata via plugins. Each plugin recieves a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new Plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
 
-### Thanks to
-[yarGen](https://github.com/Neo23x0/yarGen) by: Florian Roth
+### Codex Thanks
+We would like to thanks the authors of these tools, coming from other projects:
 
-[pefile](https://github.com/erocarrera/pefile) by: Ero Carrera
-
-[ssdeep](https://github.com/jollheef/ssdeep) by: jollheef
+#### Projects
+* yarGen (Florian Roth)            https://github.com/Neo23x0/yarGen
+* pefile (Ero Carrera)             https://github.com/erocarrera/pefile
+* ssdeep (jollheef)                https://github.com/jollheef/ssdeep
 
