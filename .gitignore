@@ -34,4 +34,3 @@ yara/yarGen-master.zip
 checkup_results/*.cku
 src/upx_script_linux.log
 benchmark/test_samples.zip
-to_load/*
