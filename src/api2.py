@@ -113,7 +113,11 @@ def search_tree():
 def api_status_files_to_load_folder():
     path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','files_to_load'))
     files=recursive_read(path)
-    return str(len(files))+" files in files_to_load folder."
+    if(files is not None):
+        flen=len(files)
+    else:
+        flen=0
+    return str(flen)+" files in files_to_load folder."
 
     
 @route('/api/v1/load_to_mongo', method='GET')

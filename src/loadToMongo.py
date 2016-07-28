@@ -33,6 +33,8 @@ def load_to_mongo2(folder_path):
     in_mem=0
     loaded_ram_counter=0
     lc=Launcher()
+    if(files is None):
+        return "No files where found."
     while (uploaded < len(files)):
         loaded_ram_counter=0
         data_vector=[]
