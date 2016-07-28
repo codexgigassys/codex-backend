@@ -49,7 +49,7 @@ sudo docker-compose --service-ports --rm api
 ```
 This way the app does not run in the background and you can use ```embed()``` from [IPython](https://en.wikipedia.org/wiki/IPython)
 
-Codex extracts the file metadata via plugins. Each plugin recieves a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new Plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py```. 
+Codex extracts the file metadata via plugins. Each plugin recieves a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new Plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
 
 ### Thanks to
 [yarGen](https://github.com/Neo23x0/yarGen) by: Florian Roth
