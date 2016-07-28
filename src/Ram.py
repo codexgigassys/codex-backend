@@ -1,3 +1,4 @@
+http://stackoverflow.com/a/17718729
 class Ram:
     def __init__(self):
         print "ram loaded"

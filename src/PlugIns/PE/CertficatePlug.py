@@ -1,3 +1,6 @@
+# Copyright (C) 2016 Deloitte Argentina.
+# This file is part of CodexGigas - https://github.com/codexgigassys/
+# See the file 'LICENSE' for copying permission.
 import os, sys
 source_path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..'))
 sys.path.insert(0,source_path)

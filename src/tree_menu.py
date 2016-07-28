@@ -1,3 +1,6 @@
+# Copyright (C) 2016 Deloitte Argentina.
+# This file is part of CodexGigas - https://github.com/codexgigassys/
+# See the file 'LICENSE' for copying permission.
 tree=[
     {"name":"Generic","children":[
         {"name":"Hash","id":1,"type":"string","example":"MD5, SHA1, SHA2","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
