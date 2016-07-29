@@ -75,7 +75,6 @@ After starting the docker containers, Codex Gigas web app will be available on `
 ### Samples handling
 
 #### Advanced search with Codex Gigas
-##### Multiple search
 If we want all the files that match with other criteria such as section name, we can select this criteria on the search box and add it to the current search:
 
 ![img](doc/29-tree-menu-section-name.png?raw=true)
