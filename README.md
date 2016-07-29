@@ -72,6 +72,83 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ## User Guide
 After starting the docker containers, Codex Gigas web app will be available on ```http://127.0.0.1:6100```.
 
+### Samples handling
+
+#### Mass Download
+You can simply download samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. 
+
+![img](doc/46-process-example2.png?raw=true)
+
+#### Simple Compare Function
+Another useful feature of Codex Gigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
+
+![img](doc/34-simple-compare.png?raw=true)
+
+
+This will compare two files of your best choice and will provide a way to visualize the similarities and differences between both files. Just select the files you need and drag them to one of the blocks shown. You can click on **maximize** to fit the screen and have a better visualization of the results:
+
+![img](doc/35-simple-compare2.png?raw=true)
+
+Above you will see the metadata of each individual file, and below the comparison of both:
+
+![img](doc/36-simple-compare3.png?raw=true)
+
+In the **Diff tab** you can see:
+•	Modified attributes, highlighted in yellow.
+•	New attributes, highlighted in green.
+•	Deleted attributes, highlighted in red.
+•	Equal attributes will be shown in white.
+
+
+![img](doc/37-simple-compare4.png?raw=true) 
+
+![img](doc/38-simple-compare5.png?raw=true)
+
+
+These comparisons are made using the file in the first box as base.
+
+
+In the equal tab, you will see all metadata that match both files:
+
+![img](doc/39-equals.png?raw=true)
+
+#### Sample Upload
+
+Among the multiple features that Codex Gigas has, it provides the capability to upload a sample of our choice, and process it to gather more information about the file’s metadata.
+To do this, go to the Upload tab in the features panel. You will see the following page:
+
+![img](doc/40-menu-upload.png?raw=true)
+
+
+To upload a file, click on the Browse button, navigate and check the file to upload. 
+
+![img](doc/41-upload-example.png?raw=true)
+ 
+Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex Gigas engine.
+
+#### Massive Load of Files
+
+In order to upload more than one file at the time, go to the Load tab in the features panel. The following screen will show:
+
+
+![img](doc/42-load-example.png?raw=true) 
+
+Click on load and choose all the desired files.
+
+![img](doc/43-load-example2.png?raw=true)
+
+![img](doc/44-load-example3.png?raw=true) 
+ 
+#### Sample Process with Codex Gigas
+
+You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
+To do this, go to the Process tab in the features panel and copy the hashes of the files you want the information from, and click on Process:
+
+![img](doc/45-process-example.png?raw=true)
+
+If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
+Once you’ve processed the desired fields, you can search for them with the Search functionality.
+
 ### Searching with Codex Gigas
 We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities.
 
@@ -214,93 +291,6 @@ Also, some criteria will show a plus sign in the right side, this means that you
 ![img](doc/32-searchbox-section-hash3.png?raw=true)
 
 ![img](doc/33-searchbox-section-hash4.png?raw=true)
-
-### Samples handling
-
-#### Mass Download
-You can simply download samples by pasting a list of hashes into the textbox. You will get a zip file with “codex” as password. 
-
-![img](doc/01-download.png?raw=true)
-
-
- 
-#### Simple Compare Function
-Another useful feature of Codex Gigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
-
-![img](doc/34-simple-compare.png?raw=true)
-
-
-This will compare two files of your best choice and will provide a way to visualize the similarities and differences between both files. Just select the files you need and drag them to one of the blocks shown. You can click on **maximize** to fit the screen and have a better visualization of the results:
-
-![img](doc/35-simple-compare2.png?raw=true)
-
-Above you will see the metadata of each individual file, and below the comparison of both:
-
-![img](doc/36-simple-compare3.png?raw=true)
-
-In the **Diff tab** you can see:
-•	Modified attributes, highlighted in yellow.
-•	New attributes, highlighted in green.
-•	Deleted attributes, highlighted in red.
-•	Equal attributes will be shown in white.
-
-
-![img](doc/37-simple-compare4.png?raw=true) 
-
-![img](doc/38-simple-compare5.png?raw=true)
-
-
-These comparisons are made using the file in the first box as base.
-
-
-In the equal tab, you will see all metadata that match both files:
-
-![img](doc/39-equals.png?raw=true)
-
-#### Sample Upload
-
-Among the multiple features that Codex Gigas has, it provides the capability to upload a sample of our choice, and process it to gather more information about the file’s metadata.
-To do this, go to the Upload tab in the features panel. You will see the following page:
-
-![img](doc/40-menu-upload.png?raw=true)
-
-
-To upload a file, click on the Browse button, navigate and check the file to upload. 
-
-![img](doc/41-upload-example.png?raw=true)
- 
-Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex Gigas engine.
-
-#### Massive Load of Files
-
-In order to upload more than one file at the time, go to the Load tab in the features panel. The following screen will show:
-
-
-![img](doc/42-load-example.png?raw=true) 
-
-Click on load and choose all the desired files.
-
-![img](doc/43-load-example2.png?raw=true)
-
-![img](doc/44-load-example3.png?raw=true) 
- 
-#### Sample Process with Codex Gigas
-
-You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
-To do this, go to the Process tab in the features panel and copy the hashes of the files you want the information from, and click on Process:
-
-![img](doc/45-process-example.png?raw=true)
-
-If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
-Once you’ve processed the desired fields, you can search for them with the Search functionality.
-
-#### Massive Download with Codex Gigas
-
-Codex Gigas lets you download all existing files in its database. 
-To do this, go to the download tab in the features panel, copy the file(s) hash(es) you want to download, and click on the Download button. It will download a .zip file with the files present in the database. Once again, the password of the .zip file is “codex”.
-
-![img](doc/46-process-example2.png?raw=true)
- 
 
 
 ## Development
