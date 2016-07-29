@@ -216,8 +216,6 @@ Also, some criteria will show a plus sign in the right side, this means that you
 ![img](doc/33-searchbox-section-hash4.png?raw=true)
 
 ### Samples handling
-#### Upload
-
 
 #### Mass Download
 You can simply download samples by pasting a list of hashes into the textbox. You will get a zip file with “codex” as password. 
