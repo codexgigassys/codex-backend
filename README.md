@@ -7,15 +7,15 @@ CodexGigas malware DNA profiling search engine discovers malware patterns and ch
       * [VirusTotal](#virustotal)
       * [Load files](#load-files)
     * [User Guide](#user-guide)
-      * [Samples handling](#samples-handling)
-        * [Upload](#upload)
-        * [Mass Download](#mass-download)
       * [Searching with codex](#searching-with-codex)
         * [File buttons functionality](#file-buttons-functionality)
         * [Searching for Dino (part of Animal Farm) using strings:](#searching-for-dino-part-of-animal-farm-using-strings)
         * [Searching for Zeus by file section:](#searching-for-zeus-by-file-section)
         * [Advanced search with codex](#advanced-search-with-codex)
           * [Multiple search](#multiple-search)
+      * [Samples handling](#samples-handling)
+        * [Upload](#upload)
+        * [Mass Download](#mass-download)
       * [Simple Compare Function](#simple-compare-function)
       * [Sample Upload](#sample-upload)
       * [Massive Load of Files](#massive-load-of-files)
@@ -29,14 +29,22 @@ CodexGigas malware DNA profiling search engine discovers malware patterns and ch
 CodexGigas is a malware profiling search engine that allows malware hunters and analysts to really interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
 
 ## Configuration (optional)
+### MongoDB path
 The default path of the Mongo database is the parent folder of ```codex-backend``` and ```codex-frontend```. If you want to change that edit line 4 of ```docker-compose.yml```:
 ```
     - ../mongo-data/:/data/db
 ```
 
+### VirusTotal
+VirusTotal is used for retrieving antivirus results at request for a file. You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/secrets.py```. Then you should restart the container:
+```
+sudo docker-compose restart
+```
+
+
 ## Install Codex
 
-First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/)
+First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
 sudo apt-get install p7zip-full
 git clone https://github.com/codexgigassys/codex-backend
@@ -53,12 +61,6 @@ sudo docker-compose stop
 sudo docker-compose start
 ```
 
-### VirusTotal
-You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/secrets.py```. Then you should restart the container:
-```
-sudo docker-compose restart
-```
-
 ### Load files
 To load files on a mass scale, drop them to ```files_to_load``` folder and execute the following command:
 ```
@@ -67,16 +69,6 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 
 ## User Guide
 After starting the docker containers, Codex web app will be available on ```http://127.0.0.1:6100```.
-
-### Samples handling
-#### Upload
-
-
-#### Mass Download
-You can simply download samples by pasting a list of hashes into the textbox. You will get a zip file with “codex” as password. 
-
-![img](doc/01-download.png?raw=true)
-
 
 ### Searching with codex
 We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities:
@@ -133,7 +125,7 @@ The **Copy hashes button** will copy all selected hashes.
 
 ![img](doc/13-button-copy-hashes.png?raw=true) 
 
-The **Generate Yara Rule** button will create a Yara rule for the selected files.
+The **Generate Yara Rule** button will create a Yara rule for the selected files. This uses [yarGen](https://github.com/Neo23x0/yarGen), so make sure you have at least 5GB of RAM on the machine you plan to use yarGen.
 
 ![img](doc/14-button-yara.png?raw=true)
 
@@ -219,6 +211,17 @@ Also, some criteria will show a plus sign in the right side, this means that you
 ![img](doc/32-searchbox-section-hash3.png?raw=true)
 
 ![img](doc/33-searchbox-section-hash4.png?raw=true)
+
+### Samples handling
+#### Upload
+
+
+#### Mass Download
+You can simply download samples by pasting a list of hashes into the textbox. You will get a zip file with “codex” as password. 
+
+![img](doc/01-download.png?raw=true)
+
+
  
 ### Simple Compare Function
 Another useful feature of CodexGigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
