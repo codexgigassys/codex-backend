@@ -224,7 +224,7 @@ You can simply download samples by pasting a list of hashes into the textbox. Yo
 
 
  
-### Simple Compare Function
+#### Simple Compare Function
 Another useful feature of Codex Gigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
 
 ![img](doc/34-simple-compare.png?raw=true)
@@ -257,7 +257,7 @@ In the equal tab, you will see all metadata that match both files:
 
 ![img](doc/39-equals.png?raw=true)
 
-### Sample Upload
+#### Sample Upload
 
 Among the multiple features that Codex Gigas has, it provides the capability to upload a sample of our choice, and process it to gather more information about the file’s metadata.
 To do this, go to the Upload tab in the features panel. You will see the following page:
@@ -271,7 +271,7 @@ To upload a file, click on the Browse button, navigate and check the file to upl
  
 Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex Gigas engine.
 
-### Massive Load of Files
+#### Massive Load of Files
 
 In order to upload more than one file at the time, go to the Load tab in the features panel. The following screen will show:
 
@@ -284,7 +284,7 @@ Click on load and choose all the desired files.
 
 ![img](doc/44-load-example3.png?raw=true) 
  
-### Sample Process with Codex Gigas
+#### Sample Process with Codex Gigas
 
 You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
 To do this, go to the Process tab in the features panel and copy the hashes of the files you want the information from, and click on Process:
@@ -294,7 +294,7 @@ To do this, go to the Process tab in the features panel and copy the hashes of t
 If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
 Once you’ve processed the desired fields, you can search for them with the Search functionality.
 
-### Massive Download with Codex Gigas
+#### Massive Download with Codex Gigas
 
 Codex Gigas lets you download all existing files in its database. 
 To do this, go to the download tab in the features panel, copy the file(s) hash(es) you want to download, and click on the Download button. It will download a .zip file with the files present in the database. Once again, the password of the .zip file is “codex”.
