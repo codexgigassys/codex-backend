@@ -1,4 +1,4 @@
-CodexGigas malware DNA profiling search engine discovers malware patterns and characteristics assisting individuals who are attracted in malware hunting.
+Codex Gigas malware DNA profiling search engine discovers malware patterns and characteristics assisting individuals who are attracted in malware hunting.
 
 ## Contents
   * [Codex Gigas](#codex-gigas)
@@ -26,7 +26,7 @@ CodexGigas malware DNA profiling search engine discovers malware patterns and ch
         * [Projects](#projects)
 
 # Codex Gigas
-CodexGigas is a malware profiling search engine that allows malware hunters and analysts to truly interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
+Codex Gigas is a malware profiling search engine that allows malware hunters and analysts to truly interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
 
 ## Configuration (optional)
 ### MongoDB path
@@ -42,7 +42,7 @@ sudo docker-compose restart
 ```
 
 
-## Install Codex
+## Install Codex Gigas
 
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
@@ -68,11 +68,12 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ```
 
 ## User Guide
-After starting the docker containers, Codex web app will be available on ```http://127.0.0.1:6100```.
+After starting the docker containers, Codex Gigas web app will be available on ```http://127.0.0.1:6100```.
 
-### Searching with codex
-We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities:
-**Searching for Stuxnet by DLL**
+### Searching with Codex Gigas
+We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities.
+
+#### Searching for Stuxnet by DLL:
 Malware samples may make use of specific libraries and DLLs in order to run. As an example, Stuxnet uses ‘s7otbxdx.dll’, which is a .dll that’s part of the Siemens Simatic S7 PLC (an automation system based on Programmable Logic Computers). 
 With this information we proceed to launch our search by Library. 
 
@@ -188,7 +189,7 @@ You can click in the column’s name to **sort** the results by the column crite
 
 ![img](doc/28-results-hash.png?raw=true) 
 
-#### Advanced search with codex
+#### Advanced search with Codex Gigas
 ##### Multiple search
 Following the last example, suppose that we want all the files that match with other additional criteria, such as section name. We can select this criteria on the search box and add it to the current search:
 
@@ -224,7 +225,7 @@ You can simply download samples by pasting a list of hashes into the textbox. Yo
 
  
 ### Simple Compare Function
-Another useful feature of CodexGigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
+Another useful feature of Codex Gigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
 
 ![img](doc/34-simple-compare.png?raw=true)
 
@@ -258,7 +259,7 @@ In the equal tab, you will see all metadata that match both files:
 
 ### Sample Upload
 
-Among the multiple features that Codex-Gigas has, it provides the capability to upload a sample of our choice, and process it to gather more information about the file’s metadata.
+Among the multiple features that Codex Gigas has, it provides the capability to upload a sample of our choice, and process it to gather more information about the file’s metadata.
 To do this, go to the Upload tab in the features panel. You will see the following page:
 
 ![img](doc/40-menu-upload.png?raw=true)
@@ -268,7 +269,7 @@ To upload a file, click on the Browse button, navigate and check the file to upl
 
 ![img](doc/41-upload-example.png?raw=true)
  
-Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex-Gigas engine.
+Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex Gigas engine.
 
 ### Massive Load of Files
 
@@ -283,19 +284,19 @@ Click on load and choose all the desired files.
 
 ![img](doc/44-load-example3.png?raw=true) 
  
-### Sample Process with Codex-Gigas
+### Sample Process with Codex Gigas
 
 You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
 To do this, go to the Process tab in the features panel and copy the hashes of the files you want the information from, and click on Process:
 
 ![img](doc/45-process-example.png?raw=true)
 
-If some of the hashes are not found in Codex-Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
+If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
 Once you’ve processed the desired fields, you can search for them with the Search functionality.
 
-### Massive Download with Codex-Gigas
+### Massive Download with Codex Gigas
 
-Codex-gigas lets you download all existing files in the Codex’ database. 
+Codex Gigas lets you download all existing files in its database. 
 To do this, go to the download tab in the features panel, copy the file(s) hash(es) you want to download, and click on the Download button. It will download a .zip file with the files present in the database. Once again, the password of the .zip file is “codex”.
 
 ![img](doc/46-process-example2.png?raw=true)
@@ -303,7 +304,7 @@ To do this, go to the download tab in the features panel, copy the file(s) hash(
 
 
 ## Development
-Wanna contribute? CodexGigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
+Wanna contribute? Codex Gigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
 
 When developing new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include a summary and possibly also introduce comprehensive documentation in our guide.
 If you want to debug the app it will be easier starting it as:
@@ -312,9 +313,9 @@ sudo docker-compose --service-ports --rm api
 ```
 This way the app does not run in the background and you can use ```embed()``` from [IPython](https://en.wikipedia.org/wiki/IPython)
 
-Codex extracts the file metadata via plugins. Each plugin receives a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
+Codex Gigas extracts the file metadata via plugins. Each plugin receives a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
 
-## Codex Thanks
+## Codex Gigas Thanks
 We would like to thanks the authors of the following tools, coming from other projects:
 
 #### Projects
