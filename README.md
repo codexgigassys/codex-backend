@@ -74,10 +74,12 @@ After starting the docker containers, Codex Gigas web app will be available on `
 
 ### Samples handling
 
-#### Massive Download
-You can simply download samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. 
+#### Sample Download
+You can download multiple samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. 
 
 ![img](doc/46-process-example2.png?raw=true)
+
+You can also download a file by using the download button described in the "File buttons functionality" section.
 
 #### Simple Compare Function
 Another useful feature of Codex Gigas is the Simple Compare function. This can be found on the right side of the screen, once we’ve already done a search:
