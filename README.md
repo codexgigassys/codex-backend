@@ -12,8 +12,8 @@
         * [Advanced search with codex](#advanced-search-with-codex)
           * [Multiple search](#multiple-search)
           * [Simple Compare Function](#simple-compare-function)
-      * [Development](#development)
-      * [Codex Thanks](#codex-thanks)
+   * [Development](#development)
+   * [Codex Thanks](#codex-thanks)
         * [Projects](#projects)
 
 
@@ -295,7 +295,7 @@ To do this, go to the download tab in the features panel, copy the file(s) hash(
  
 
 
-### Development
+## Development
 Wanna contribute? CodexGigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions.
 
 When develping new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include some concise information and possibly also introduce comprehensive documentation in our guide.
@@ -307,7 +307,7 @@ This way the app does not run in the background and you can use ```embed()``` fr
 
 Codex extracts the file metadata via plugins. Each plugin recieves a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new Plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
 
-### Codex Thanks
+## Codex Thanks
 We would like to thanks the authors of these tools, coming from other projects:
 
 #### Projects
