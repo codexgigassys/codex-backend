@@ -74,6 +74,29 @@ After starting the docker containers, Codex Gigas web app will be available on `
 
 ### Samples handling
 
+#### Advanced search with Codex Gigas
+##### Multiple search
+If we want all the files that match with other criteria such as section name, we can select this criteria on the search box and add it to the current search:
+
+![img](doc/29-tree-menu-section-name.png?raw=true)
+ 
+An additional box will show:
+
+![img](doc/30-searchbox-section-hash.png?raw=true)
+
+You can add all the criteria you want:
+
+![img](doc/31-searchbox-section-hash2.png?raw=true)
+
+
+You can erase one of the selected criteria by clicking on the X in the right side of the text box.
+Also, some criteria will show a plus sign in the right side, this means that you can add more criteria of the same type:
+
+
+![img](doc/32-searchbox-section-hash3.png?raw=true)
+
+![img](doc/33-searchbox-section-hash4.png?raw=true)
+
 #### Sample Download
 You can download multiple samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. 
 
@@ -149,29 +172,6 @@ To do this, go to the Process tab in the features panel and copy the hashes of t
 
 If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
 Once you’ve processed the desired fields, you can search for them with the Search functionality.
-
-#### Advanced search with Codex Gigas
-##### Multiple search
-If we want all the files that match with other criteria such as section name, we can select this criteria on the search box and add it to the current search:
-
-![img](doc/29-tree-menu-section-name.png?raw=true)
- 
-An additional box will show:
-
-![img](doc/30-searchbox-section-hash.png?raw=true)
-
-You can add all the criteria you want:
-
-![img](doc/31-searchbox-section-hash2.png?raw=true)
-
-
-You can erase one of the selected criteria by clicking on the X in the right side of the text box.
-Also, some criteria will show a plus sign in the right side, this means that you can add more criteria of the same type:
-
-
-![img](doc/32-searchbox-section-hash3.png?raw=true)
-
-![img](doc/33-searchbox-section-hash4.png?raw=true)
 
 ### Searching with Codex Gigas
 We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities.
