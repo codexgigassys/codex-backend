@@ -26,7 +26,7 @@ CodexGigas malware DNA profiling search engine discovers malware patterns and ch
         * [Projects](#projects)
 
 # Codex Gigas
-CodexGigas is a malware profiling search engine that allows malware hunters and analysts to really interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
+CodexGigas is a malware profiling search engine that allows malware hunters and analysts to truly interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
 
 ## Configuration (optional)
 ### MongoDB path
@@ -83,13 +83,13 @@ The following box will appear:
 ![img](doc/03-searchbox.png?raw=true)
 
  
-We type the library of our interest, select the limit of results that we want and click on the search button. If you use 0 as limit, it will do a limitless search, so, be careful using this.
+We type the ‘s7otbxdx.dll’ library in the box, select the limit of results that we want and click on the search button. If you use 0 as limit, it will do a limitless search, so be careful when using this option.
 Note that if you type a .dll with a typo or if the .dll is not present in the database, it will highlight the textbox in red, as shown below:
 
 ![img](doc/04-library_textbox.png?raw=true)
 
  
-Also, we can select the attributes of our interest by selecting one or multiple categories of the “Attributes for results preview” dropdown list. For this example we will use Time Date Stamp, Description and Size. If you don’t select any attribute, it will show sha1, description and size of each file that matches the search criteria.
+Also, we can select the attributes of our interest by selecting one or multiple categories of the “Attributes for results preview” dropdown list. For this example we will use Time Date Stamp, Description and Size. If you don’t select any attribute, it will show SHA1, description and size of each file that matches the search criteria.
 The results will look like the image below:
 
 ![img](doc/05-search-dll.png?raw=true)
@@ -104,7 +104,7 @@ As you can see, there are multiple buttons that can be useful to find more data.
 
 ![img](doc/08-buttons.png?raw=true)
 
-If we select the checkbutton “**Check all**”, it will select all results found, including the ones not present in the current page.
+If we select the check button “**Check all**”, it will select all results found, including the ones not present in the current page.
 
 ![img](doc/09-buttons2.png?raw=true)
  
@@ -112,7 +112,7 @@ The **download button** will download the checked results in a .zip file. The fi
 
 ![img](doc/10-buttons.png?raw=true)
 
-The **export button** will download a text file with the metadata gathered from the selected files:
+The **export button** will download a text file containing the metadata gathered from the selected files:
 
 ![img](doc/11-export-example.png?raw=true)
 
@@ -136,7 +136,7 @@ In addition, you can select one of the results and explore its **metadata tree**
 The metadata tree is organized in several categories, and it will vary depending on the file.
 
 #### File buttons functionality
-The **Download button** has the same functionality of the above button, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”.
+The **Download button** has almost the same functionality as the download button mentioned before, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”.
 
 ![img](doc/16-file-download.png?raw=true)
  
@@ -156,7 +156,7 @@ In the scan span, you’ll see further information about the results thrown by e
 
 ![img](doc/20-file-scans.png?raw=true) 
 
-#### Searching for Dino (part of Animal Farm) using strings:
+#### Searching for Dino (part of Animal Farm APT) using strings:
 
 The binary’s original name, “Dino.exe”, has been left visible by its authors. We can use this information to search for other Dino samples:
 
@@ -172,7 +172,7 @@ Once you click on **search**, you will see the files that match the criteria:
 
 #### Searching for Zeus by file section:
 
-Common file sections may be observed across malware variants. In this case, the SHA-1 of the .data section for Zeus is ‘edbc64b30aceabd6e7d32defc698c1475861a42d’
+Common file sections may be observed across malware variants. In this case, the SHA1 of the .data section for Zeus is ‘edbc64b30aceabd6e7d32defc698c1475861a42d’
 
 ![img](doc/24-search-tree-section-hash.png?raw=true)
 
@@ -229,7 +229,7 @@ Another useful feature of CodexGigas is the Simple Compare function. This can be
 ![img](doc/34-simple-compare.png?raw=true)
 
 
-This will compare two files of your best choice and will provide a way to visualize the similarities and differences of both files. Just select the files you need and drag them to one of the blocks shown. You can click on **maximize** to fit the screen and have a better visualization of the results:
+This will compare two files of your best choice and will provide a way to visualize the similarities and differences between both files. Just select the files you need and drag them to one of the blocks shown. You can click on **maximize** to fit the screen and have a better visualization of the results:
 
 ![img](doc/35-simple-compare2.png?raw=true)
 
@@ -268,7 +268,7 @@ To upload a file, click on the Browse button, navigate and check the file to upl
 
 ![img](doc/41-upload-example.png?raw=true)
  
-Once uploaded, it’ll show the SHA-1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex-Gigas engine.
+Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex-Gigas engine.
 
 ### Massive Load of Files
 
@@ -285,17 +285,17 @@ Click on load and choose all the desired files.
  
 ### Sample Process with Codex-Gigas
 
-You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA-1, SHA-256) or any other attributes you already know of the files. 
+You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
 To do this, go to the Process tab in the features panel and copy the hashes of the files you want the information from, and click on Process:
 
 ![img](doc/45-process-example.png?raw=true)
 
-If some of the hashes are not in Codex-Gigas, the legend “Not Found” will be shown, listing the missing file’s hashes.
+If some of the hashes are not found in Codex-Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
 Once you’ve processed the desired fields, you can search for them with the Search functionality.
 
 ### Massive Download with Codex-Gigas
 
-Codex-gigas let you download all existing files in the Codex’ database. 
+Codex-gigas lets you download all existing files in the Codex’ database. 
 To do this, go to the download tab in the features panel, copy the file(s) hash(es) you want to download, and click on the Download button. It will download a .zip file with the files present in the database. Once again, the password of the .zip file is “codex”.
 
 ![img](doc/46-process-example2.png?raw=true)
@@ -303,19 +303,19 @@ To do this, go to the download tab in the features panel, copy the file(s) hash(
 
 
 ## Development
-Wanna contribute? CodexGigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions.
+Wanna contribute? CodexGigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
 
-When develping new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include some concise information and possibly also introduce comprehensive documentation in our guide.
+When developing new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include a summary and possibly also introduce comprehensive documentation in our guide.
 If you want to debug the app it will be easier starting it as:
 ```
 sudo docker-compose --service-ports --rm api
 ```
 This way the app does not run in the background and you can use ```embed()``` from [IPython](https://en.wikipedia.org/wiki/IPython)
 
-Codex extracts the file metadata via plugins. Each plugin recieves a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new Plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
+Codex extracts the file metadata via plugins. Each plugin receives a file and returns a python dictionary that is saved in MongoDB. Plugins are located in ```src/PlugIns```. To add a new plugin for Windows executables create a file in ```src/PlugIns/PE/``` and add the plugin name in ```Prosessors/PEProcessor.py``` and ```PlugIns/PE/__init__.py```. 
 
 ## Codex Thanks
-We would like to thanks the authors of these tools, coming from other projects:
+We would like to thanks the authors of the following tools, coming from other projects:
 
 #### Projects
 * yarGen (Florian Roth)            https://github.com/Neo23x0/yarGen
