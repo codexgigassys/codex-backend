@@ -172,6 +172,27 @@ To do this, go to the Process tab in the features panel and copy the hashes of t
 If some of the hashes are not found in Codex Gigas, the legend “Not Found” will be shown, and the missing file’s hashes will be listed.
 Once you’ve processed the desired fields, you can search for them with the Search functionality.
 
+#### File buttons functionality
+The **Download button** has almost the same functionality as the download button mentioned before, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”. 
+
+![img](doc/16-file-download.png?raw=true)
+ 
+The **Process Button** will automatically re-process the file and update the results:
+
+ ![img](doc/17-file-process.png?raw=true)
+
+ The **Export Button** will export the metadata information to a .txt file:
+
+![img](doc/18-file-export.png?raw=true) 
+
+The **VT scan Data** button will gather the information found for the file hash you’re currently viewing, and add it to the metadata tree:
+
+![img](doc/19-file-vt-scan.png?raw=true)
+
+In the scan span, you’ll see further information about the results thrown by each Antivirus vendor:
+
+![img](doc/20-file-scans.png?raw=true) 
+
 ### Searching with Codex Gigas
 We will search for Stuxnet, Dino and Zeus in order to demonstrate some of the engine capabilities.
 
@@ -237,27 +258,6 @@ In addition, you can select one of the results and explore its **metadata tree**
 ![img](doc/15-file-json.png?raw=true)
 
 The metadata tree is organized in several categories, and it will vary depending on the file.
-
-#### File buttons functionality
-The **Download button** has almost the same functionality as the download button mentioned before, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”. 
-
-![img](doc/16-file-download.png?raw=true)
- 
-The **Process Button** will automatically re-process the file and update the results:
-
- ![img](doc/17-file-process.png?raw=true)
-
- The **Export Button** will export the metadata information to a .txt file:
-
-![img](doc/18-file-export.png?raw=true) 
-
-The **VT scan Data** button will gather the information found for the file hash you’re currently viewing, and add it to the metadata tree:
-
-![img](doc/19-file-vt-scan.png?raw=true)
-
-In the scan span, you’ll see further information about the results thrown by each Antivirus vendor:
-
-![img](doc/20-file-scans.png?raw=true) 
 
 #### Searching for Dino (part of Animal Farm APT) using strings:
 
