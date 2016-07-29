@@ -1,3 +1,22 @@
+# Contents
+ * [Codex Gigas](#codex-gigas)
+    * [Configuration (optional)](#configuration-optional)
+    * [Install Codex](#install-codex)
+      * [VirusTotal](#virustotal)
+      * [Load files](#load-files)
+    * [User Guide](#user-guide)
+        * [Samples handling](#samples-handling)
+          * [Upload](#upload)
+          * [Mass Download](#mass-download)
+        * [Searching with codex](#searching-with-codex)
+        * [Advanced search with codex](#advanced-search-with-codex)
+          * [Multiple search](#multiple-search)
+          * [Simple Compare Function](#simple-compare-function)
+      * [Development](#development)
+      * [Codex Thanks](#codex-thanks)
+        * [Projects](#projects)
+
+
 # Codex Gigas
 CodexGigas is a malware profiling search engine that allows malware hunters and analysts to really interrogate the internals of malware and perform searches over a large number of file characteristics. For instance, instead of relying on file-level hashes, we can compute other features such as imported functions, strings, constants, file segments, code regions, or anything that is defined in the file type specification, and that provides us with more than 142 possible searchable patterns, that can be combined.
 
