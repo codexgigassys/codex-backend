@@ -126,10 +126,9 @@ To upload a file, click on the Browse button, navigate and check the file to upl
  
 Once uploaded, it’ll show the SHA1 hash for the file. Take note of this hash, since you’ll need it to get the information gathered by Codex Gigas engine.
 
-#### Massive Load of Files
+#### Massive sample Upload
 
 In order to upload more than one file at the time, go to the Load tab in the features panel. The following screen will show:
-
 
 ![img](doc/42-load-example.png?raw=true) 
 
@@ -138,7 +137,7 @@ Click on load and choose all the desired files.
 ![img](doc/43-load-example2.png?raw=true)
 
 ![img](doc/44-load-example3.png?raw=true) 
- 
+
 #### Sample Process with Codex Gigas
 
 You are able to get the metadata information of each of the files you’ve uploaded searching by the file hash (MD5, SHA1, SHA256) or any other attributes you already know of the files. 
