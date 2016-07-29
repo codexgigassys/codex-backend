@@ -97,7 +97,7 @@ Also, some criteria will show a plus sign in the right side, this means that you
 ![img](doc/33-searchbox-section-hash4.png?raw=true)
 
 #### Sample Download
-You can download multiple samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. 
+You can download multiple samples by pasting a list of hashes into the textbox of the download tab. You will get a zip file with “codex” as password. **Use this functionality at your own risk!**
 
 ![img](doc/46-process-example2.png?raw=true)
 
@@ -211,7 +211,7 @@ If we select the check button “**Check all**”, it will select all results fo
 
 ![img](doc/09-buttons2.png?raw=true)
  
-The **download button** will download the checked results in a .zip file. The file’s password is “codex”. **Use this utility at your own risk!**
+The **download button** will download the checked results in a .zip file. The file’s password is “codex”. 
 
 ![img](doc/10-buttons.png?raw=true)
 
@@ -239,7 +239,7 @@ In addition, you can select one of the results and explore its **metadata tree**
 The metadata tree is organized in several categories, and it will vary depending on the file.
 
 #### File buttons functionality
-The **Download button** has almost the same functionality as the download button mentioned before, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”.
+The **Download button** has almost the same functionality as the download button mentioned before, but this will download only the file you’re currently viewing. The password for the .zip file is “codex”. 
 
 ![img](doc/16-file-download.png?raw=true)
  
