@@ -58,7 +58,7 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ```
 
 ## Ready-to-use virtual machines
-You can download your prefered vm file. Inside you'll find Codex Gigas running at startup.
+You can download your preferred vm file. Inside you'll find Codex Gigas running at startup.
 * [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
 * [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
