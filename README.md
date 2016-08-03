@@ -59,13 +59,13 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 
 ## Ready-to-use virtual machines
 You can download your prefered vm file. Inside you'll find Codex Gigas running at startup.
-* [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
-* [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
+* [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
+* [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
 VMs password: codex
 
 ## APT-notes samples
-We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
+We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (sha1: 6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
 mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys)
 
 ## Development
