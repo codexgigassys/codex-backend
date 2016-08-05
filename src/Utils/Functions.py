@@ -68,7 +68,10 @@ def clean_hash(hash):
     else:
         hash = hash.strip().lower()
         m = re.search('[a-f0-9]+',hash)
-        return m.group(0)
+        if m is not None:
+            return m.group(0)
+        else:
+            return None
 
 
 
@@ -90,7 +93,7 @@ def save_file_from_vt(hash_id):
 
 #returns true if a hash is md5 or sha1 valid. False otherwise
 def valid_hash(hash):
-    return (len(hash)==32 or len(hash)==40) and re.search('^[a-f0-9]+$',hash) is not None
+    return hash is not None and re.search('^[a-f0-9]+$',hash) is not None and (len(hash)==32 or len(hash)==40 or len(hash)==56 or len(hash)==64 or len(hash)==128)
     
 
 # clean hashes and search in the meta collection.
@@ -103,6 +106,12 @@ def get_file_id(hash):
         ret = search_by_hash_and_type(hash,"md5")
     elif len(hash)==40:
         ret = search_by_hash_and_type(hash,"sha1")
+    elif len(hash)==56:
+        ret = search_by_hash_and_type(hash,"sha2")
+    elif len(hash)==64:
+        ret = search_by_hash_and_type(hash,"sha2")
+    elif len(hash)==128:
+        ret = None
     if ret is not None and ret[0] is not None:
         return ret[0].get('sha1')
     else:
@@ -111,7 +120,7 @@ def get_file_id(hash):
 # Given a hash and a type (md5 or file_id (sha1))
 # it will search in meta collection.
 def search_by_hash_and_type(hash,type):
-    if type is not "md5" and type is not "sha1":
+    if type is not "md5" and type is not "sha1" and type is not "sha2":
         return None
     search={'$and': [{'hash.'+type: hash}]}
     retrieve={'file_id': 1}

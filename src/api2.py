@@ -36,6 +36,7 @@ import re
 from Utils.InfoExtractor import *
 from loadToMongo import *
 import cgi
+from api_alerts import *
 
 tmp_folder="/tmp/mass_download/"
 
