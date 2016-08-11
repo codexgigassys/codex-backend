@@ -164,7 +164,7 @@ tree=[
             {"name":"Exports Address Of Ordinals","id":118,"type":"number","children":[],"searchable":True,"projectable":True, "call_func": ""},
             {"name":"Exported Symbols","children":[
                 {"name":"Symbol Ordinal","id":119,"type":"number","children":[],"searchable":True,"projectable":False, "call_func": ""},
-                {"name":"Symbol Name","id":120,"type":"string","example":"getprocaddress","children":[],"searchable":True,"projectable":False, "call_func": ""},
+                {"name":"Symbol Name","id":120,"type":"string","example":"getprocaddress","children":[],"searchable":True,"projectable":False, "call_func": "", "multi": True},
                 {"name":"Symbol RVA","id":121,"type":"number","children":[],"searchable":True,"projectable":False, "call_func": ""},
                 {"name":"Symbol Forwarder DLL","id":122,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
                 {"name":"Symbol Forwarder Function","id":123,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
