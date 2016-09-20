@@ -29,7 +29,7 @@ The default path of the Mongo database is the parent folder of ```codex-backend`
 ### VirusTotal
 VirusTotal is used for retrieving antivirus results at request for a file. You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/secrets.py```. Then you should restart the container:
 ```
-sudo docker-compose restart
+sudo docker-compose up
 ```
 
 ## Install Codex Gigas
@@ -74,7 +74,7 @@ Wanna contribute? Codex Gigas is an open, BSD-licensed, collaborative developmen
 When developing new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include a summary and possibly also introduce comprehensive documentation in our guide.
 If you want to debug the app it will be easier starting it as:
 ```
-sudo docker-compose --service-ports --rm api
+sudo docker-compose run --service-ports --rm api
 ```
 This way the app does not run in the background and you can use ```embed()``` from [IPython](https://en.wikipedia.org/wiki/IPython)
 
