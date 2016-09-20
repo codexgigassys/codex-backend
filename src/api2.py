@@ -426,6 +426,8 @@ def api_batch_process_debug_file():
 
         added_to_queue+=1    
         add_hash_to_process_queue(sha1)
+        if(env['auto_get_av_result']):
+            get_av_result(sha1)
 	yield str(sha1)+"\n"
    
     responsex=str(added_to_queue)+" files added to the process queue.\n"
@@ -474,6 +476,8 @@ def api_batch_process_file():
         added_to_queue+=1    
         print str(hash_id)+" added to queue"
         add_hash_to_process_queue(sha1)
+        if(env['auto_get_av_result']):
+            get_av_result(sha1)
    
     responsex=str(added_to_queue)+" files added to the process queue.\n"
     if(downloaded_from_vt > 0):
