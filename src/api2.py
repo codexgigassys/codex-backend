@@ -200,7 +200,7 @@ def search():
         limit=int(str_lim)
     callback_name = cgi.escape(request.query.callback)
     print "callback="+str(callback_name)
-    res=SearchModule.search_by_id(data,limit,columns)
+    res=SearchModule.search_by_id(data,limit,columns,True)
     add_list_to_process_queue(res[0:10]) 
     
     #para que muestre solo algunas columnas (gronchada)
@@ -456,7 +456,7 @@ def api_batch_process_file():
         if hash_id is None:
             continue
         data="1="+str(hash_id)
-        res=SearchModule.search_by_id(data,1,[],False)
+        res=SearchModule.search_by_id(data,1,[],True)
         if(len(res)==0):
             not_found.append(hash_id)
             continue
