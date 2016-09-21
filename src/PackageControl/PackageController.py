@@ -8,39 +8,53 @@ import gridfs
 from secrets import env 
 
 #Almacena los binarios dentro de la base de datos
+TEMPORAL_FILES_DB=False # Poner este valor en True habilita el uso de una base de datos secundaria para archivos
 class PackageController():
+    def __init__(self):
+        client=MongoClient(env["files"]["host"],env["files"]["port"])
+        db=client[env["db_files_name"]]
+        self.fs=gridfs.GridFS(db)
+        if(TEMPORAL_FILES_DB):
+            client_temp=MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
+            db_temp=client[env["db_temp_files_name"]]
+            self.fs_temp=gridfs.GridFS(db_temp)
 
-        def __init__(self):
-            client=MongoClient(env["files"]["host"],env["files"]["port"])
-            db=client[env["db_files_name"]]
-            self.fs=gridfs.GridFS(db)
-            
-        def __delete__(self):
-            pass
-            
-        #agrega la data de un archivo dentrol de un paquete appendeado
-        def append(self,file_id,data,vt_blocked=False):
-            self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})    
-                
-        #devuelve el archivo buscado
-        #None si no existe    
-        def getFile(self,file_id):
-            f=self.fs.find_one({"filename":file_id})
-            if f==None : return None
-            return f.read()
-            
-        #devuelve la entrada del archivo del indice global
-        #None si no existe
-        # 0 if the file exists.
-        # 1 if the file exists but can't be downloaded.
-        ####Ver si no se usa y sacarla!
-        def searchFile(self,file_id):
-            ret=self.fs.find_one({"filename":file_id})
-            if(ret==None):
-                return None
-            if(ret.metadata is not None and ret.metadata.get("vt_blocked")==True):
-                return 1
-            else: return 0
+    def __delete__(self):
+        pass
+        
+    #agrega la data de un archivo dentrol de un paquete appendeado
+    def append(self,file_id,data,vt_blocked=False):
+        if(TEMPORAL_FILES_DB):
+            self.fs_temp.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})    
+        else:
+            self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})        
+    
+    #devuelve el archivo buscado
+    #None si no existe    
+    def getFile(self,file_id):
+        f=self.fs.find_one({"filename":file_id})
+        if f==None: 
+            if TEMPORAL_FILES_DB==False: return None
+            else:
+                f=self.fs_temp.find_one({"filename":file_id})
+                if f==None: return None
+        return f.read()
+        
+    #devuelve la entrada del archivo del indice global
+    #None si no existe
+    # 0 if the file exists.
+    # 1 if the file exists but can't be downloaded.
+    ####Ver si no se usa y sacarla!
+    def searchFile(self,file_id):
+        ret=self.fs.find_one({"filename":file_id})
+        if(ret==None):
+            if(TEMPORAL_FILES_DB==False):return None 
+            else:
+                ret=self.fs_temp.find_one({"filename":file_id})
+                if(ret==None):return None
+        if(ret.metadata is not None and ret.metadata.get("vt_blocked")==True):
+            return 1
+        else: return 0
                 
 #****************TEST_CODE******************
 def testCode():
