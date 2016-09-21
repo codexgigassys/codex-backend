@@ -195,10 +195,10 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             path=str(dic["path"])
             retrieve[path]=1
         
-    
     search_list=data.split('&')
     #print(len(search_list))
     query_list=[]
+    av_collection_query_list=[]
     hash_search=False
     hash_for_search=""
     for search in search_list:
@@ -214,21 +214,56 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         if(id==1 or id==2 or id==3):
             hash_search=True
             hash_for_search=v
+        if(id>=10000):   #para agregar la busqueda de AVs
+            av_collection_query_list.append({p:{"$regex":v,"$options":'i'}})
+            continue
         query_list.append({p:v})
-    if(len(query_list)==0):
-        return []
-    query={"$and":query_list}
+    
+    if(len(query_list)>0 and len(av_collection_query_list)==0):
+        query={"$and":query_list}    
+        res=searchFull(query,limit,retrieve)
+        if(hash_search and len(res)==0 and search_on_vt):#buesqueda en VT
+            sha1=add_file_from_vt(hash_for_search)
+            if sha1==None: return []
+            process_file(sha1)
+            query={"file_id":sha1}
+            res=searchFull(query,1,retrieve)
+        return res 
 
-    res=searchFull(query,limit,retrieve)
-    if(hash_search and len(res)==0 and search_on_vt):#buesqueda en VT
-        sha1=add_file_from_vt(hash_for_search)
-        if sha1==None: return []
-        process_file(sha1)
-        query={"file_id":sha1}
-        res=searchFull(query,1,retrieve)
+    if(len(av_collection_query_list)>0):    
+        av_query={"$and":av_collection_query_list}
+
     #res= ["2fa9672b7507f0e983897cfd18b24d3810bb2160","hashfile2"]
-    return res
 
+    if(len(av_collection_query_list)==0):
+        return []
+    else:
+        #realizar busqueda de avs
+        db_collection = env["db_metadata_collection"]
+        client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
+        db=client[env["db_metadata_name"]]
+        av_coll=db.av_analysis
+        
+        if limit==0:
+            av_res=av_coll.find(av_query,{"sha1":1})
+        else:
+            av_res=av_coll.find(av_query,{"sha1":1}).limit(limit)
+        lista_av=[]
+        for f in av_res:
+            lista_av.append(f)
+        #print(lista_av)#resultados de la busqueda de avs
+               
+        res=[]
+        for l in lista_av:
+            query_list_for_combinated=[]
+            sha1=l.get("sha1")
+            query_list_for_combinated.append({"hash.sha1":sha1})
+            query_list_for_combinated=query_list_for_combinated+query_list
+            query={"$and":query_list_for_combinated}    
+            search=searchFull(query,1,retrieve)
+            res=res+search
+        return res
+ 
 def count_documents():
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
     db=client[env["db_metadata_name"]]
