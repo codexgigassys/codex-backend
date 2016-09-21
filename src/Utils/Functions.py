@@ -11,6 +11,10 @@ from PackageControl.PackageController import *
 from Sample import *
 from Launcher import *
 import csv
+import json
+
+def jsonize(data):
+    return json.dumps(data, sort_keys=False, indent=4)
 
 def log_event(event,file_hash,comments=""):
     with open("logs.csv","a+") as logfile:

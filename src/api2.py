@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize
 import re
 from Utils.InfoExtractor import *
 from loadToMongo import *
@@ -53,8 +53,6 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def jsonize(data):
-    return json.dumps(data, sort_keys=False, indent=4)
 
 def jsonp(data,callback):
     reply = {"status": "OK", "data": data}
