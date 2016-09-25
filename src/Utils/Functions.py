@@ -198,9 +198,9 @@ import traceback
 if(len(sys.argv)>=2):
     if(sys.argv[1]==TEST):
         try:
-            print("######## Test de " + str(sys.argv[0])+" ########")
+            print("######## Test of " + str(sys.argv[0])+" ########")
             testCode()
 
         except:
             print(traceback.format_exc())
-        raw_input("Presione una tecla...")
+        raw_input("Press a key...")

@@ -8,20 +8,20 @@ def test(TEST,function):
     if(len(sys.argv)>=2):
         if(sys.argv[1]==TEST):
             try:
-                print("[--------------- Test de " + str(sys.argv[0])+" -------------]")
+                print("[--------------- Test of " + str(sys.argv[0])+" -------------]")
                 function()
             except Exception,e:
                 print (str(e))
-                print("####### Error detectado #######")
+                print("####### Error detected #######")
                 print("")
                 print(traceback.format_exc())
                 print("")
-                print("###### Fin del log ######")
-            #raw_input("Presione una tecla...")
+                print("###### End of log ######")
+            #raw_input("Press a key...")
 
 #****************TEST_CODE******************
 def probando():
-    print("testeando")
+    print("testing")
 
 def testCode():
     test("-test_test",probando)

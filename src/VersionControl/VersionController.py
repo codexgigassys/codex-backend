@@ -5,7 +5,7 @@ import os
 from pymongo import MongoClient
 from secrets import env
 
-#Controlador versionando de los plugins ejecutados
+# versioning controller of executed plugins.
 class VersionController:
     def __init__(self):
         client=MongoClient(env["versions"]["host"],env["versions"]["port"])

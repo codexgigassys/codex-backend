@@ -18,7 +18,7 @@ class PEFileModule(Module):
         self.already_initialized=True
         try:
             self.library = pefile.PE(data=sample.getBinary(),fast_load=True)
-            #ver si se puede hacer estas inicializaciones desde los plugins
+            # see if this initializations can be done on plugins.
             self.library.parse_data_directories( directories=[
                 pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'],
                 pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_EXPORT'],

@@ -77,7 +77,7 @@ class Sample:
         #if(val!=None): return val
         #print("NOOOOOOOOOO")
         #return self.cataloger.catalog(self.getBinary())
-        ##sacarla de las versiones
+        ## remove from versions.
 
     def setCategory(self,cat):
         self.category=cat

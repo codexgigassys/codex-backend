@@ -79,27 +79,27 @@ class StringPlug(PlugIn):
 
         registry=[]
         for s in unique_strings:
-            #viendo si declara el import o no
+            # checking if the import is declared or not
             #print(s)
             #print(searchUsed.get(repr(s).lower()))
             #raw_input()
             if(searchUsed.get(s)==True): continue
             raw.append(s)
 
-            #buscando si es un import o no
+            # searching if its an import or not
             r=mdc.searchImportByName(s)
             if(r!=None):
                 hidden.append(s)
                 continue
             evaluado=eval(s)
 
-            #buscando dll
+            #searching dll
             r=mdc.searchDllByName(s)
             if(r!=None):
                 dll.append(s)
                 continue
 
-            #buscando cosas nombres de archivos
+            # searching for filenames
             types=["exe","dll","bat","sys","htm","html","js","jar","jpg",
                     "png","vb","scr","pif","chm","zip","rar","cab","pdf",
                     "doc","docx","ppt","pptx","xls","xlsx","swf","gif","pdb","cpp"]
@@ -112,27 +112,27 @@ class StringPlug(PlugIn):
             if salir: continue
 
 
-            #buscando email
+            # searching email
             if(validators.email(evaluado)):
                 email.append(s)
                 continue
 
-            #buscando url
+            # searching url
             if(validators.url(evaluado)):
                 url.append(s)
                 continue
 
-            #buscando ip
+            # searching ips
             if(validators.ipv4(evaluado)): #or validators.ipv6(evaluado)):
                 ip_l.append(s)
                 continue
 
-            #buscando registry
+            # searching registry
             if(s.find("HKLM\\")!=-1 or s.find("HKCU\\")!=-1 ):
                 registry.append(s)
                 continue
 
-            #buscando dominios
+            # searching domains
             if(validators.domain(evaluado)):
                 domain.append(s)
                 continue

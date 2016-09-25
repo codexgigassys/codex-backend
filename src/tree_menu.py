@@ -338,6 +338,6 @@ ids={
     145:{"path":"particular_header.certificate.signed","type":"check"},
     #146 dont use, allready use
 
-    10000:{"path":"scans.result","type":"string"},  # para busquedas de av a partir de 10000
+    10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
     }
 

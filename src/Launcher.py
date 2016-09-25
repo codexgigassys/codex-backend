@@ -118,10 +118,10 @@ def testCode():
 #-----------------------------------------------
 def testCode2():
     object="../processed/VirusShare_00000.zip"
-    #abriendo el paquete zipeado
+    # opening zipped package
     fd=open(object,'r')
     zf= ZipFile(fd)
-    names=zf.namelist() #nombre de los archivos comprimidos
+    names=zf.namelist() # name of compressed files
 
     lc=Launcher()
     count=0
@@ -133,14 +133,14 @@ def testCode2():
         reset+=1
         count+=1
         if(reset>=1000):
-            print(str(count)+" procesados")
+            print(str(count)+" processed")
             reset=0
-    print(str(count)+" procesados")
+    print(str(count)+" processed")
 
 #----------------------------------------------
 def testCode3():
     object="../DB/packages/fileindex"
-    #abriendo el indice
+    # opening the index
     fd=open(object,'r')
     lc=Launcher()
     count=0
@@ -169,10 +169,10 @@ def testCode3():
         reset+=1
         count+=1
         if(reset>=1000):
-            print(str(count)+" procesados")
+            print(str(count)+" processed")
             reset=0
 
-    print(str(count)+" procesados")
+    print(str(count)+" processed")
 
 #----------------------------------------------
 def testCode4():
@@ -189,9 +189,9 @@ def testCode4():
         lc.launchFileAnalitics((f.filename,data))
         reset+=1; count+=1
         if(reset>=1000):
-            print(str(count)+" procesados")
+            print(str(count)+" processed")
             reset=0
-    print(str(count)+" procesados")
+    print(str(count)+" processed")
 
 #----------------------------------------------
 def testCode5():
@@ -224,9 +224,9 @@ def testCode6():
         lc.launchAnalysisByID(sample)
         reset+=1; count+=1
         if(reset>=1000):
-            print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))+" procesados:"+str(count/1000)+"K")
+            print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))+" processed:"+str(count/1000)+"K")
             reset=0
-    print(str(count)+" procesados")
+    print(str(count)+" processed")
 
 
 #****************TEST_EXECUTE******************

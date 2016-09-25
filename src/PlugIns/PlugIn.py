@@ -40,7 +40,7 @@ class PlugIn():
     def getPath(self):
         return self.getName()
 
-    def _normalize(self,data):#TODO SACAR ESTO DE ACA
+    def _normalize(self,data):#TODO remove this from here
         try:
             res=repr(hex(data))
         except:

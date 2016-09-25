@@ -56,7 +56,7 @@ class VersionInfoPlug(PlugIn):
                 fst={}
                 for entry in pelib.FileInfo:
                     if(hasattr(entry,"StringTable")):
-                        for str_entry in entry.StringTable: #ver esto, es un array
+                        for str_entry in entry.StringTable: # check this. its an array.
                             #print(str_entry.entries)
                             #print(dir(str_entry))
                             fst["LangID"]=str(str_entry.LangID)

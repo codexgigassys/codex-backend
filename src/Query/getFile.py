@@ -18,10 +18,10 @@ db=client[env["db_files_name"]]
 fs=gridfs.GridFS(db)
 f=fs.find_one({"filename":file_id})
 if(f==None):
-    print("No existe el archivo")
+    print("File does not exist.")
     exit(0)
 data=f.read()
 fd=open(file_id,"w+")
 fd.write(data)
 fd.close()
-print("Archivo encontrado")
+print("File found")

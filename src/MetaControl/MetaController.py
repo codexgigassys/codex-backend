@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from secrets import env
 #from IPython import embed
 
-#almacena y lee la metadata de la base de datos
+# Saves and reads metadata to/from the db.
 class MetaController():
 
     def __init__(self,db_collection=None):

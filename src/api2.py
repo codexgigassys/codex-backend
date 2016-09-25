@@ -199,7 +199,7 @@ def search():
     res=SearchModule.search_by_id(data,limit,columns,True)
     add_list_to_process_queue(res[0:10])
 
-    #para que muestre solo algunas columnas (gronchada)
+    # to only show a few columns (uggly stuff)
     if(len(columns)==0):
         show=["sha1","description","size"]
     else:
@@ -399,7 +399,7 @@ def api_batch_process_debug_file():
     file_hashes=request.forms.get('file_hash')
     #print(dir(request.forms))
     #print(request.forms.keys())
-    #transformar file_hashes a una lista de hashes
+    # transform file_hashes in a list of hashes.
     not_found=[]
     added_to_queue=0
     downloaded_from_vt=0
@@ -443,7 +443,7 @@ def api_batch_process_file():
     file_hashes=request.forms.get('file_hash')
     #print(dir(request.forms))
     #print(request.forms.keys())
-    #transformar file_hashes a una lista de hashes
+    # transform file_hashes in a list of hashes
     not_found=[]
     added_to_queue=0
     downloaded_from_vt=0

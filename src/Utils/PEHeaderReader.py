@@ -24,14 +24,14 @@ class PEHeaderReader():
 
 
     def get_import_size(self):
-        #self.pe.parse_data_directories() # si tiene fast load
+        #self.pe.parse_data_directories() # si it has fast load.
         sizes=[]
         for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
             sizes.append(len(entry.imports))
         return sizes
 
     def get_import_size_stats(self):
-        #self.pe.parse_data_directories() # si tiene fast load
+        #self.pe.parse_data_directories() # si if has fast load.
         total=0
         if (self.pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT']].VirtualAddress == 0):
             return 0,0,0

@@ -19,7 +19,7 @@ class HashProcessor(Processor):
     def __delete__(self):
         Processor.__delete__(self)
 
-    #metodo de procesamiento
+    # Processing method
     def process(self):
         Processor.process(self)
         self._addModule(PEFileModule())

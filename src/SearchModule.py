@@ -33,7 +33,6 @@ def process_file(file_hash):
     return 0
 
 def add_file_from_vt(hash_id):
-    #return None # FUNCION DESABILITADA - SACAR LA LINEA PARA PONER
     downloaded_file=download_from_virus_total(hash_id)
     if(downloaded_file==None):
         return None
@@ -60,7 +59,7 @@ def fuzz_search_fast(id,p,fuzz):
     l=[]
     for f in f1:
         l.append(f)
-    #print("comparando")
+    #print("comparing")
     dic={}
     for a in l:
         res=-1
@@ -76,7 +75,7 @@ def fuzz_search_fast(id,p,fuzz):
             #print(str(res)+"------"+str(a[p])+"-----"+str(a["file_id"]))
             continue
 
-    #print("ordenando")
+    #print("sorting")
     order=sorted(dic.items(),key=operator.itemgetter(1))
     ret=[]
     count=0
@@ -84,7 +83,7 @@ def fuzz_search_fast(id,p,fuzz):
         ret.append(o[0])
         count+=1
         if count>=100: break
-    #print("fianlizado")
+    #print("finishing")
     return ret
 
 
@@ -192,7 +191,7 @@ def translate_id(id,str_value):
     return path,value
 
 def search_by_id(data,limit,columns=[],search_on_vt=False):
-    #fecha - mime - empaquetado se necesitan para estadisticas
+    #date - mime - packager are needed for stats
     if(len(columns)==0):
         retrieve={"file_id":1,"description":1,"size":1,
                 "mime_type":1,"particular_header.packer_detection":1,"particular_header.headers.file_header.TimeDateStamp":1}
@@ -225,7 +224,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         if(id==1 or id==2 or id==3):
             hash_search=True
             hash_for_search=v
-        if(id>=10000):   #para agregar la busqueda de AVs
+        if(id>=10000):   # for adding AVs searchs
             av_collection_query_list.append({p:{"$regex":v,"$options":'i'}})
             continue
         query_list.append({p:v})
@@ -233,7 +232,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
     if(len(query_list)>0 and len(av_collection_query_list)==0):
         query={"$and":query_list}
         res=searchFull(query,limit,retrieve)
-        if(hash_search and len(res)==0 and search_on_vt):#buesqueda en VT
+        if(hash_search and len(res)==0 and search_on_vt):# searching in VT.
             sha1=add_file_from_vt(hash_for_search)
             if sha1==None: return []
             process_file(sha1)
@@ -249,7 +248,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
     if(len(av_collection_query_list)==0):
         return []
     else:
-        #realizar busqueda de avs
+        # do AV search
         db_collection = env["db_metadata_collection"]
         client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
         db=client[env["db_metadata_name"]]
@@ -262,7 +261,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         lista_av=[]
         for f in av_res:
             lista_av.append(f)
-        #print(lista_av)#resultados de la busqueda de avs
+        #print(lista_av)# results of AV searchs
 
         res=[]
         for l in lista_av:

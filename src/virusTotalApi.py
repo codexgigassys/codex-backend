@@ -123,7 +123,7 @@ def test():
 
 def test2():
     hash="1df6ae2a5594ab29a6e60b6d9296128b1f9fd980" #stuxnet
-    #hash="8260795f47f284889488c375bed2996e" #no existe
+    #hash="8260795f47f284889488c375bed2996e" # does not exist
     res=get_av_result(hash)
     print(res)
 

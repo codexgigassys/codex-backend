@@ -16,4 +16,4 @@ query={}
 query["particular_header.file_entropy"]={"$gt":7.999}
 res=coll_meta.find(query)
 for e in res:
-    print(("Encontrado: %s")%(e,))
+    print(("Found: %s")%(e,))

@@ -41,16 +41,16 @@ class XMLCreator():
 
     def appendAll(self,node,contenedor):
         tipo=type(contenedor)
-        if(tipo==type({})):     # appendea un diccionario
+        if(tipo==type({})):     # appends to a dictionary
             for d in contenedor:
                 n=XML.SubElement(node,d)
                 self.appendAll(n,contenedor[d])
-        elif(tipo==type([])):    #appendea una lista
+        elif(tipo==type([])):    # appends to a list
             for v in contenedor:
                 n=XML.SubElement(node,"item")
                 n.text=v
         else:
-            node.text=str(contenedor) # le pone un valor
+            node.text=str(contenedor) # saves a value
 
         #return node
 
@@ -90,8 +90,8 @@ def testCode():
     dic={}
     dic["pepe"]="pepe"
     lista=[]
-    lista.append("una cosa")
-    lista.append("otra cosa")
+    lista.append("one thing")
+    lista.append("other thing")
     dic["lista"]=lista
     xml=XMLCreator()
     node=xml.createXMLNode("principal_node",dic)
@@ -115,10 +115,10 @@ import traceback
 if(len(sys.argv)>=2):
     if(sys.argv[1]==TEST):
         try:
-            print("######## Test de " + str(sys.argv[0])+" ########")
+            print("######## Test of " + str(sys.argv[0])+" ########")
             testCode()
 
         except:
             print(traceback.format_exc())
-        raw_input("Presione una tecla...")
+        raw_input("Press a key...")
 
