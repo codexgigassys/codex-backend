@@ -26,8 +26,7 @@ class CheckEPSectionPlug(PlugIn):
         ep = pelib.OPTIONAL_HEADER.AddressOfEntryPoint
         pos = 0
         for sec in pelib.sections:
-            if (ep >= sec.VirtualAddress) and \
-               (ep < (sec.VirtualAddress + sec.Misc_VirtualSize)):
+            if (ep >= sec.VirtualAddress) and (ep < (sec.VirtualAddress + sec.Misc_VirtualSize)):
                 name = sec.Name.replace('\x00', '')
                 break
             else:

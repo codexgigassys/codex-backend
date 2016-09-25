@@ -27,9 +27,6 @@ class PEHeaderReader():
         #self.pe.parse_data_directories() # si tiene fast load
         sizes=[]
         for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
-          #print entry.dll
-          #for imp in entry.imports:
-            #print '\t', hex(imp.address), imp.name
             sizes.append(len(entry.imports))
         return sizes
 
@@ -39,10 +36,10 @@ class PEHeaderReader():
         if (self.pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT']].VirtualAddress == 0):
             return 0,0,0
         for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
-          #print entry.dll
-          #for imp in entry.imports:
-            #print '\t', hex(imp.address), imp.name
             total=total+len(entry.imports)
+            #print entry.dll
+            #for imp in entry.imports:
+            #print '\t', hex(imp.address), imp.name
 
         cant_librerias=(len(self.pe.DIRECTORY_ENTRY_IMPORT))
         total_imports=total
@@ -63,7 +60,7 @@ class PEHeaderReader():
             virtual_sum+=virtual
             #print(hex(section.Characteristics))
             if ( section.__dict__.get('IMAGE_SCN_MEM_WRITE', False)  and
-            section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):
+                    section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):
                 #print("Write Exe")
                 w_e+=1
                 w_real_sum+=real

@@ -45,8 +45,8 @@ except ImportError:
 
 # suspicious APIs to alert on
 alerts = ['OpenProcess', 'VirtualAllocEx', 'WriteProcessMemory', 'CreateRemoteThread', 'ReadProcessMemory',
-          'CreateProcess', 'WinExec', 'ShellExecute', 'HttpSendRequest', 'InternetReadFile', 'InternetConnect',
-          'CreateService', 'StartService']
+        'CreateProcess', 'WinExec', 'ShellExecute', 'HttpSendRequest', 'InternetReadFile', 'InternetConnect',
+        'CreateService', 'StartService']
 
 # legit entry point sections
 good_ep_sections = ['.text', '.code', 'CODE', 'INIT', 'PAGE']
@@ -56,10 +56,10 @@ clamscan_path = '/usr/bin/clamscanx'
 
 def convert_char(char):
     if char in string.ascii_letters or \
-       char in string.digits or \
-       char in string.punctuation or \
-       char in string.whitespace:
-        return char
+            char in string.digits or \
+            char in string.punctuation or \
+            char in string.whitespace:
+                return char
     else:
         return r'\x%02x' % ord(char)
 
@@ -67,33 +67,33 @@ def convert_to_printable(s):
     return ''.join([convert_char(c) for c in s])
 
 def get_filetype(data):
-        """There are two versions of python-magic floating around, and annoyingly, the interface
+    """There are two versions of python-magic floating around, and annoyingly, the interface
         changed between versions, so we try one method and if it fails, then we try the other"""
         if sys.modules.has_key('magic'):
-                try:
-                        ms = magic.open(magic.MAGIC_NONE)
+            try:
+                ms = magic.open(magic.MAGIC_NONE)
                         ms.load()
                         return ms.buffer(data)
                 except:
-                        return magic.from_buffer(data)
+                    return magic.from_buffer(data)
         return ''
 
 def get_ssdeep(filename):
-        """There are two Python bindings for ssdeep, each with a different interface. So we try
+    """There are two Python bindings for ssdeep, each with a different interface. So we try
         Jose's pyssdeep first and if it fails, try the one from pypi. Just install one or the other:
         http://code.google.com/p/pyssdeep/
         http://pypi.python.org/packages/source/s/ssdeep/ssdeep-2.5.tar.gz#md5=fd9e5271c01ca389cc621ae306327ab6
         """
         try:
-                from ssdeep import ssdeep
+            from ssdeep import ssdeep
                 s = ssdeep()
                 return s.hash_file(filename)
         except:
-                try:
-                        import ssdeep
+            try:
+                import ssdeep
                         return ssdeep.hash_from_file(filename)
                 except:
-                        pass
+                    pass
         return ''
 
 class PEScanner:
@@ -120,8 +120,8 @@ class PEScanner:
         pos = 0
         for sec in pe.sections:
             if (ep >= sec.VirtualAddress) and \
-               (ep < (sec.VirtualAddress + sec.Misc_VirtualSize)):
-                name = sec.Name.replace('\x00', '')
+                    (ep < (sec.VirtualAddress + sec.Misc_VirtualSize)):
+                        name = sec.Name.replace('\x00', '')
                 break
             else:
                 pos += 1
@@ -147,9 +147,9 @@ class PEScanner:
     def check_tls(self, pe):
         callbacks = []
         if (hasattr(pe, 'DIRECTORY_ENTRY_TLS') and \
-                    pe.DIRECTORY_ENTRY_TLS and \
-                    pe.DIRECTORY_ENTRY_TLS.struct and \
-                    pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks):
+                pe.DIRECTORY_ENTRY_TLS and \
+                pe.DIRECTORY_ENTRY_TLS.struct and \
+                pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks):
             callback_array_rva = pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks - pe.OPTIONAL_HEADER.ImageBase
             idx = 0
             while True:
@@ -222,8 +222,8 @@ class PEScanner:
         if self.rules:
             yarahits = self.rules.match(data=data)
             if yarahits:
-              for hit in yarahits:
-                ret.append("YARA: %s" % hit.rule)
+                for hit in yarahits:
+                    ret.append("YARA: %s" % hit.rule)
                 #for key, val in hit.strings.iteritems():
                 for (key,stringname,val) in hit.strings:
                     makehex = False
@@ -342,11 +342,11 @@ class PEScanner:
 
             for sec in pe.sections:
                 s = "%-10s %-12s %-12s %-12s %-12f" % (
-                    ''.join([c for c in sec.Name if c in string.printable]),
-                    hex(sec.VirtualAddress),
-                    hex(sec.Misc_VirtualSize),
-                    hex(sec.SizeOfRawData),
-                    sec.get_entropy())
+                        ''.join([c for c in sec.Name if c in string.printable]),
+                        hex(sec.VirtualAddress),
+                        hex(sec.Misc_VirtualSize),
+                        hex(sec.SizeOfRawData),
+                        sec.get_entropy())
                 if sec.SizeOfRawData == 0 or (sec.get_entropy() > 0 and sec.get_entropy() < 1) or sec.get_entropy() > 7:
                     s += "[SUSPICIOUS]"
                 out.append(s)
@@ -363,7 +363,7 @@ class PEScanner:
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
-      print "Usage: %s <file|directory>\n" % (sys.argv[0])
+        print "Usage: %s <file|directory>\n" % (sys.argv[0])
       sys.exit()
 
     object = sys.argv[1]

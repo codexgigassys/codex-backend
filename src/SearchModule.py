@@ -20,7 +20,8 @@ def process_file(file_hash):
     #print "process_file("+str(file_hash)+")"
     pc=PackageController()
     res=pc.getFile(file_hash)
-    if res==None:return None
+    if res==None:
+        return None
     sam_id=file_hash
     sample=Sample()
     sample.setID(sam_id)
@@ -134,18 +135,26 @@ def translate_id(id,str_value):
     if(id==1):
         str_value=clean_hash(str_value)
         largo=len(str_value)
-        if(largo==32):id=1
-        elif(largo==40):id=2
-        elif(largo==64):id=3
-        else: id=1
+        if(largo==32):
+            id=1
+        elif(largo==40):
+            id=2
+        elif(largo==64):
+            id=3
+        else:
+            id=1
 
     if(id==12):
         str_value=clean_hash(str_value)
         largo=len(str_value)
-        if(largo==32):id=12
-        elif(largo==40):id=13
-        elif(largo==64):id=14
-        else: id=12
+        if(largo==32):
+            id=12
+        elif(largo==40):
+            id=13
+        elif(largo==64):
+            id=14
+        else:
+            id=12
 
     dic=tree_menu.ids[id]
     path=str(dic["path"])
@@ -205,8 +214,10 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         #print(search)
         str_id,str_value=search.split('=')
         id=int(str_id.split('.')[0])
-        if(id<=0):id=0
-        if str_value=="":continue
+        if(id<=0):
+            id=0
+        if str_value=="":
+            continue
         p,v=translate_id(id,str_value)
         if (id==10 or id==11 or id==21):
             res=fuzz_search_fast(id,p,v)

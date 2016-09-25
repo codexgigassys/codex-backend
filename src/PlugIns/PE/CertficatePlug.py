@@ -166,7 +166,7 @@ class CertficatePlug(PlugIn):
         address = pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']].VirtualAddress
 
         if address > 0:
-        # Always in DER format AFAIK
+            # Always in DER format AFAIK
             derData = pe.write()[address + 8:]
         else:
             print("address 0")

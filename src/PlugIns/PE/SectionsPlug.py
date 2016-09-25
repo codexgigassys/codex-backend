@@ -41,7 +41,7 @@ class SectionsPlug(PlugIn):
             dic_sec["characteristics"]=hex(section.Characteristics)
 
             if ( section.__dict__.get('IMAGE_SCN_MEM_WRITE', False)  and
-            section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):
+                    section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):
                 dic_sec["write_executable"]="True"
             else:
                 dic_sec["write_executable"]="False"

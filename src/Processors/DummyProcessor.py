@@ -6,19 +6,18 @@ import traceback
 
 
 class DummyProcessor(Processor):
+    def __init__(self,sample):
+        Processor.__init__(self,sample)
 
-        def __init__(self,sample):
-            Processor.__init__(self,sample)
+    def __delete__(self):
+        Processor.__delete__(self)
 
-        def __delete__(self):
-            Processor.__delete__(self)
-
-        #metodo de procesamiento
-        def process(self):
-            Processor.process(self)
-            #los plugins van aca
-            self._executeAllPlugIns()
-            return self.metadata_to_store
+    #metodo de procesamiento
+    def process(self):
+        Processor.process(self)
+        #los plugins van aca
+        self._executeAllPlugIns()
+        return self.metadata_to_store
 
 
 

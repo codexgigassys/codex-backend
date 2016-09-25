@@ -65,13 +65,15 @@ class Sample:
         return self.version_storeada
 
     def getCategory(self):
-        if(self.category!=None): return self.category
+        if(self.category!=None):
+            return self.category
         st=self.getStorageVersion()
-        if(st==None):return None
+        if(st==None):
+            return None
         self.category=st.get("category")
         return self.category
 
-        #val=self.getStorageMetadata().get("mime_type")#cambiar
+    #val=self.getStorageMetadata().get("mime_type")#cambiar
         #if(val!=None): return val
         #print("NOOOOOOOOOO")
         #return self.cataloger.catalog(self.getBinary())
@@ -82,15 +84,17 @@ class Sample:
 
     def getLastValue(self,key):
         val=self.metadata_calculada.getValue(key)
-        if(val!=None): return val
+        if(val!=None):
+            return val
         if(self.metadata_try_to_load):
             self.metadata_try_to_load=False
-            if(self.mc==None): return None
+            if(self.mc==None):
+                return None
             self.metadata_storeada.setData(self.mc.read(self.sample_id))
         val=self.metadata_storeada.getValue(key)
         return val
 
-        #if(self.metaCalc!=None):
+    #if(self.metaCalc!=None):
         #    res=self.metaCalc.get(key)
         #    if(res!=None): return res
         #
@@ -112,7 +116,8 @@ class Sample:
     def getStorageMetadata(self):
         if(self.metadata_try_to_load):
             self.metadata_try_to_load=False
-            if(self.mc==None): return None
+            if(self.mc==None):
+                return None
             self.metadata_storeada.setData(self.mc.read(self.sample_id))
         return self.metadata_storeada
 
@@ -121,7 +126,7 @@ class Sample:
 
     def getCalculatedMetadata(self):
         return self.metadata_calculada
-        #if(self.metaDB!=None):
+    #if(self.metaDB!=None):
         #    return self.metaDB
         #if(self.metaDB_try):
         #    return None

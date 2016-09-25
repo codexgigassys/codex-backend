@@ -60,38 +60,38 @@ class Launcher():
             return 0
 
     def launchAnalysisByID(self,sample):
-            logging.debug("Launching Analysis on sample:%s",sample.getID())
-            sample.setPackageController(self.pc)
-            sample.setMetaController(self.mdc)
-            sample.setVersionController(self.vc)
+        logging.debug("Launching Analysis on sample:%s",sample.getID())
+        sample.setPackageController(self.pc)
+        sample.setMetaController(self.mdc)
+        sample.setVersionController(self.vc)
 
-            category=sample.getCategory()
-            if(category==None):
-                category=Cataloger().catalog(sample.getBinary())
-                logging.debug("Category not found in DB, categorized as %s",str(category))
-            else:
-                logging.debug("Category found in DB, categorized as %s",str(category))
+        category=sample.getCategory()
+        if(category==None):
+            category=Cataloger().catalog(sample.getBinary())
+            logging.debug("Category not found in DB, categorized as %s",str(category))
+        else:
+            logging.debug("Category found in DB, categorized as %s",str(category))
 
-            processor=ProcessorFactory().createProcessor(category,sample)
-            result_dic=processor.process()
-            result_version=processor.getVersion()
+        processor=ProcessorFactory().createProcessor(category,sample)
+        result_dic=processor.process()
+        result_version=processor.getVersion()
 
-            if(len(result_version)>0):
-                logging.debug("Updating metadata")
+        if(len(result_version)>0):
+            logging.debug("Updating metadata")
 
-                if(self.mdc.write(sample.getID(),result_dic)!=0):
-                    logging.error("Error writing Metadata to DB, sample:%s",sample.getID())
-                    return -1
-                logging.debug("Metadata writed in DB")
+            if(self.mdc.write(sample.getID(),result_dic)!=0):
+                logging.error("Error writing Metadata to DB, sample:%s",sample.getID())
+               return -1
+           logging.debug("Metadata writed in DB")
 
-                self.vc.updateVersion(sample.getID(),result_version)
-                logging.debug("Versions writed to DB")
-            else:
+            self.vc.updateVersion(sample.getID(),result_version)
+            logging.debug("Versions writed to DB")
+        else:
 
-                logging.debug("Nothing to update")
+            logging.debug("Nothing to update")
 
-            logging.debug("Analysis Finished OK")
-            return 0
+        logging.debug("Analysis Finished OK")
+        return 0
 
 
 #****************TEST_CODE******************

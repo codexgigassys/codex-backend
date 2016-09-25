@@ -47,7 +47,7 @@ def add_hash_to_process_queue(sha1):
 def add_list_to_process_queue(res):
     if type(res)==list:
         for sample in res:
-           add_hash_to_process_queue(sample.get('sha1'))
+            add_hash_to_process_queue(sample.get('sha1'))
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -138,9 +138,7 @@ def get_metadata():
     if len(file_hash) == 32: #ToDo: validate hash
         key = 'md5'
     elif len(file_hash) == 40:
-       key = 'sha1'
-    #elif len(file_hash) == 64:
-    #   key = 'sha256'
+        key = 'sha1'
     else:
         response.code = 400
         return jsonize({'message':'Invalid hash format (use MD5, SHA1 or SHA2)'})
@@ -365,8 +363,8 @@ def yara():
         if len(file_hash) == 40:
             key = 'sha1'
         else:
-           response.code = 400
-           return jsonize({'message':'Invalid hash format (use sha1)'})
+            response.code = 400
+            return jsonize({'message':'Invalid hash format (use sha1)'})
 
         pc=PackageController()
         res=pc.searchFile(file_hash)
@@ -426,7 +424,7 @@ def api_batch_process_debug_file():
         add_hash_to_process_queue(sha1)
         if(env['auto_get_av_result']):
             get_av_result(sha1)
-	yield str(sha1)+"\n"
+        yield str(sha1)+"\n"
 
     responsex=str(added_to_queue)+" files added to the process queue.\n"
     if(downloaded_from_vt > 0):
@@ -458,7 +456,7 @@ def api_batch_process_file():
         if(len(res)==0):
             not_found.append(hash_id)
             continue
-            """
+        """
             print "downloading "+str(hash_id)+" from vt"
             sha1=SearchModule.add_file_from_vt(hash_id)
             if(sha1==None):
