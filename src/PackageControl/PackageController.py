@@ -5,7 +5,7 @@ import os
 import hashlib
 from pymongo import MongoClient
 import gridfs
-from secrets import env 
+from secrets import env
 
 #Almacena los binarios dentro de la base de datos
 TEMPORAL_FILES_DB=False # Poner este valor en True habilita el uso de una base de datos secundaria para archivos
@@ -21,25 +21,25 @@ class PackageController():
 
     def __delete__(self):
         pass
-        
+
     #agrega la data de un archivo dentrol de un paquete appendeado
     def append(self,file_id,data,vt_blocked=False):
         if(TEMPORAL_FILES_DB):
-            self.fs_temp.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})    
+            self.fs_temp.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
         else:
-            self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})        
-    
+            self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
+
     #devuelve el archivo buscado
-    #None si no existe    
+    #None si no existe
     def getFile(self,file_id):
         f=self.fs.find_one({"filename":file_id})
-        if f==None: 
+        if f==None:
             if TEMPORAL_FILES_DB==False: return None
             else:
                 f=self.fs_temp.find_one({"filename":file_id})
                 if f==None: return None
         return f.read()
-        
+
     #devuelve la entrada del archivo del indice global
     #None si no existe
     # 0 if the file exists.
@@ -48,14 +48,14 @@ class PackageController():
     def searchFile(self,file_id):
         ret=self.fs.find_one({"filename":file_id})
         if(ret==None):
-            if(TEMPORAL_FILES_DB==False):return None 
+            if(TEMPORAL_FILES_DB==False):return None
             else:
                 ret=self.fs_temp.find_one({"filename":file_id})
                 if(ret==None):return None
         if(ret.metadata is not None and ret.metadata.get("vt_blocked")==True):
             return 1
         else: return 0
-                
+
 #****************TEST_CODE******************
 def testCode():
     pc=PackageController(host="192.168.0.45",db_name="DATABASE_TEST")
@@ -65,7 +65,7 @@ def testCode():
         res=pc.searchFile(hs)
         if(res==None):
             print("Appendeando: "+dato)
-            if(dato=="test_vt1"):    
+            if(dato=="test_vt1"):
                 pc.append(hs,dato,True)
             else:
                 pc.append(hs,dato)
@@ -73,9 +73,9 @@ def testCode():
             print(dato+" ya existe con:"+str(res))
         if(res==1):
             print(dato+" bloqueado:"+str(res))
-        
-            
-    
+
+
+
     for dato in ["test_vt1","test_vt2","test_vt3"]:
         hs=hashlib.sha1(dato).hexdigest()
         res=pc.searchFile(hs)
@@ -85,7 +85,7 @@ def testCode():
             print(dato+" ya existe con:"+str(res))
         if(res==1):
             print(dato+" bloqueado:"+str(res))
-    
+
 #****************TEST_EXECUTE******************
 #from Utils.test import test
 #test("-test_PackageController",testCode)

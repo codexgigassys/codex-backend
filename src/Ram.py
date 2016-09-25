@@ -20,4 +20,4 @@ class Ram:
                     tmp += int(sline[1])
             ret['free'] = tmp
             ret['used'] = int(ret['total']) - int(ret['free'])
-        return ret 
+        return ret

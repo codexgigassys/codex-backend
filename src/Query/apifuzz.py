@@ -28,7 +28,7 @@ def searchFuzzy(fuzz,limit,thresh):
             continue
         if(res>=thresh):
             ret[a["file_id"]]=res
-            
+
     return ret
 
 def searchFull(search,limit):
@@ -44,12 +44,12 @@ def searchFull(search,limit):
     l=[]
     for f in f1:
         l.append(f)
-    
+
     #print("6")
     ret=[]
     for a in l:
         ret.append(str(a["file_id"]))
     #print("7")
-    
+
     return ret
-    
+

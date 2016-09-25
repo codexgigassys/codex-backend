@@ -6,23 +6,23 @@ from Utils.InfoExtractor import *
 class Cataloger():
     def __init__(self,data=None):
         self.data=str(data)
-        
+
     def __delete__(self):
         pass
-    
-    def catalogData(self):    
+
+    def catalogData(self):
         mime=MIME_TYPE(self.data,True)
         return mime
-    
-    def catalog(self,data):    
+
+    def catalog(self,data):
         mime=MIME_TYPE(data,True)
-        return mime    
-        
-        
+        return mime
+
+
 #****************TEST_CODE******************
 import os
 def testCode():
-    dir=os.getcwd()    
+    dir=os.getcwd()
     #file=dir+"/Test_files/test.exe"
     file=dir+"/Test_files/t.lz"
     cat=Cataloger(open(file,'rb').read())

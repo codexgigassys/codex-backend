@@ -13,27 +13,27 @@ import pefile
 class ImportsPlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.imports"
-                
+
     def getName(self):
         return "imports"
-    
+
     def getVersion(self):
         return 4
-            
+
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
         if(pelib==None):return ""
-        
+
         try:
             if (pelib.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT']].VirtualAddress == 0):
                 return ""
         except Exception, e:
             print str(e)
             return ""
-        
+
         d=[]
         dir_ent_imp=None
         try:
@@ -42,7 +42,7 @@ class ImportsPlug(PlugIn):
             print str(e)
             return ""
         for entry in dir_ent_imp:
-            
+
             dll_name=repr(entry.dll).lower()
             l=[]
             for imp in entry.imports:
@@ -51,14 +51,14 @@ class ImportsPlug(PlugIn):
                 #aux["name"]=imp.name
                 #aux["ordinal"]=imp.ordinal
                 #l.append(aux)
-                
-            dic_ent={"lib":dll_name,"functions":l}    
+
+            dic_ent={"lib":dll_name,"functions":l}
             d.append(dic_ent)
-                        
+
         return d
 
 if __name__=="__main__":
-    data=open(source_path+"/Test_files/test.exe","rb").read()    
+    data=open(source_path+"/Test_files/test.exe","rb").read()
     sample=Sample()
     sample.setBinary(data)
     modules={}

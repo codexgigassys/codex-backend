@@ -37,17 +37,17 @@ try:
     import magic
 except ImportError:
     print 'python-magic is not installed, file types will not be available'
-    
+
 try:
     import yara
 except ImportError:
     print 'yara-python is not installed, see http://code.google.com/p/yara-project/'
 
-# suspicious APIs to alert on 
+# suspicious APIs to alert on
 alerts = ['OpenProcess', 'VirtualAllocEx', 'WriteProcessMemory', 'CreateRemoteThread', 'ReadProcessMemory',
           'CreateProcess', 'WinExec', 'ShellExecute', 'HttpSendRequest', 'InternetReadFile', 'InternetConnect',
           'CreateService', 'StartService']
-          
+
 # legit entry point sections
 good_ep_sections = ['.text', '.code', 'CODE', 'INIT', 'PAGE']
 
@@ -67,12 +67,12 @@ def convert_to_printable(s):
     return ''.join([convert_char(c) for c in s])
 
 def get_filetype(data):
-        """There are two versions of python-magic floating around, and annoyingly, the interface 
+        """There are two versions of python-magic floating around, and annoyingly, the interface
         changed between versions, so we try one method and if it fails, then we try the other"""
         if sys.modules.has_key('magic'):
                 try:
-                        ms = magic.open(magic.MAGIC_NONE) 
-                        ms.load() 
+                        ms = magic.open(magic.MAGIC_NONE)
+                        ms.load()
                         return ms.buffer(data)
                 except:
                         return magic.from_buffer(data)
@@ -85,7 +85,7 @@ def get_ssdeep(filename):
         http://pypi.python.org/packages/source/s/ssdeep/ssdeep-2.5.tar.gz#md5=fd9e5271c01ca389cc621ae306327ab6
         """
         try:
-                from ssdeep import ssdeep 
+                from ssdeep import ssdeep
                 s = ssdeep()
                 return s.hash_file(filename)
         except:
@@ -99,20 +99,20 @@ def get_ssdeep(filename):
 class PEScanner:
     def __init__(self, files, yara_rules=None, peid_sigs=None):
         self.files = files
-        
-        # initialize YARA rules if provided 
+
+        # initialize YARA rules if provided
         if yara_rules and sys.modules.has_key('yara'):
             self.rules = yara.compile(yara_rules)
         else:
             self.rules = None
-            
-        # initialize PEiD signatures if provided 
+
+        # initialize PEiD signatures if provided
         if peid_sigs:
             self.sigs = peutils.SignatureDatabase(peid_sigs)
         else:
             self.sigs = None
             print("PEiD no inicializado")
-        
+
     def check_ep_section(self, pe):
         """ Determine if a PE's entry point is suspicious """
         name = ''
@@ -123,14 +123,14 @@ class PEScanner:
                (ep < (sec.VirtualAddress + sec.Misc_VirtualSize)):
                 name = sec.Name.replace('\x00', '')
                 break
-            else: 
+            else:
                 pos += 1
         return (ep, name, pos)
 
     def check_verinfo(self, pe):
         """ Determine the version info in a PE file """
         ret = []
-        
+
         if hasattr(pe, 'VS_VERSIONINFO'):
             if hasattr(pe, 'FileInfo'):
                 for entry in pe.FileInfo:
@@ -150,11 +150,11 @@ class PEScanner:
                     pe.DIRECTORY_ENTRY_TLS and \
                     pe.DIRECTORY_ENTRY_TLS.struct and \
                     pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks):
-            callback_array_rva = pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks - pe.OPTIONAL_HEADER.ImageBase 
+            callback_array_rva = pe.DIRECTORY_ENTRY_TLS.struct.AddressOfCallBacks - pe.OPTIONAL_HEADER.ImageBase
             idx = 0
             while True:
                 func = pe.get_dword_from_data(pe.get_data(callback_array_rva + 4 * idx, 4), 0)
-                if func == 0: 
+                if func == 0:
                     break
                 callbacks.append(func)
                 idx += 1
@@ -181,7 +181,7 @@ class PEScanner:
                                 sublang = pefile.get_sublang_name_for_lang( resource_lang.data.lang, resource_lang.data.sublang )
                                 ret[i] = (name, resource_lang.data.struct.OffsetToData, resource_lang.data.struct.Size, filetype, lang, sublang)
                                 i += 1
-        return ret                            
+        return ret
 
     def check_imports(self, pe):
         ret = []
@@ -264,10 +264,10 @@ class PEScanner:
                 out.append("Cannot read %s (maybe empty?)" % file)
                 out.append("")
                 continue
-                
+
             try:
                 pe = pefile.PE(data=data, fast_load=True)
-                pe.parse_data_directories( directories=[ 
+                pe.parse_data_directories( directories=[
                     pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'],
                     pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_EXPORT'],
                     pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_TLS'],
@@ -281,12 +281,12 @@ class PEScanner:
             out.append(self.header("Meta-data"))
             out.append("File:    %s" % file)
             out.append("Size:    %d bytes" % len(data))
-            out.append("Type:    %s" % get_filetype(data)) 
+            out.append("Type:    %s" % get_filetype(data))
             out.append("MD5:     %s"  % hashlib.md5(data).hexdigest())
             out.append("SHA1:    %s" % hashlib.sha1(data).hexdigest())
             out.append("ssdeep:  %s" % get_ssdeep(file))
             out.append("Date:    %s" % self.get_timestamp(pe))
-            
+
             # Alert if the EP section is not in a known good section or if its in the last PE section
             (ep, name, pos) = self.check_ep_section(pe)
             s = "EP:      %s %s %d/%d" % (hex(ep+pe.OPTIONAL_HEADER.ImageBase), name, pos, len(pe.sections))
@@ -302,25 +302,25 @@ class PEScanner:
             packers = self.check_packers(pe)
             if len(packers):
                 out.append("Packers: %s" % ','.join(packers))
-         
+
             if sys.modules.has_key('yara'):
                 yarahits = self.check_yara(data)
             else:
                 yarahits = []
-                
+
             clamhits = self.check_clam(file)
-            
+
             if len(yarahits) or len(clamhits):
                 out.append(self.header("Signature scans"))
                 out.append(yarahits)
                 out.append(clamhits)
-                    
+
             callbacks = self.check_tls(pe)
             if len(callbacks):
                 out.append(self.header("TLS callbacks"))
                 for cb in callbacks:
                     out.append("    0x%x" % cb)
-                
+
             resources = self.check_rsrc(pe)
             if len(resources):
                 out.append(self.header("Resource entries"))
@@ -328,47 +328,47 @@ class PEScanner:
                 out.append("-" * 80)
                 for rsrc in resources.keys():
                     (name,rva,size,type,lang,sublang) = resources[rsrc]
-                    out.append("%-18s %-8s %-8s %-12s %-24s %s" % (name, hex(rva), hex(size), lang, sublang, type)) 
-            
+                    out.append("%-18s %-8s %-8s %-12s %-24s %s" % (name, hex(rva), hex(size), lang, sublang, type))
+
             imports = self.check_imports(pe)
             if len(imports):
                 out.append(self.header("Suspicious IAT alerts"))
                 for imp in imports:
                     out.append(imp)
-                  
+
             out.append(self.header("Sections"))
             out.append("%-10s %-12s %-12s %-12s %-12s" % ("Name", "VirtAddr", "VirtSize", "RawSize", "Entropy"))
             out.append("-" * 80)
-            
+
             for sec in pe.sections:
                 s = "%-10s %-12s %-12s %-12s %-12f" % (
-                    ''.join([c for c in sec.Name if c in string.printable]), 
-                    hex(sec.VirtualAddress), 
-                    hex(sec.Misc_VirtualSize), 
+                    ''.join([c for c in sec.Name if c in string.printable]),
+                    hex(sec.VirtualAddress),
+                    hex(sec.Misc_VirtualSize),
                     hex(sec.SizeOfRawData),
                     sec.get_entropy())
                 if sec.SizeOfRawData == 0 or (sec.get_entropy() > 0 and sec.get_entropy() < 1) or sec.get_entropy() > 7:
                     s += "[SUSPICIOUS]"
                 out.append(s)
-            
+
             verinfo = self.check_verinfo(pe)
             if len(verinfo):
                 out.append(self.header("Version info"))
                 out.append(verinfo)
-                
+
             out.append("")
             print '\n'.join(out)
             count += 1
-            
+
 if __name__ == "__main__":
-        
+
     if len(sys.argv) != 2:
       print "Usage: %s <file|directory>\n" % (sys.argv[0])
       sys.exit()
-      
+
     object = sys.argv[1]
     files  = []
-    
+
     if os.path.isdir(object):
         for root, dirs, filenames in os.walk(object):
             for name in filenames:
@@ -378,7 +378,7 @@ if __name__ == "__main__":
     else:
         print "You must supply a file or directory!"
         sys.exit()
-    
+
     # You should fill these in with a path to your YARA rules and PEiD database
     pescan = PEScanner(files, '', '')
     pescan.collect()

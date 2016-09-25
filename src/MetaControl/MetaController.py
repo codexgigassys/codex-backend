@@ -10,7 +10,7 @@ from secrets import env
 
 #almacena y lee la metadata de la base de datos
 class MetaController():
-    
+
     def __init__(self,db_collection=None):
         if db_collection is None:
             db_collection = env["db_metadata_collection"]
@@ -19,20 +19,20 @@ class MetaController():
         self.collection=db[db_collection]
         self.import_coll=db.imports_tree
         self.av_coll=db.av_analysis
-            
+
     def __delete__(self):
-        pass    
-    
+        pass
+
     def read(self,file_id):
         f=self.collection.find_one({"file_id":file_id})
         if(f==None): return None
-        
+
         av_analysis=self.search_av_analysis(file_id)
         if(av_analysis!=None):
             f["av_analysis"]=av_analysis
-        
+
         return f
-        
+
     def write(self,file_id,data_dic):
         command={"$set":data_dic}
         #print(command)
@@ -45,7 +45,7 @@ class MetaController():
             print(err)
             return -1
         return 0
-        
+
     def writeImportsTree(self,imports):
         command={"$inc":{"count":1}}
         bulk=self.import_coll.initialize_unordered_bulk_op()
@@ -59,40 +59,40 @@ class MetaController():
                 #print("**** Error Imports Tree ****")
                 #err=str(traceback.format_exc())
                 #print(err)
-                #return -1    
+                #return -1
         try:
             if(execute_bool):bulk.execute({'w':0})
         except:
             print("**** Error Imports Tree ****")
             err=str(traceback.format_exc())
             print(err)
-            return -1    
-        return 0    
-        
+            return -1
+        return 0
+
     def searchImportByName(self,import_name):
         r=self.import_coll.find_one({"function_name":import_name})
         return r
-    
+
     def searchDllByName(self,dll_name):
         r=self.import_coll.find_one({"dll_name":dll_name})
         return r
-        
+
     def searchExactImport(self,import_name,dll_name):
         r=self.import_coll.find_one({"function_name":import_name,"dll_name":dll_name})
-        return r        
+        return r
 
     def count_section_used(self,section_sha1):
         f=self.collection.find({"particular_header.sections.sha1":section_sha1}).count()
         return f
-        
+
     def count_resources_used(self,resources_sha1):
         f=self.collection.find({"particular_header.res_entries.sha1":resources_sha1}).count()
         return f
-    
+
     def search_av_analysis(self,file_id):
         f=self.av_coll.find_one({"sha1":file_id})
         return f
-        
+
     def save_av_analysis(self,file_id,analysis_result):
         command={"$set":analysis_result}
         #print(command)
@@ -105,12 +105,12 @@ class MetaController():
             print(err)
             return -1
         return 0
-        
+
 #****************TEST_CODE******************
 def testCode():
     pass
-    
-    
+
+
 #****************TEST_EXECUTE******************
 from Utils.test import test
 test("-test_MetaController",testCode)

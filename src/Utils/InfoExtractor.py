@@ -10,24 +10,24 @@ def MIME_TYPE(data,mime=True):
         return magic.from_buffer(data,mime=mime)
     except magic.MagicException:
         return "none/none"
-    
+
 def SHA1(data):
     return hashlib.sha1(data).hexdigest()
 
 def SHA256(data):
     return hashlib.sha256(data).hexdigest()
-    
+
 def MD5(data):
     return hashlib.md5(data).hexdigest()
-    
+
 def getSsdeep(data):
     try:
         res=ssdeep.hash(data)
         return res
     except Exception, e:
         print str(e)
-        return ''    
-        
+        return ''
+
 #****************TEST_CODE******************
 
 def testCode():

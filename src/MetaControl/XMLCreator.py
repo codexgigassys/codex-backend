@@ -6,16 +6,16 @@ import os
 
 class XMLCreator():
     def __init__(self):
-        pass        
-        
+        pass
+
     def __delete__(self):
         pass
-        
-        
+
+
     def serialize(self,node):
         ser=XML.tostring(node)
         return ser
-    
+
     def parse(self,meta_plain):
         try:
             root=XML.fromstring(meta_plain)
@@ -24,7 +24,7 @@ class XMLCreator():
         except Exception, e:
             print str(e)
             return {}
-        
+
     def appendValueFromDictionary(self,node,dic,value):
         n=XML.SubElement(node,value)
         n.text=str(dic[value])
@@ -33,12 +33,12 @@ class XMLCreator():
         tree = XML.ElementTree(xml_node)
         tree.write("../DB/metadata/"+str(file_name)+".xml")
         return 0
-                
+
     def createXMLNode(self,node_name,dic):
         root = XML.Element(node_name)
         self.appendAll(root,dic)
         return root
-    
+
     def appendAll(self,node,contenedor):
         tipo=type(contenedor)
         if(tipo==type({})):     # appendea un diccionario
@@ -51,9 +51,9 @@ class XMLCreator():
                 n.text=v
         else:
             node.text=str(contenedor) # le pone un valor
-        
+
         #return node
-        
+
     def readAll(self,file_name):
         try:
             tree=XML.parse("../DB/metadata/"+str(file_name)+".xml")
@@ -63,8 +63,8 @@ class XMLCreator():
         except Exception, e:
             print str(e)
             return {}
-        
-    
+
+
     def _iterateNode(self,node):
         dic={}
         lista=[]
@@ -75,13 +75,13 @@ class XMLCreator():
             else:
                 if(sub.tag=="item"):
                     lista.append(text)
-                else:    
+                else:
                     dic[sub.tag]=text
         if(len(lista)>0):
-            return lista    
+            return lista
         return dic
-                
-                    
+
+
 #****************TEST_CODE******************
 
 TEST="-test_XMLCreator"
@@ -95,30 +95,30 @@ def testCode():
     dic["lista"]=lista
     xml=XMLCreator()
     node=xml.createXMLNode("principal_node",dic)
-    ser=xml.serialize(node)    
+    ser=xml.serialize(node)
     print(ser)
-    
+
     #------------------------------------------------------------------
     #~ xml=XMLCreator()
     #~ dic=xml.readAll("filename")
     #~ print(dic)
-    #------------------------------------------------------------------    
+    #------------------------------------------------------------------
     #~ xml=XMLCreator()
     #~ data=open("test.xml","r").read()
     #~ dic=xml.parse(data)
     #~ print(dic)
-    
-    
+
+
 #***********************TEST***************************
 import sys
 import traceback
-if(len(sys.argv)>=2): 
+if(len(sys.argv)>=2):
     if(sys.argv[1]==TEST):
-        try:    
+        try:
             print("######## Test de " + str(sys.argv[0])+" ########")
             testCode()
-    
+
         except:
             print(traceback.format_exc())
         raw_input("Presione una tecla...")
-    
+

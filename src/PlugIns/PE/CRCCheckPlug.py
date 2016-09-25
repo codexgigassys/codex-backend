@@ -8,20 +8,20 @@ import pefile
 class CRCCheckPlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.crc"
-        
+
     def getName(self):
         return "crc"
-    
+
     def getVersion(self):
         return 1
-            
+
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
         if(pelib==None):return ""
-        
+
         crc_claimed = pelib.OPTIONAL_HEADER.CheckSum
         crc_actual  = pelib.generate_checksum()
         s="Claimed: 0x%x, Actual: 0x%x" % (crc_claimed,crc_actual)

@@ -15,11 +15,11 @@ class HashProcessor(Processor):
 
     def __init__(self,sample):
         Processor.__init__(self,sample)
-                                
+
     def __delete__(self):
         Processor.__delete__(self)
-    
-    #metodo de procesamiento    
+
+    #metodo de procesamiento
     def process(self):
         Processor.process(self)
         self._addModule(PEFileModule())
@@ -27,7 +27,7 @@ class HashProcessor(Processor):
         self._addPlugIn(SectionsPlug.SectionsPlug())
         self._executeAllPlugIns()
         return self.metadata_to_store
-            
+
 #****************TEST_CODE******************
 import time
 from Sample import *
@@ -35,7 +35,7 @@ from Sample import *
 def testCode():
     file="Test_files/error_de_codificacion_en_nombre_de_libreria"
     data=open(file,"rb").read()
-    
+
     start_time=time.time()
     dic={}
     sample=Sample()
@@ -44,11 +44,11 @@ def testCode():
     res=pe.process()
     print(res)
     #print(res["particular_header"]["sections"])
-    elapsed=time.time()-start_time    
+    elapsed=time.time()-start_time
     print("Time Elapsed: "+str(elapsed*1000)+" ms")
     print("")
-        
-    
+
+
 #****************TEST_EXECUTE******************
 #from Utils.test import test
 test("-test_PEProcessor",testCode)

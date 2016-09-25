@@ -340,4 +340,4 @@ ids={
 
     10000:{"path":"scans.result","type":"string"},  # para busquedas de av a partir de 10000
     }
-    
+

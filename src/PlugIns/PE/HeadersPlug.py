@@ -8,20 +8,20 @@ import pefile
 class HeadersPlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.headers"
-        
+
     def getName(self):
         return "headers"
-    
+
     def getVersion(self):
         return 2
-            
+
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
         if(pelib==None):return ""
-        
+
         dos={}
         dos["magic"]=self._normalize(pelib.DOS_HEADER.e_magic)
         dos["cblp"]=self._normalize(pelib.DOS_HEADER.e_cblp)
@@ -42,10 +42,10 @@ class HeadersPlug(PlugIn):
         dos["oeminfo"]=self._normalize(pelib.DOS_HEADER.e_oeminfo)
         dos["res2"]=self._normalize(pelib.DOS_HEADER.e_res2)
         dos["lfanew"]=self._normalize(pelib.DOS_HEADER.e_lfanew)
-        
+
         nt={}
         nt["Signature"]=self._normalize(pelib.NT_HEADERS.Signature)
-    
+
         fh={}
         fh["Machine"]=self._normalize(pelib.FILE_HEADER.Machine)
         fh["NumberOfSections"]=self._normalize(pelib.FILE_HEADER.NumberOfSections)
@@ -85,11 +85,11 @@ class HeadersPlug(PlugIn):
         oh["SizeOfHeapCommit"]=self._normalize(pelib.OPTIONAL_HEADER.SizeOfHeapCommit)
         oh["LoaderFlags"]=self._normalize(pelib.OPTIONAL_HEADER.LoaderFlags)
         oh["NumberOfRvaAndSizes"]=self._normalize(pelib.OPTIONAL_HEADER.NumberOfRvaAndSizes)
-        
+
         res={}
         res["dos_header"]=dos
         res["nt_header"]=nt
         res["file_header"]=fh
         res["optional_header"]=oh
-        
+
         return res

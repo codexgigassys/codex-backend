@@ -19,7 +19,7 @@ def jsonize(data):
 def log_event(event,file_hash,comments=""):
     with open("logs.csv","a+") as logfile:
         csv_writer=csv.writer(logfile)
-        csv_writer.writerow([str(dtdatetime.now().isoformat()),str(event),str(file_hash),str(comments)]) 
+        csv_writer.writerow([str(dtdatetime.now().isoformat()),str(event),str(file_hash),str(comments)])
 
 
 def process_file(file_hash):
@@ -33,7 +33,7 @@ def process_file(file_hash):
     sample=Sample()
     sample.setID(sam_id)
     sample.setBinary(res)
-    sample.setStorageVersion({}) 
+    sample.setStorageVersion({})
     lc=Launcher()
     lc.launchAnalysisByID(sample)
     log_event("process",str(file_hash))
@@ -46,7 +46,7 @@ def execute(comand):
     process.close()
     #print(preprocessed)
     return preprocessed
-        
+
 def recursive_read(object):
     files=[]
     if os.path.isdir(object):
@@ -95,7 +95,7 @@ def save_file_from_vt(hash_id):
 #returns true if a hash is md5 or sha1 valid. False otherwise
 def valid_hash(hash):
     return (len(hash)==32 or len(hash)==40) and re.search('^[a-f0-9]+$',hash) is not None
-    
+
 
 # clean hashes and search in the meta collection.
 # returns file_id if it was found. None if it was not.
@@ -131,7 +131,7 @@ def cursor_to_dict(f1,retrieve):
     l=[]
     for f in f1:
         l.append(f)
-    
+
     ret=[]
     for a in l:
         dic={}
@@ -144,15 +144,15 @@ def cursor_to_dict(f1,retrieve):
                 if type(partial_res)==type([]):
                     partial_res=None
                     break
-            
+
             legend_to_show=key.split('.')[-1]
             if (legend_to_show=="file_id"):legend_to_show="sha1"
-            
+
             if (legend_to_show=="TimeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(int(eval(partial_res),16)))
             if (legend_to_show=="timeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(partial_res))
-            
+
             dic[legend_to_show]=partial_res
-        
+
         ret.append(dic)
     return ret
 
@@ -164,28 +164,28 @@ import time
 TEST="-test_Functions"
 def testCode():
     print("*****ENTROPY*****")
-    
-    dir=os.getcwd()    
+
+    dir=os.getcwd()
     file=dir+"//test.exe"
     start_time=time.time()
     f=open(file,"rb")
-    data=f.read()    
+    data=f.read()
     elapsed_read=time.time()-start_time
-    
+
     print("File size: "+ str(len(data)))
     print("Read time: " + str(elapsed_read) + " --- Time per byte: "+ str(elapsed_read/len(data)))
     print("Entropy calculation time: "+ str(elapsed_entropy)+" --- Time per byte: "+ str(elapsed_entropy/len(data)))
     print("")
     print("Read time GB:    "+str((1073741824/len(data))*elapsed_read))
     print("Entropy time GB: "+str((1073741824/len(data))*elapsed_entropy))
-    
+
     print("")
     print("Entropy file: "+str(res))
 
 
     file=dir+"//testComp.exe"
     f=open(file,"rb")
-    data=f.read()    
+    data=f.read()
     res=getEntropy(data)
     print("Entropy file paq: "+str(res))
 
@@ -195,12 +195,12 @@ def testCode():
 #***********************TEST***************************
 import sys
 import traceback
-if(len(sys.argv)>=2): 
+if(len(sys.argv)>=2):
     if(sys.argv[1]==TEST):
-        try:    
+        try:
             print("######## Test de " + str(sys.argv[0])+" ########")
             testCode()
-    
+
         except:
             print(traceback.format_exc())
         raw_input("Presione una tecla...")

@@ -7,16 +7,16 @@ from Modules.MetaDataModule import *
 class AddImportsToTreePlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.imports_tree"
-        
+
     def getName(self):
         return "imports_tree"
-    
+
     def getVersion(self):
         return 1
-            
+
     def process(self):
         imports=self.sample.getLastValue("particular_header.imports")
         if(imports==None ):return "no_imports"
@@ -27,4 +27,4 @@ class AddImportsToTreePlug(PlugIn):
             return "added"
         else:
             return "not_added"
-        
+

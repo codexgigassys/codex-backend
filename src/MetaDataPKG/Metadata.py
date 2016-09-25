@@ -5,17 +5,17 @@ class Metadata():
     def __init__(self):
         self.data={}
         self.empty=True
-    
+
     def isEmpty(self):
         return self.empty
-                        
+
     def setData(self,data):
         self.empty=False
         self.data=data
-        
+
     def getData(self):
         return self.data
-        
+
     def getValue(self,source):
         path=source.split('.')
         root=self.data
@@ -41,8 +41,8 @@ class Metadata():
                 root[p]=aux
                 root=aux
         root[path[-1]]=value
-            
-    
+
+
 #m=Metadata()
 #m.setData({"pepe":"nosenose","manaos":"horrriibleeee","aver":{"otra":"ahoraSi"}})
 #m.setValue("pepe","nosenose")

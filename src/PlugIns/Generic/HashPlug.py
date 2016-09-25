@@ -7,13 +7,13 @@ from Utils.InfoExtractor import *
 class HashPlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getName(self):
         return "hash"
-    
+
     def getVersion(self):
         return 1
-            
+
     def process(self):
         data=self.sample.getBinary()
         dic={}

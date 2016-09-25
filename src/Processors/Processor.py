@@ -21,40 +21,40 @@ class Processor():
         self.plugins=[] #plugins a ejecutar
         self.modules={}#modulos de librerias utilizados por los  plugins
         self.metadata_to_store={}
-        
+
     def __delete__(self):
         pass
-    
-    #procesos generales que se ejecutan para todo archivo    
+
+    #procesos generales que se ejecutan para todo archivo
     def process(self):
         self._addPlugIn(FuzzyPlug.FuzzyPlug())
         self._addPlugIn(HashPlug.HashPlug())
         self._addPlugIn(SizePlug.SizePlug())
         self._addPlugIn(DescPlug.DescPlug())
         self._addPlugIn(MimePlug.MimePlug())
-        
+
         return self.metadata_to_store
-    
+
     def _executeAllPlugIns(self):
         for plug in self.plugins :
             plug.setSample(self.sample)
             plug.setModules(self.modules)
             self._executePlugIn(plug)
-    
+
     def _addPlugIn(self,plug):
         self.plugins.append(plug)
-        
+
     def _addModule(self,mod):
         self.modules[mod.getName()]=mod
-    
-    #ejecuta un plugin de forma segura    
+
+    #ejecuta un plugin de forma segura
     def _executePlugIn(self,plugin):
         info_string=plugin.getName()
         code_version=plugin.getVersion()
         path=plugin.getPath()
         if(self._version_is_update(info_string,code_version)):
             return 0
-        #calcular    
+        #calcular
         try:
             logging.debug("Running %s v.%s PlugIn",info_string,str(code_version))
             #tl=TimeLoger()
@@ -73,15 +73,15 @@ class Processor():
             print(err)
         self._update(plugin,res)
         return 0
-        
-    #chequea si la version de "info string" esta actualizada  
+
+    #chequea si la version de "info string" esta actualizada
     def _version_is_update(self,info_string,code_version):
         if(self.version==None): return False
         ver=self.version.get(info_string)
         if(ver==None): return False
         if(ver<code_version): return False
         return True
-    
+
     #guarda el resultado y la version
     def _update(self,plugin,res):
         code_version=plugin.getVersion()
@@ -91,12 +91,12 @@ class Processor():
         #self.version[name]=code_version
         self.result_version[name]=code_version
         self.metadata_to_store[info_string]=res
-        return 0                
-    
+        return 0
+
     #devuelve las versiones actualizadas
     def getVersion(self):
         return self.result_version
-    
+
     #redefine str()
     #def __str__(self):
     #    string=""
@@ -106,10 +106,10 @@ class Processor():
     #        #for i in range(6-int((len(word)+1)/8)):
     #        #    tabs+="    "
     #        string+=(str(word)+":"+tabs+str(self.result[word])+'\n')
-    #        
+    #
     #    return string
-        
-            
+
+
 #****************TEST_CODE******************
 def testCode():
     pass

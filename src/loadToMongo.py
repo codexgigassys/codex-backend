@@ -58,7 +58,7 @@ def load_to_mongo2(folder_path):
                 sample=Sample()
                 sample.setID(file_id)
                 sample.setBinary(data)
-                sample.setStorageVersion({}) 
+                sample.setStorageVersion({})
                 count+=1
                 lc.launchAnalysisByID(sample)
             else:

@@ -9,20 +9,20 @@ from Utils.InfoExtractor import *
 class ResourceEntriesPlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.res_entries"
-        
+
     def getName(self):
         return "res_entries"
-    
+
     def getVersion(self):
         return 6
-            
+
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
         if(pelib==None):return ""
-        
+
         ret = []
         if hasattr(pelib, 'DIRECTORY_ENTRY_RESOURCE'):
             i = 0
@@ -50,12 +50,12 @@ class ResourceEntriesPlug(PlugIn):
                                 entry={}
                                 entry["name"]=self._normalize(name)
                                 entry["rva"]= self._normalize(hex(resource_lang.data.struct.OffsetToData))
-                                entry["size"]=self._normalize(hex(resource_lang.data.struct.Size)) 
-                                entry["type"]=self._normalize(filetype) 
+                                entry["size"]=self._normalize(hex(resource_lang.data.struct.Size))
+                                entry["type"]=self._normalize(filetype)
                                 entry["lang"]=self._normalize(lang)
                                 entry["sublang"]=self._normalize(sublang)
                                 entry["sha1"]=SHA1(data)
                                 ret.append(entry)
-                                
+
         return ret
-        
+

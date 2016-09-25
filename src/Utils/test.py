@@ -5,9 +5,9 @@
 def test(TEST,function):
     import sys
     import traceback
-    if(len(sys.argv)>=2): 
+    if(len(sys.argv)>=2):
         if(sys.argv[1]==TEST):
-            try:    
+            try:
                 print("[--------------- Test de " + str(sys.argv[0])+" -------------]")
                 function()
             except Exception,e:
@@ -22,9 +22,9 @@ def test(TEST,function):
 #****************TEST_CODE******************
 def probando():
     print("testeando")
-    
+
 def testCode():
     test("-test_test",probando)
-    
+
 #****************TEST_EXECUTE******************
 test("-test_test",testCode)

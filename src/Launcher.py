@@ -17,17 +17,17 @@ import logging
 from secrets import env
 
 class Launcher():
-    
+
     def __init__(self):
         formato='[%(asctime)-15s][%(levelname)s] %(message)s'
         path=os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
         logfile=os.path.join(path,"launcher.log")
         logging.basicConfig(format=formato,filename=logfile, level=logging.INFO)
-        
+
         self.vc=VersionController()
         self.pc=PackageController()
         self.mdc=MetaController()
-        
+
         def launchOnlyHashingByID(self,sample):
             sample.setPackageController(self.pc)
             sample.setMetaController(self.mdc)
@@ -41,59 +41,59 @@ class Launcher():
             processor=ProcessorFactory().getHashProcessor(category,sample)
             result_dic=processor.process()
             result_version=processor.getVersion()
-            
-            if(len(result_version)>0):    
+
+            if(len(result_version)>0):
                 logging.debug("Updating metadata")
-                    
+
                 if(self.mdc.write(sample.getID(),result_dic)!=0):
                     logging.error("Error writing Metadata to DB, sample:%s",sample.getID())
                     return -1
                 logging.debug("Metadata writed in DB")
-                
+
                 self.vc.updateVersion(sample.getID(),result_version)
                 logging.debug("Versions writed to DB")
             else:
-                
+
                 logging.debug("Nothing to update")
-            
+
             logging.debug("Analysis Finished OK")
             return 0
-    
+
     def launchAnalysisByID(self,sample):
             logging.debug("Launching Analysis on sample:%s",sample.getID())
             sample.setPackageController(self.pc)
             sample.setMetaController(self.mdc)
             sample.setVersionController(self.vc)
-            
+
             category=sample.getCategory()
             if(category==None):
                 category=Cataloger().catalog(sample.getBinary())
                 logging.debug("Category not found in DB, categorized as %s",str(category))
             else:
                 logging.debug("Category found in DB, categorized as %s",str(category))
-        
+
             processor=ProcessorFactory().createProcessor(category,sample)
             result_dic=processor.process()
             result_version=processor.getVersion()
-            
-            if(len(result_version)>0):    
+
+            if(len(result_version)>0):
                 logging.debug("Updating metadata")
-                    
+
                 if(self.mdc.write(sample.getID(),result_dic)!=0):
                     logging.error("Error writing Metadata to DB, sample:%s",sample.getID())
                     return -1
                 logging.debug("Metadata writed in DB")
-                
+
                 self.vc.updateVersion(sample.getID(),result_version)
                 logging.debug("Versions writed to DB")
             else:
-                
+
                 logging.debug("Nothing to update")
-            
+
             logging.debug("Analysis Finished OK")
             return 0
 
-                    
+
 #****************TEST_CODE******************
 from pymongo import MongoClient
 import gridfs
@@ -114,15 +114,15 @@ def testCode():
         lc.launchFileAnalitics((fp,data))
         print("")
     print("")
-    
+
 #-----------------------------------------------
 def testCode2():
     object="../processed/VirusShare_00000.zip"
-    #abriendo el paquete zipeado 
+    #abriendo el paquete zipeado
     fd=open(object,'r')
     zf= ZipFile(fd)
     names=zf.namelist() #nombre de los archivos comprimidos
-    
+
     lc=Launcher()
     count=0
     reset=0
@@ -171,9 +171,9 @@ def testCode3():
         if(reset>=1000):
             print(str(count)+" procesados")
             reset=0
-    
+
     print(str(count)+" procesados")
-    
+
 #----------------------------------------------
 def testCode4():
     inicio=10569000
@@ -192,8 +192,8 @@ def testCode4():
             print(str(count)+" procesados")
             reset=0
     print(str(count)+" procesados")
-    
-#----------------------------------------------    
+
+#----------------------------------------------
 def testCode5():
     lc=Launcher()
     sample=Sample()
@@ -204,7 +204,7 @@ def testCode5():
     #print(sample.getCalculatedMetadata().getData())
     #print(sample.getCalculatedVersion())
     #print(sample.getStorageVersion())
-    
+
 #----------------------------------------------
 def testCode6():
     inicio=0
@@ -227,8 +227,8 @@ def testCode6():
             print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))+" procesados:"+str(count/1000)+"K")
             reset=0
     print(str(count)+" procesados")
-    
-    
+
+
 #****************TEST_EXECUTE******************
 test("-test_Launcher",testCode6)
 

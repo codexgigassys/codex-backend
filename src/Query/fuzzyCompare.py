@@ -42,8 +42,8 @@ for a in l:
         res=ssdeep.compare(a["fuzzy_hash"],b["fuzzy_hash"])
         if(res>0):
             print("%s - %s - %s"%(res,a["file_id"],b["file_id"]))
-            
-    print("***** %s ******"%(count,))        
-            
+
+    print("***** %s ******"%(count,))
+
             #raw_input()
 

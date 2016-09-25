@@ -25,10 +25,10 @@ def process_file(file_hash):
     sample=Sample()
     sample.setID(sam_id)
     sample.setBinary(res)
-    sample.setStorageVersion({}) 
+    sample.setStorageVersion({})
     lc=Launcher()
     lc.launchAnalysisByID(sample)
-    
+
     return 0
 
 def add_file_from_vt(hash_id):
@@ -46,9 +46,9 @@ def add_file_from_vt(hash_id):
         pc.append(file_id,data_bin,True)
         #print("Added: %s" % (file_id,))
     return file_id
-    
+
 def fuzz_search_fast(id,p,fuzz):
-    #print("searching fuzz")   
+    #print("searching fuzz")
     block=int(fuzz.split(':')[0])
     lap=500
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
@@ -74,8 +74,8 @@ def fuzz_search_fast(id,p,fuzz):
             print str(e)
             #print(str(res)+"------"+str(a[p])+"-----"+str(a["file_id"]))
             continue
-    
-    #print("ordenando")    
+
+    #print("ordenando")
     order=sorted(dic.items(),key=operator.itemgetter(1))
     ret=[]
     count=0
@@ -83,10 +83,10 @@ def fuzz_search_fast(id,p,fuzz):
         ret.append(o[0])
         count+=1
         if count>=100: break
-    #print("fianlizado")    
+    #print("fianlizado")
     return ret
-    
-    
+
+
 
 def searchFull(search,limit=0,retrieve={}):
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
@@ -98,11 +98,11 @@ def searchFull(search,limit=0,retrieve={}):
         f1=coll_meta.find(search,retrieve)
     else:
         f1=coll_meta.find(search,retrieve).limit(limit)
-    
+
     l=[]
     for f in f1:
         l.append(f)
-    
+
     ret=[]
     for a in l:
         #print(a)
@@ -116,17 +116,17 @@ def searchFull(search,limit=0,retrieve={}):
                 if type(partial_res)==type([]):
                     partial_res=None
                     break
-            
+
             legend_to_show=key.split('.')[-1]
             if (legend_to_show=="file_id"):legend_to_show="sha1"
-            
+
             if (legend_to_show=="TimeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(int(eval(partial_res),16)))
             if (legend_to_show=="timeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(partial_res))
-            
+
             dic[legend_to_show]=partial_res
-        
+
         ret.append(dic)
-        
+
     return ret
 
 def translate_id(id,str_value):
@@ -138,7 +138,7 @@ def translate_id(id,str_value):
         elif(largo==40):id=2
         elif(largo==64):id=3
         else: id=1
-        
+
     if(id==12):
         str_value=clean_hash(str_value)
         largo=len(str_value)
@@ -146,7 +146,7 @@ def translate_id(id,str_value):
         elif(largo==40):id=13
         elif(largo==64):id=14
         else: id=12
-        
+
     dic=tree_menu.ids[id]
     path=str(dic["path"])
     type_format=dic["type"]
@@ -177,13 +177,13 @@ def translate_id(id,str_value):
         value="'%s'"%(aux,)
     elif type_format == "s_string_nl":
         aux=str(urllib.unquote(str_value).decode('utf8'))
-        value="'%s'"%(aux,)    
+        value="'%s'"%(aux,)
     else:
         value = None
     return path,value
 
 def search_by_id(data,limit,columns=[],search_on_vt=False):
-    #fecha - mime - empaquetado se necesitan para estadisticas 
+    #fecha - mime - empaquetado se necesitan para estadisticas
     if(len(columns)==0):
         retrieve={"file_id":1,"description":1,"size":1,
                 "mime_type":1,"particular_header.packer_detection":1,"particular_header.headers.file_header.TimeDateStamp":1}
@@ -194,7 +194,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             dic=tree_menu.ids[int(col)]
             path=str(dic["path"])
             retrieve[path]=1
-        
+
     search_list=data.split('&')
     #print(len(search_list))
     query_list=[]
@@ -218,9 +218,9 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             av_collection_query_list.append({p:{"$regex":v,"$options":'i'}})
             continue
         query_list.append({p:v})
-    
+
     if(len(query_list)>0 and len(av_collection_query_list)==0):
-        query={"$and":query_list}    
+        query={"$and":query_list}
         res=searchFull(query,limit,retrieve)
         if(hash_search and len(res)==0 and search_on_vt):#buesqueda en VT
             sha1=add_file_from_vt(hash_for_search)
@@ -228,9 +228,9 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             process_file(sha1)
             query={"file_id":sha1}
             res=searchFull(query,1,retrieve)
-        return res 
+        return res
 
-    if(len(av_collection_query_list)>0):    
+    if(len(av_collection_query_list)>0):
         av_query={"$and":av_collection_query_list}
 
     #res= ["2fa9672b7507f0e983897cfd18b24d3810bb2160","hashfile2"]
@@ -243,7 +243,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
         db=client[env["db_metadata_name"]]
         av_coll=db.av_analysis
-        
+
         if limit==0:
             av_res=av_coll.find(av_query,{"sha1":1})
         else:
@@ -252,18 +252,18 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         for f in av_res:
             lista_av.append(f)
         #print(lista_av)#resultados de la busqueda de avs
-               
+
         res=[]
         for l in lista_av:
             query_list_for_combinated=[]
             sha1=l.get("sha1")
             query_list_for_combinated.append({"hash.sha1":sha1})
             query_list_for_combinated=query_list_for_combinated+query_list
-            query={"$and":query_list_for_combinated}    
+            query={"$and":query_list_for_combinated}
             search=searchFull(query,1,retrieve)
             res=res+search
         return res
- 
+
 def count_documents():
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
     db=client[env["db_metadata_name"]]

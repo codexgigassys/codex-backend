@@ -28,7 +28,7 @@ for a in l:
         continue
     if(res>=50):
         print("%s - %s"%(res,a["file_id"]))
-    
+
     #print count
     #reset+=1; count+=1
     #if(reset>=1000):

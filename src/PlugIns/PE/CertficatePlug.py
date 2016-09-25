@@ -17,26 +17,26 @@ from pyasn1_modules import rfc2315
 class CertficatePlug(PlugIn):
     def __init__(self,sample=None):
         PlugIn.__init__(self,sample)
-        
+
     def getPath(self):
         return "particular_header.certificate"
-                
+
     def getName(self):
         return "certificate"
-    
+
     def getVersion(self):
         return 2
-            
+
     def process(self):
         raw_certificate_file = "./certPlug.temp"
         pelib=self._getLibrary(PEFileModule().getName())
         if(pelib==None):return ""
-                
+
         # reset the offset to the table containing the signature
         sigoff = 0
         # reset the lenght of the table
         siglen = 0
-    
+
         # search for the 'IMAGE_DIRECTORY_ENTRY_SECURITY' directory
         # probably there is a direct way to find that directory
         # but I am not aware of it at the moment
@@ -50,12 +50,12 @@ class CertficatePlug(PlugIn):
                 #print(siglen)
                 if (siglen>=8):
                     found=True
-        
+
         if not found: return {}
-        
+
         bin_data=self.sample.getBinary()
-        totsize=len(bin_data)      
-    
+        totsize=len(bin_data)
+
         if sigoff < totsize:
             # hmmm, okay we could possibly read this from the PE object
             # but is straightforward to just open the file again
@@ -68,7 +68,7 @@ class CertficatePlug(PlugIn):
             thesig = bin_data[sigoff:(sigoff+siglen)]
             # close the file
             #f.close()
-    
+
             # now the 'thesig' variable should contain the table with
             # the following structure
             #   DWORD       dwLength          - this is the length of bCertificate
@@ -76,25 +76,25 @@ class CertficatePlug(PlugIn):
             #   WORD        wCertificateType
             #   BYTE        bCertificate[dwLength] - this contains the PKCS7 signature
             #                                    with all the
-    
+
             # lets dump only the PKCS7 signature (without checking the lenght with dwLength)
-            
+
             res={}
-            
+
             length_raw=thesig[:4]
             revision_raw=thesig[4:6]
             type_raw=thesig[6:8]
             raw_certificate=thesig[8:]
-            
+
             res["length"]=int(binascii.hexlify(length_raw), 16)
             res["revision"]=int(binascii.hexlify(revision_raw), 16)
             res["type"]=int(binascii.hexlify(type_raw), 16)
             res["signed"]=True
-            
+
             fd=open(raw_certificate_file,"w")
             fd.write(raw_certificate)
             fd.close()
-            
+
             cmd=["openssl","pkcs7","-inform","DER","-print_certs","-text","-in",raw_certificate_file]
             try:
                 output=check_output(cmd)
@@ -102,12 +102,12 @@ class CertficatePlug(PlugIn):
                 print str(e)
                 return {}
             #print(output)
-            
-            
+
+
             certificates=[]
             one_cert={}
             iterator=iter(output.split('\n'))
-            
+
             while True:
                 try:
                     actual=iterator.next().strip()
@@ -123,9 +123,9 @@ class CertficatePlug(PlugIn):
                         hasta=actual.find("(")
                         serial=actual[len("Serial Number:"):hasta]
                         serial=serial.strip()
-                    else:    
+                    else:
                         serial=iterator.next().strip()
-                    #print("##%s##"%serial)  
+                    #print("##%s##"%serial)
                     one_cert["serial"]=serial.lower()
                 elif(actual.find("Issuer:")==0):
                     s_pos=actual.find(", O=")
@@ -138,7 +138,7 @@ class CertficatePlug(PlugIn):
                     one_cert["issuer"]=issuer_o.lower()
                 elif(actual.find("Validity")==0):
                     val_in=iterator.next().strip()
-                    val_fin=iterator.next().strip()        
+                    val_fin=iterator.next().strip()
                     one_cert["validity_beg"]=val_in[12:].lower()
                     one_cert["validity_end"]=val_fin[12:].lower()
                 elif(actual.find("Subject:")==0):
@@ -150,36 +150,36 @@ class CertficatePlug(PlugIn):
                     else:
                         subject_o=""
                     one_cert["subject"]=subject_o.lower()
-            
+
             if(len(one_cert)>0):
                 certificates.append(one_cert)
             res["certificates"]=certificates
             return res
-            
+
         else:
-            return {}    
-                        
+            return {}
+
     def process2(self):
         pe=self._getLibrary(PEFileModule().getName())
-        if(pe==None):return "" 
+        if(pe==None):return ""
         #  get the security directory entry
         address = pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']].VirtualAddress
 
-        if address > 0:  
+        if address > 0:
         # Always in DER format AFAIK
             derData = pe.write()[address + 8:]
         else:
             print("address 0")
-            return    
+            return
 
         (contentInfo, rest) = decoder.decode(derData, asn1Spec=rfc2315.ContentInfo())
 
         contentType = contentInfo.getComponentByName('contentType')
 
-        if contentType == rfc2315.signedData:  
+        if contentType == rfc2315.signedData:
             signedData = decode(contentInfo.getComponentByName('content'),asn1Spec=rfc2315.SignedData())
 
-        for sd in signedData:  
+        for sd in signedData:
             if sd == '': continue
 
             signerInfos = sd.getComponentByName('signerInfos')
@@ -188,7 +188,7 @@ class CertficatePlug(PlugIn):
                 issuer = issuerAndSerial.getComponentByName('issuer').getComponent()
                 for i in issuer:
                     for r in i:
-                        at = r.getComponentByName('type')                       
+                        at = r.getComponentByName('type')
                         if rfc2459.id_at_countryName == at:
                             cn = decode(r.getComponentByName('value'),asn1Spec=rfc2459.X520countryName())
                             print(cn[0])
@@ -202,12 +202,12 @@ class CertficatePlug(PlugIn):
                             cn = decode(r.getComponentByName('value'),asn1Spec=rfc2459.X520CommonName())
                             print(cn[0].getComponent())
                         else:
-                            print at        
-        
-        
+                            print at
+
+
 
 if __name__=="__main__":
-    data=open(source_path+"/Test_files/certificate5.codex","rb").read()    
+    data=open(source_path+"/Test_files/certificate5.codex","rb").read()
     sample=Sample()
     sample.setBinary(data)
     modules={}
