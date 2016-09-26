@@ -423,11 +423,30 @@ def api_batch_process_debug_file():
         if hash_id is None:
             continue
         data="1="+hash_id
+        if(len(hash_id)==40 or len(hash_id)==32):
+            pc=PackageController()
+            res=pc.getFile(hash_id)
+            if res is not None and len(SearchModule.search_by_id(data,1,[],False))==0:
+                print "Processing right now: "+str(hash_id)
+                process_file(hash_id)
+                if(env['auto_get_av_result']):
+                    get_av_result(hash_id)
+                    continue
         res=SearchModule.search_by_id(data,1,[],False)
         if(len(res)==0):
-            print "downloading "+str(hash_id)+" from vt"
+            print "process_debug(): metadata of "+str(hash_id)+" was not found. We will look in Pc. hash length: "+str(len(hash_id))
+            if(len(hash_id)==40 or len(hash_id) == 32):
+                pc=PackageController()
+                res=pc.getFile(hash_id)
+                if res is not None:
+                    print "process_debug(): hash was found ("+str(hash_id)+")"
+                else:
+                    print "process_debug(): hash was not found("+str(hash_id)+")"
+            print "process_debug():"
+            print "process_debug(): going to search "+str(hash_id)+" in vt"
             sha1=SearchModule.add_file_from_vt(hash_id)
             if(sha1==None):
+                print "process_debug(): sha1 is None: "+str(hash_id)
                 not_found.append(hash_id)
                 continue
             else:

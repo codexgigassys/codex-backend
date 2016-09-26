@@ -32,12 +32,26 @@ class PackageController():
     # returns searched file
     # returns None if it does not exist.
     def getFile(self,file_id):
-        f=self.fs.find_one({"filename":file_id})
+        if( len(file_id) == 40):
+            f=self.fs.find_one({"filename":file_id})
+        elif(len(file_id) == 32):
+            f=self.fs.find_one({"md5":file_id})
+        else:
+            print "PackageController: invalid file_id:"+str(file_id)+"(len="+str(len(file_id))+")"
+            f=None
         if f==None:
-            if TEMPORAL_FILES_DB==False: return None
+            if TEMPORAL_FILES_DB==False:
+                return None
             else:
-                f=self.fs_temp.find_one({"filename":file_id})
-                if f==None: return None
+                if( len(file_id)==40):
+                    f=self.fs_temp.find_one({"filename":file_id})
+                elif(len(file_id) == 32):
+                    f=self.fs_temp.find_one({"md5":file_id})
+                else:
+                    f=None
+                    print "PackageController tmp: invalid file_id"+str(file_id)
+                if f==None:
+                    return None
         return f.read()
 
 

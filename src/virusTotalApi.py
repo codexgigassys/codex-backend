@@ -10,7 +10,7 @@ from secrets import env
 
 
 def download_from_virus_total(file_id):
-    print "Searching "+str(file_id)+" in VT."
+    print "download_form_virus_total(): "+str(file_id)
     apikey = env["vt_apikey"]
     params = {'apikey':apikey,'hash':file_id}
     try_again = True
@@ -36,10 +36,13 @@ def download_from_virus_total(file_id):
         elif(largo==64):
             check=hashlib.sha256(downloaded_file).hexdigest()
         else: return None
-        if(check!=file_id):return None
+        if(check!=file_id):
+            print "download_from_virus_total(): check!="+str(file_id)
+            return None
         return downloaded_file
 
     else:
+        print "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")"
         return None
 
 def parse_vt_response(json_response):

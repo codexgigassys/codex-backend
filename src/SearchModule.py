@@ -35,8 +35,10 @@ def process_file(file_hash):
 def add_file_from_vt(hash_id):
     downloaded_file=download_from_virus_total(hash_id)
     if(downloaded_file==None):
+        print "add_file_from_vt(): "+str(hash_id)+" not found in VT."
         return None
 
+    print "add_file_from_vt(): downloaded_file is not None."+str(hash_id)
     data_bin=downloaded_file
     file_id=hashlib.sha1(data_bin).hexdigest()
     #print "file_id="+str(file_id)
@@ -44,7 +46,11 @@ def add_file_from_vt(hash_id):
     res=pc.searchFile(file_id)
     if(res==None): # File not found. Add it to the package.
         pc.append(file_id,data_bin,True)
+        print str(hash_id)+" added to DB from VT."
         #print("Added: %s" % (file_id,))
+    else:
+        print "add_file_from_vt(): "+str(hash_id)+" was found in the DB and asked in VT: BUG. Going to process right now."
+        process_file(file_id)
     return file_id
 
 def fuzz_search_fast(id,p,fuzz):
@@ -236,6 +242,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         query={"$and":query_list}
         res=searchFull(query,limit,retrieve)
         if(hash_search and len(res)==0 and search_on_vt):# searching in VT.
+            print "search_by_id() -> add_file_from_vt()"
             sha1=add_file_from_vt(hash_for_search)
             if sha1==None: return []
             process_file(sha1)
