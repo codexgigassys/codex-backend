@@ -16,7 +16,7 @@ class PackageController():
         self.fs=gridfs.GridFS(db)
         if(TEMPORAL_FILES_DB):
             client_temp=MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
-            db_temp=client[env["db_temp_files_name"]]
+            db_temp=client_temp[env["db_temp_files_name"]]
             self.fs_temp=gridfs.GridFS(db_temp)
 
     def __delete__(self):
