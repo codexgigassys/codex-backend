@@ -103,7 +103,7 @@ def searchFull(search,limit=0,retrieve={}):
     if limit==0:
         f1=coll_meta.find(search,retrieve)
     else:
-        f1=coll_meta.find(search,retrieve).limit(limit*2)
+        f1=coll_meta.find(search,retrieve).limit(limit)
 
     l=[]
     for f in f1:
@@ -133,10 +133,6 @@ def searchFull(search,limit=0,retrieve={}):
 
         ret.append(dic)
 
-        if(limit > 0):
-            return res[0:limit]
-        else:
-            return res
 
 def translate_id(id,str_value):
     str_value=str_value.replace("+"," ")
@@ -282,7 +278,10 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             query={"$and":query_list_for_combinated}
             search=searchFull(query,1,retrieve)
             res=res+search
-        return res
+        if(limit > 0):
+            return res[0:limit]
+        else:
+            return res
 
 def count_documents():
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
