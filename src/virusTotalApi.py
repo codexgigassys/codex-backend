@@ -82,7 +82,6 @@ def get_vt_av_result(file_id):
     except Exception, e:
         print str(e)
         return None
-    parsed_response = parse_vt_response(response.json())
     try:
         parsed_response = parse_vt_response(response.json())
     except Exception, e:
