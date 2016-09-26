@@ -566,7 +566,7 @@ def export_metadata():
 @route('/api/v1/av_result', method='GET')
 def get_result_from_av():
     hash_id=clean_hash(request.query.file_hash)
-    if len(file_hash) is None:
+    if hash_id is None:
         response.code = 400
         return jsonize({'message':'Invalid hash format'})
     if(len(hash_id)!=40):
