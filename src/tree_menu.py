@@ -187,7 +187,85 @@ tree=[
         ]},
     #{"name":"PDF","children":[]},
     #{"name":"Image","children":[]}
-    ]
+    {"name":"Dynamic","children":[
+        {"name":"Started","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+        {"name":"Signatures","children":[
+            {"name":"Signature Description","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Signature Severity","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+            ]},
+        {"name":"Network","children":[
+            {"name":"UDP","children":[
+                {"name":"UDP Destination Address","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"UDP Destination Port","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                {"name":"UDP Source Port","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                ]},
+            {"name":"HTTP","children":[
+                {"name":"URL","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"User-Agent","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Method","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Host","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Version","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Path","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Data","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"HTTP Port","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                ]},
+            {"name":"TCP","children":[
+                {"name":"TCP Destination","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"TCP Port","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                ]},
+            {"name":"Host","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"DNS","children":[
+                {"name":"DNS Type","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"DNS Request","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"DNS Answer Data","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"DNS Answer Type","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                ]},
+            {"name":"Domains","children":[
+                {"name":"Domain IP","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Domain name","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                ]},
+            {"name":"Dead Host","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            ]},
+        {"name":"Dropped","children":[
+            {"name":"Dropped MD5","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Dropped SHA1","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Dropped SHA2","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Dropped Filepath","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Dropped Type","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+            {"name":"Dropped PID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+            ]},
+        {"name":"Behavior","children":[
+            {"name":"Generic","children":[
+                {"name":"Process Path","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Process Name","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Process PID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                {"name":"Process PPID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                {"name":"Summary","children":[
+                    {"name":"File Created","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"File Recreated","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"DLL Loaded","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"File Opened","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"Command Line","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"File Written","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"File Failed","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    {"name":"GUID","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    ]},
+                {"name":"API Stats","children":[
+                    {"name":"API Stats PID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                    {"name":"API Stats API","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                    ]},
+                ]},
+            {"name":"Process Tree","children":[
+                {"name":"Process Tree Track","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Process Tree PID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                {"name":"Process Tree Name","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Process Tree cmd","id":0,"type":"string","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+                {"name":"Process Tree PPID","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                {"name":"Process Tree Children","id":0,"type":"number","example":"not implemented","children":[],"searchable":True,"projectable":True, "call_func": ""},
+                ]},
+            ]},
+        ]},
+   ]
 
 ids={
         1:{"path":"hash.md5","type":"string", "do": "clean_hash" },
