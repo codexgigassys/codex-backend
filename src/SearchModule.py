@@ -97,7 +97,7 @@ def searchFull(search,limit=0,retrieve={}):
     if limit==0:
         f1=coll_meta.find(search,retrieve)
     else:
-        f1=coll_meta.find(search,retrieve).limit(limit)
+        f1=coll_meta.find(search,retrieve).limit(limit*2)
 
     l=[]
     for f in f1:
@@ -127,7 +127,10 @@ def searchFull(search,limit=0,retrieve={}):
 
         ret.append(dic)
 
-    return ret
+        if(limit > 0):
+            return res[0:limit]
+        else:
+            return res
 
 def translate_id(id,str_value):
     str_value=str_value.replace("+"," ")
