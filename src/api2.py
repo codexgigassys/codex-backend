@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,process_date
 import re
 from Utils.InfoExtractor import *
 from loadToMongo import *
@@ -150,7 +150,7 @@ def get_metadata():
         return jsonize({'message':'Metadata not found in the database'})
     log_event("metadata",file_hash)
 
-    return dumps(res)
+    return dumps(change_date_to_str(res))
 
 
 @route('/api/v1/logs', method='GET')
@@ -328,12 +328,21 @@ def upload_file(data_bin):
 def add_file():
     #tags = request.forms.get('name')
     upload = request.files.get('file')
+    try:
+        form_date = process_date(request.forms.get('file_date'))
+    except ValueError:
+        #response.status = 422 #status can't be added because angular will not show the message.
+        return jsonize({'message': 'Invalid date format'})
+    print "date="+str(form_date)
+    if form_date is None:
+        form_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     name = upload.filename
     data_bin=upload.file.read()
     file_id=hashlib.sha1(data_bin).hexdigest()
     print "file_id="+str(file_id)
     status=upload_file(data_bin)
     process_file(file_id) #ToDo: add a redis job
+    update_date(file_id,form_date)
     if(status == "ok"):
         return jsonize({'message': 'Added with '+str(file_id)})
     elif(status == "already exists"):
@@ -546,11 +555,11 @@ def get_result_from_av():
         if(len(res)==0):
             response.code = 400
             return jsonize({'message':'File not found'})
-        else:    
-            sha1=res[0]["sha1"]    
+        else:
+            sha1=res[0]["sha1"]
     else:
         sha1=hash_id
-        
+
     av_result=get_av_result(sha1)
     if(av_result==None): return jsonize("Can not get analysis")
 

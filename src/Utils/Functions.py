@@ -16,10 +16,48 @@ import json
 def jsonize(data):
     return json.dumps(data, sort_keys=False, indent=4)
 
+# Given a date in str (epoch or ISO)
+# will return a datetime object.
+def process_date(str_date):
+    if str_date is None:
+        return None
+    str_date=str_date.strip()
+    if str_date=="":
+        return None
+    if str_date.isdigit():
+        return dtdatetime.fromtimestamp(int(str_date))
+    else:
+        return dtdatetime.strptime(str_date,"%Y-%m-%d %H:%M:%S")
+
+# Checks if the meta has a date. If it doesn't
+# it updates it. If a date is found, the oldest
+# date will get saved.
+def update_date(file_id,date):
+    if file_id is None or date is None:
+        return
+    mdc=MetaController()
+    res=mdc.read(file_id)
+    if res is not None:
+        if res.get('date') is not None:
+            if(res["date"] > date):
+                mdc.write(file_id,{"date": date})
+                return
+        else:
+            mdc.write(file_id,{"date": date})
+
+
 def log_event(event,file_hash,comments=""):
     with open("logs.csv","a+") as logfile:
         csv_writer=csv.writer(logfile)
         csv_writer.writerow([str(dtdatetime.now().isoformat()),str(event),str(file_hash),str(comments)])
+
+
+def change_date_to_str(res):
+    if res.get("date") is None:
+        return res
+    else:
+        res["date"]=str(res.get('date'))
+        return res
 
 
 def process_file(file_hash):
