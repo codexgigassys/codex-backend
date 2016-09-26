@@ -414,8 +414,6 @@ ids={
     143:{"path":"particular_header.certificate.certificates.validity_beg","type":"string"},
     144:{"path":"particular_header.certificate.certificates.validity_end","type":"string"},
     145:{"path":"particular_header.certificate.signed","type":"check"},
-    #146 dont use, allready use
-
     10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
     }
 
