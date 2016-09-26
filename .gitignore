@@ -1,6 +1,8 @@
 #Ignore backup files and compiled python
 *~
 *.pyc
+*.wpr
+*.wpu
 
 #Ignore TEMP files except for readme.txt
 TEMP/*
