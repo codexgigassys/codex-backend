@@ -397,6 +397,11 @@ def api_batch_process_debug_file():
     yield "<html><body><pre>"
     yield "Running Batch process\n"
     file_hashes=request.forms.get('file_hash')
+    if file_hashes is None:
+        response.status=422
+        print "file_hash is missing"
+        yield "file_hash parameter is missing"
+
     #print(dir(request.forms))
     #print(request.forms.keys())
     # transform file_hashes in a list of hashes.
@@ -444,6 +449,8 @@ def api_batch_process_file():
     #print(dir(request.forms))
     #print(request.forms.keys())
     # transform file_hashes in a list of hashes
+    if file_hashes is None:
+        return jsonize({"Error: file_hash parameter is missing."})
     not_found=[]
     added_to_queue=0
     downloaded_from_vt=0
