@@ -34,6 +34,7 @@ from redis import Redis
 from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,process_date
 import re
 from Utils.InfoExtractor import *
+from Api.last_uploaded import *
 from loadToMongo import *
 import cgi
 

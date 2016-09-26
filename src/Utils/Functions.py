@@ -13,6 +13,14 @@ from Launcher import *
 import csv
 import json
 
+def to_bool(string):
+    string=string.strip().lower()
+    if string=="false" or string is None:
+        return False
+    else:
+        return bool(string)
+
+
 def jsonize(data):
     return json.dumps(data, sort_keys=False, indent=4)
 
@@ -53,11 +61,14 @@ def log_event(event,file_hash,comments=""):
 
 
 def change_date_to_str(res):
-    if res.get("date") is None:
-        return res
-    else:
-        res["date"]=str(res.get('date'))
-        return res
+    if res is None:
+        return None
+    for date_key in ["date","upload_date"]:
+        if res.get(date_key) is None:
+            pass
+        else:
+            res[date_key]=str(res.get(date_key))
+    return res
 
 
 def process_file(file_hash):

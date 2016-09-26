@@ -40,6 +40,24 @@ class PackageController():
                 if f==None: return None
         return f.read()
 
+
+    def last_updated(self,number):
+        if(TEMPORAL_FILES_DB):
+            client_fs = MongoClient(env["files"]["host"],env["files"]["port"])
+        else:
+            client_fs = MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
+        db_files = client_fs[env["db_files_name"]]
+        collection_files = db_files["fs.files"].find().sort([("_id", -1)]).limit(number)
+        result=[]
+        for document in collection_files:
+            sha1=document.get('filename')
+            md5=document.get('md5')
+            tmp_doc={}
+            tmp_doc["hash"] = {"sha1": sha1, "md5": md5}
+            tmp_doc["upload_date"] = document.get('uploadDate') 
+            result.append(tmp_doc)
+        return result
+
     # returns None if the file can't be found on the DB.
     # 0 if the file exists.
     # 1 if the file exists but can't be downloaded.
