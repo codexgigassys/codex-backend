@@ -529,12 +529,22 @@ def export_metadata():
 
 @route('/api/v1/av_result', method='GET')
 def get_result_from_av():
-    file_hash=clean_hash(request.query.file_hash)
-    if len(file_hash) != 40:
+    hash_id=clean_hash(request.query.file_hash)
+    if len(file_hash) is None:
         response.code = 400
-        return jsonize({'message':'Invalid hash format (use sha1)'})
-
-    av_result=get_av_result(file_hash)
+        return jsonize({'message':'Invalid hash format'})
+    if(len(hash_id)!=40):
+        data="1="+str(hash_id)
+        res=SearchModule.search_by_id(data,1,[],True)
+        if(len(res)==0):
+            response.code = 400
+            return jsonize({'message':'File not found'})
+        else:    
+            sha1=res[0]["sha1"]    
+    else:
+        sha1=hash_id
+        
+    av_result=get_av_result(sha1)
     if(av_result==None): return jsonize("Can not get analysis")
 
     return jsonize("File processed")
