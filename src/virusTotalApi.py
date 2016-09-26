@@ -10,6 +10,7 @@ from secrets import env
 
 
 def download_from_virus_total(file_id):
+    print "Searching "+str(file_id)+" in VT."
     apikey = env["vt_apikey"]
     params = {'apikey':apikey,'hash':file_id}
     try_again = True
@@ -79,6 +80,13 @@ def get_vt_av_result(file_id):
         print str(e)
         return None
     parsed_response = parse_vt_response(response.json())
+    try:
+        parsed_response = parse_vt_response(response.json())
+    except Exception, e:
+        print "response.json() error. get_vt_av_result("+str(file_id)+")"
+        print str(e)
+        print "response="+str(response)
+        return None
     return parsed_response
 
 def get_av_result(file_id):
