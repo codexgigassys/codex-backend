@@ -43,9 +43,9 @@ class PackageController():
 
     def last_updated(self,number):
         if(TEMPORAL_FILES_DB):
-            client_fs = MongoClient(env["files"]["host"],env["files"]["port"])
-        else:
             client_fs = MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
+        else:
+            client_fs = MongoClient(env["files"]["host"],env["files"]["port"])
         db_files = client_fs[env["db_files_name"]]
         collection_files = db_files["fs.files"].find().sort([("_id", -1)]).limit(number)
         result=[]
