@@ -32,13 +32,12 @@ class SectionsPlug(PlugIn):
         number=0
 
         for section in pelib.sections:
-            #print(section)
             dic_sec={}
-            dic_sec["name"]=repr(section.Name)
+            dic_sec["name"]=section.Name.rstrip('\0')
 
-            dic_sec["size_raw_data"]=int(hex(section.SizeOfRawData),16)
-            dic_sec["virtual_size"]=int(hex(section.Misc_VirtualSize ),16)
-            dic_sec["characteristics"]=hex(section.Characteristics)
+            dic_sec["size_raw_data"]=section.SizeOfRawData
+            dic_sec["virtual_size"]=section.Misc_VirtualSize
+            dic_sec["characteristics"]=section.Characteristics
 
             if ( section.__dict__.get('IMAGE_SCN_MEM_WRITE', False)  and
                     section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):

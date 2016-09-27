@@ -26,7 +26,8 @@ tree=[
                 ]},
             {"name":"Sections","children":[
                 {"name":"Section Hash","id":12,"type":"string", "example": "72c0e35b5ae8124264f3694331f843a2", "children":[],"searchable":True,"projectable":False, "call_func": ""},
-                {"name":"Section name","id":15,"type":"string","example":".text\\x00\\x00\\x00","children":[],"searchable":True,"projectable":False, "call_func": "", "lower": False },
+                {"name":"Section name","id":15,"type":"string","example":".text","children":[],"searchable":True,"projectable":False, "call_func": "", "lower": False },
+                {"name":"Section name (hex)","id":146,"type":"string","example":"2E 74 65 78 74 00 00 00","children":[],"searchable":True,"projectable":False, "call_func": "", "lower": False },
                 {"name":"Section size of RAW data","id":16,"type":"number", "example": "78336", "children":[],"searchable":True,"projectable":False, "call_func": ""},
                 {"name":"Section virtual size","id":17,"type":"number","example": "81920", "children":[],"searchable":True,"projectable":False, "call_func": ""},
                 #{"name":"Section characteristics","id":18,"type":"string","example":"0xe0000020","children":[],"searchable":True,"projectable":False},
@@ -414,6 +415,7 @@ ids={
     143:{"path":"particular_header.certificate.certificates.validity_beg","type":"string"},
     144:{"path":"particular_header.certificate.certificates.validity_end","type":"string"},
     145:{"path":"particular_header.certificate.signed","type":"check"},
+    146:{"path":"particular_header.sections.name","type":"hex"},
     10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
     }
 

@@ -136,7 +136,7 @@ def searchFull(search,limit=0,retrieve={}):
 
 def translate_id(id,str_value):
     str_value=str_value.replace("+"," ")
-    if(id==1):
+    if(id==1):#hash
         str_value=clean_hash(str_value)
         largo=len(str_value)
         if(largo==32):
@@ -148,7 +148,7 @@ def translate_id(id,str_value):
         else:
             id=1
 
-    if(id==12):
+    if(id==12):#section hash
         str_value=clean_hash(str_value)
         largo=len(str_value)
         if(largo==32):
@@ -184,13 +184,21 @@ def translate_id(id,str_value):
             value="False"
     elif type_format == "s_string":
         aux=str(urllib.unquote(str_value).decode('utf8')).lower()
-        value="'%s'"%(aux,)
+        value=aux
     elif type_format == "s_string_no_lower":
         aux=str(urllib.unquote(str_value).decode('utf8'))
         value="'%s'"%(aux,)
     elif type_format == "s_string_nl":
         aux=str(urllib.unquote(str_value).decode('utf8'))
         value="'%s'"%(aux,)
+    elif type_format == "hex":
+        hex_value=str_value.replace(' ','').lower()
+        if(all(c in string.hexdigits for c in hex_value)):
+            value=hex_value.decode("hex").rstrip('\0')
+        else:
+            value = None
+    print "path="+str(path)
+    print "value="+str(value)
     else:
         value = None
     return path,value
