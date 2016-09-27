@@ -17,7 +17,7 @@ class ResourceEntriesPlug(PlugIn):
         return "res_entries"
 
     def getVersion(self):
-        return 6
+        return 7
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -48,12 +48,12 @@ class ResourceEntriesPlug(PlugIn):
                                 lang = pefile.LANG.get(resource_lang.data.lang, 'unknown')
                                 sublang = pefile.get_sublang_name_for_lang( resource_lang.data.lang, resource_lang.data.sublang )
                                 entry={}
-                                entry["name"]=self._normalize(name)
+                                entry["name"]=str(name)
                                 entry["rva"]=resource_lang.data.struct.OffsetToData
                                 entry["size"]=resource_lang.data.struct.Size
-                                entry["type"]=self._normalize(filetype)
-                                entry["lang"]=self._normalize(lang)
-                                entry["sublang"]=self._normalize(sublang)
+                                entry["type"]=str(filetype) 
+                                entry["lang"]=str(lang)
+                                entry["sublang"]=str(sublang)
                                 entry["sha1"]=SHA1(data)
                                 ret.append(entry)
 
