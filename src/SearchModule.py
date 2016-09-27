@@ -175,7 +175,7 @@ def translate_id(id,str_value):
         else:
             value=str(urllib.unquote(str_value).decode('utf8'))
         #print(value)
-    elif type_format == "int":
+    elif type_format == "integer":
         value=int(str_value)
     elif type_format == "float":
         value=float(str_value)
