@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,process_date
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,process_date,clean_tree
 import re
 from Utils.InfoExtractor import *
 from Api.last_uploaded import *
@@ -151,7 +151,7 @@ def get_metadata():
         return jsonize({'message':'Metadata not found in the database'})
     log_event("metadata",file_hash)
 
-    return dumps(change_date_to_str(res))
+    return dumps(clean_tree(change_date_to_str(res)))
 
 
 @route('/api/v1/logs', method='GET')
