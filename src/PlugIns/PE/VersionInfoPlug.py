@@ -11,7 +11,7 @@ import pefile
 from Sample import Sample
 
 class VersionInfoPlug(PlugIn):
-    def __init__(self,sample=None):
+    def __init_(self,sample=None):
         PlugIn.__init__(self,sample)
 
     def getPath(self):
@@ -21,7 +21,7 @@ class VersionInfoPlug(PlugIn):
         return "version"
 
     def getVersion(self):
-        return 2
+        return 3
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -30,26 +30,26 @@ class VersionInfoPlug(PlugIn):
         res={}
         if(hasattr(pelib,"VS_VERSIONINFO")):
             vi={}
-            vi["Length"]=self._normalize(pelib.VS_VERSIONINFO.Length)
-            vi["ValueLength"]=self._normalize(pelib.VS_VERSIONINFO.ValueLength)
-            vi["Type"]=self._normalize(pelib.VS_VERSIONINFO.Type)
+            vi["Length"]=pelib.VS_VERSIONINFO.Length
+            vi["ValueLength"]=pelib.VS_VERSIONINFO.ValueLength
+            vi["Type"]=pelib.VS_VERSIONINFO.Type
             res["version_info"]=vi
 
             if(hasattr(pelib,"VS_FIXEDFILEINFO")):
                 ffi={}
-                ffi["Signature"]=self._normalize(pelib.VS_FIXEDFILEINFO.Signature)
-                ffi["StrucVersion"]=self._normalize(pelib.VS_FIXEDFILEINFO.StrucVersion)
-                ffi["FileVersionMS"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileVersionMS)
-                ffi["FileVersionLS"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileVersionLS)
-                ffi["ProductVersionMS"]=self._normalize(pelib.VS_FIXEDFILEINFO.ProductVersionMS)
-                ffi["ProductVersionLS"]=self._normalize(pelib.VS_FIXEDFILEINFO.ProductVersionLS)
-                ffi["FileFlagsMask"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileFlagsMask)
-                ffi["FileFlags"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileFlags)
-                ffi["FileOS"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileOS)
-                ffi["FileType"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileType)
-                ffi["FileSubtype"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileSubtype)
-                ffi["FileDateMS"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileDateMS)
-                ffi["FileDateLS"]=self._normalize(pelib.VS_FIXEDFILEINFO.FileDateLS)
+                ffi["Signature"]=pelib.VS_FIXEDFILEINFO.Signature
+                ffi["StrucVersion"]=pelib.VS_FIXEDFILEINFO.StrucVersion
+                ffi["FileVersionMS"]=pelib.VS_FIXEDFILEINFO.FileVersionMS
+                ffi["FileVersionLS"]=pelib.VS_FIXEDFILEINFO.FileVersionLS
+                ffi["ProductVersionMS"]=pelib.VS_FIXEDFILEINFO.ProductVersionMS
+                ffi["ProductVersionLS"]=pelib.VS_FIXEDFILEINFO.ProductVersionLS
+                ffi["FileFlagsMask"]=pelib.VS_FIXEDFILEINFO.FileFlagsMask
+                ffi["FileFlags"]=pelib.VS_FIXEDFILEINFO.FileFlags
+                ffi["FileOS"]=pelib.VS_FIXEDFILEINFO.FileOS
+                ffi["FileType"]=pelib.VS_FIXEDFILEINFO.FileType
+                ffi["FileSubtype"]=pelib.VS_FIXEDFILEINFO.FileSubtype
+                ffi["FileDateMS"]=pelib.VS_FIXEDFILEINFO.FileDateMS
+                ffi["FileDateLS"]=pelib.VS_FIXEDFILEINFO.FileDateLS
                 res["fixed_file_info"]=ffi
 
             if(hasattr(pelib,"FileInfo")):
