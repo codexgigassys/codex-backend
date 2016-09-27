@@ -14,6 +14,13 @@ import csv
 import json
 import string
 
+def is_iterable(s):
+    try:
+        iter(s)
+    except:
+        return False
+    return True
+
 def is_printable(str_value):
     for i in str_value:
         if i not in string.printable:
@@ -58,10 +65,12 @@ def clean_tree(s):
         return s
     else:
         print str(type(s))
-        print str(s)
+        if(is_iterable(s) and not is_printable(s)):
+            return display_with_hex(s)
+        else:
+            return str(s)
+    print str(s)
         #embed()
-        return str(s)
-        
     return s
  
 

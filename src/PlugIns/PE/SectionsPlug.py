@@ -7,6 +7,7 @@ import pefile
 from Utils.InfoExtractor import *
 import logging
 import entropy
+from bson.binary import *
 
 class SectionsPlug(PlugIn):
     def __init__(self,sample=None):
@@ -19,7 +20,7 @@ class SectionsPlug(PlugIn):
         return "sections"
 
     def getVersion(self):
-        return 15
+        return 19
 
     def process(self):
         #print("SECTIONS")
@@ -33,8 +34,10 @@ class SectionsPlug(PlugIn):
 
         for section in pelib.sections:
             dic_sec={}
-            dic_sec["name"]=section.Name.rstrip('\0')
-
+            if(len(section.Name.rstrip('\0'))>0):
+                dic_sec["name"]=Binary(section.Name.rstrip('\0'))
+            else:
+                dic_sec["name"]=Binary("\0")
             dic_sec["size_raw_data"]=section.SizeOfRawData
             dic_sec["virtual_size"]=section.Misc_VirtualSize
             dic_sec["characteristics"]=section.Characteristics

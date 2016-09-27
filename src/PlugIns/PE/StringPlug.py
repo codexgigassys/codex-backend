@@ -18,7 +18,7 @@ class StringPlug(PlugIn):
         return "strings"
 
     def getVersion(self):
-        return 3
+        return 4
 
     def process(self):
         ret={}

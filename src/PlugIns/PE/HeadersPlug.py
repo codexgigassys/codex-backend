@@ -4,6 +4,8 @@
 from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
+#from IPython import embed
+from bson.binary import *
 
 class HeadersPlug(PlugIn):
     def __init__(self,sample=None):
@@ -16,7 +18,7 @@ class HeadersPlug(PlugIn):
         return "headers"
 
     def getVersion(self):
-        return 2
+        return 5
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -37,10 +39,16 @@ class HeadersPlug(PlugIn):
         dos["cs"]=pelib.DOS_HEADER.e_cs
         dos["lfarlc"]=pelib.DOS_HEADER.e_lfarlc
         dos["ovno"]=pelib.DOS_HEADER.e_ovno
-        dos["res"]=self._normalize(pelib.DOS_HEADER.e_res)
+        if(len(pelib.DOS_HEADER.e_res)>0 and len(pelib.DOS_HEADER.e_res.rstrip('\0'))==0):
+            dos["res"]=Binary('\x00')
+        else:
+            dos["res"]=Binary(pelib.DOS_HEADER.e_res)
         dos["oemid"]=pelib.DOS_HEADER.e_oemid
         dos["oeminfo"]=pelib.DOS_HEADER.e_oeminfo
-        dos["res2"]=self._normalize(pelib.DOS_HEADER.e_res2)
+        if(len(pelib.DOS_HEADER.e_res2)>0 and len(pelib.DOS_HEADER.e_res2.rstrip('\0'))==0 ):
+            dos["res2"]=Binary('\x00')
+        else:
+            dos["res2"]=Binary(pelib.DOS_HEADER.e_res2)
         dos["lfanew"]=pelib.DOS_HEADER.e_lfanew
 
         nt={}

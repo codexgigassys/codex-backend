@@ -21,7 +21,7 @@ class ImportsPlug(PlugIn):
         return "imports"
 
     def getVersion(self):
-        return 4
+        return 5
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())

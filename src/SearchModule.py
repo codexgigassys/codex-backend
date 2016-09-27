@@ -15,6 +15,8 @@ from Sample import *
 from Launcher import *
 from secrets import env
 from Utils.Functions import clean_hash
+#from IPython import embed
+from bson.binary import *
 
 def process_file(file_hash):
     #print "process_file("+str(file_hash)+")"
@@ -191,10 +193,15 @@ def translate_id(id,str_value):
     elif type_format == "s_string_nl":
         aux=str(urllib.unquote(str_value).decode('utf8'))
         value="'%s'"%(aux,)
-    elif type_format == "hex":
-        hex_value=str_value.replace(' ','').lower()
+    elif type_format == "binary":
+        hex_value=str_value.replace(' ','').replace(':','').lower()
         if(all(c in string.hexdigits for c in hex_value)):
-            value=hex_value.decode("hex").rstrip('\0')
+            value=hex_value.decode("hex")
+            if(len(value.rstrip('\0'))>0): #this is to prevent removing a strings of only \x00 chars.
+                value=value.rstrip('\0')
+            else:
+                value='\x00'
+            value=Binary(value)
         else:
             value = None
     print "path="+str(path)

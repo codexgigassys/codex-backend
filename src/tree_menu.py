@@ -328,11 +328,11 @@ ids={
     56:{"path":"particular_header.headers.dos_header.lfanew","type":"integer"},
     57:{"path":"particular_header.headers.dos_header.lfarlc","type":"integer"},
     58:{"path":"particular_header.headers.dos_header.crlc","type":"integer"},
-    59:{"path":"particular_header.headers.dos_header.res2","type":"s_string"},
+    59:{"path":"particular_header.headers.dos_header.res2","type":"binary"},
     60:{"path":"particular_header.headers.dos_header.minalloc","type":"integer"},
     61:{"path":"particular_header.headers.dos_header.oeminfo","type":"integer"},
     62:{"path":"particular_header.headers.dos_header.ovno","type":"integer"},
-    63:{"path":"particular_header.headers.dos_header.res","type":"s_string_nl"},
+    63:{"path":"particular_header.headers.dos_header.res","type":"binary"},
     64:{"path":"particular_header.headers.dos_header.csum","type":"integer"},
     65:{"path":"particular_header.headers.dos_header.cp","type":"integer"},
     66:{"path":"particular_header.headers.dos_header.cblp","type":"integer"},
@@ -415,7 +415,10 @@ ids={
     143:{"path":"particular_header.certificate.certificates.validity_beg","type":"string"},
     144:{"path":"particular_header.certificate.certificates.validity_end","type":"string"},
     145:{"path":"particular_header.certificate.signed","type":"check"},
-    146:{"path":"particular_header.sections.name","type":"hex"},
+    146:{"path":"particular_header.sections.name","type":"binary"},
     10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
     }
 
+    # with type=binary data, the \x00 bytes at the right do not get saved, except when all the binary is \x00. In that case, only 1 byte gets saved.
+    # For example: if I have the string ".text\x00\x00" in hex is 2e 74 65 78 74 00 00. In the DB the value 2e746578 gets saved.
+    # If the value is \x00\x00\x00, then \x00 gets saved.
