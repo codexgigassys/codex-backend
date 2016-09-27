@@ -16,7 +16,7 @@ class CRCCheckPlug(PlugIn):
         return "crc"
 
     def getVersion(self):
-        return 1
+        return 2
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -24,5 +24,5 @@ class CRCCheckPlug(PlugIn):
 
         crc_claimed = pelib.OPTIONAL_HEADER.CheckSum
         crc_actual  = pelib.generate_checksum()
-        s="Claimed: 0x%x, Actual: 0x%x" % (crc_claimed,crc_actual)
-        return self._normalize(s)
+        s={"claimed": crc_claimed, "actual": crc_actual}
+        return s
