@@ -213,8 +213,6 @@ def translate_id(id,str_value):
             value=Binary(value)
         else:
             value = None
-    print "path="+str(path)
-    print "value="+str(value)
     else:
         value = None
     return path,value
