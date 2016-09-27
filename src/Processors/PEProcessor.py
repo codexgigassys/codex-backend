@@ -30,7 +30,7 @@ class PEProcessor(Processor):
         self._addPlugIn(EntropyPlug.EntropyPlug())
         self._addPlugIn(SectionsPlug.SectionsPlug())
         self._addPlugIn(ResourceEntriesPlug.ResourceEntriesPlug())
-        self._addPlugIn(CheckEPSectionPlug.CheckEPSectionPlug())
+        #self._addPlugIn(CheckEPSectionPlug.CheckEPSectionPlug()) #repeated data
         #self._addPlugIn(CRCCheckPlug.CRCCheckPlug())
         self._addPlugIn(TimeStampPlug.TimeStampPlug())
         self._addPlugIn(HeadersPlug.HeadersPlug())
