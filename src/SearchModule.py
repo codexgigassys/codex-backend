@@ -199,14 +199,17 @@ def translate_id(id,str_value):
     elif type_format == "s_string_nl":
         aux=str(urllib.unquote(str_value).decode('utf8'))
         value="'%s'"%(aux,)
-    elif type_format == "binary":
+    elif type_format == "string_to_binary":
+        value=Binary(str(str_value))
+    elif type_format == "binary" or type_format == "binary_reduced":
         hex_value=str_value.replace(' ','').replace(':','').lower()
         if(all(c in string.hexdigits for c in hex_value)):
             value=hex_value.decode("hex")
-            if(len(value.rstrip('\0'))>0): #this is to prevent removing a strings of only \x00 chars.
-                value=value.rstrip('\0')
-            else:
-                value='\x00'
+            if type_format == "binary_reduced":
+                if(len(value.rstrip('\0'))>0): #this is to prevent removing a strings of only \x00 chars.
+                    value=value.rstrip('\0')
+                else:
+                    value='\x00'
             value=Binary(value)
         else:
             value = None

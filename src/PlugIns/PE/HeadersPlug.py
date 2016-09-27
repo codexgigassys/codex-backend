@@ -39,16 +39,10 @@ class HeadersPlug(PlugIn):
         dos["cs"]=pelib.DOS_HEADER.e_cs
         dos["lfarlc"]=pelib.DOS_HEADER.e_lfarlc
         dos["ovno"]=pelib.DOS_HEADER.e_ovno
-        if(len(pelib.DOS_HEADER.e_res)>0 and len(pelib.DOS_HEADER.e_res.rstrip('\0'))==0):
-            dos["res"]=Binary('\x00')
-        else:
-            dos["res"]=Binary(pelib.DOS_HEADER.e_res.rstrip('\0'))
+        dos["res"]=Binary(pelib.DOS_HEADER.e_res)
         dos["oemid"]=pelib.DOS_HEADER.e_oemid
         dos["oeminfo"]=pelib.DOS_HEADER.e_oeminfo
-        if(len(pelib.DOS_HEADER.e_res2)>0 and len(pelib.DOS_HEADER.e_res2.rstrip('\0'))==0 ):
-            dos["res2"]=Binary('\x00')
-        else:
-            dos["res2"]=Binary(pelib.DOS_HEADER.e_res2.rstrip('\0'))
+        dos["res2"]=Binary(pelib.DOS_HEADER.e_res2)
         dos["lfanew"]=pelib.DOS_HEADER.e_lfanew
 
         nt={}

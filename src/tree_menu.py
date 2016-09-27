@@ -284,7 +284,7 @@ ids={
         12:{"path":"particular_header.sections.md5","type":"string", "do": "clean_hash"},
         13:{"path":"particular_header.sections.sha1","type":"string", "do": "clean_hash"},
         14:{"path":"particular_header.sections.sha2","type":"string", "do": "clean_hash"},
-        15:{"path":"particular_header.sections.name","type":"s_string_no_lower"},
+        15:{"path":"particular_header.sections.name","type":"string_to_binary"},
         16:{"path":"particular_header.sections.size_raw_data","type":"integer"},
         17:{"path":"particular_header.sections.virtual_size","type":"integer"},
         18:{"path":"particular_header.sections.characteristics","type":"string"},
@@ -415,10 +415,12 @@ ids={
     143:{"path":"particular_header.certificate.certificates.validity_beg","type":"string"},
     144:{"path":"particular_header.certificate.certificates.validity_end","type":"string"},
     145:{"path":"particular_header.certificate.signed","type":"check"},
-    146:{"path":"particular_header.sections.name","type":"binary"},
+    146:{"path":"particular_header.sections.name","type":"binary_reduced"},
     10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
     }
 
-    # with type=binary data, the \x00 bytes at the right do not get saved, except when all the binary is \x00. In that case, only 1 byte gets saved.
+    # with type=binary_reduced data, the \x00 bytes at the right do not get saved, except when all the binary is \x00. In that case, only 1 byte gets saved.
     # For example: if I have the string ".text\x00\x00" in hex is 2e 74 65 78 74 00 00. In the DB the value 2e746578 gets saved.
     # If the value is \x00\x00\x00, then \x00 gets saved.
+    # with type=binary, the input is a hex. The backends converts the hex to Binary() and does the query.
+    # string_to_binary. The input is a string, but the value is saved in the db as a Binary.
