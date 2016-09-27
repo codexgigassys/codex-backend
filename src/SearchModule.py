@@ -126,10 +126,10 @@ def searchFull(search,limit=0,retrieve={}):
                     break
 
             legend_to_show=key.split('.')[-1]
-            if (legend_to_show=="file_id"):legend_to_show="sha1"
-
-            if (legend_to_show=="TimeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(int(eval(partial_res),16)))
-            if (legend_to_show=="timeDateStamp" and partial_res!=None):partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(partial_res))
+            if (legend_to_show=="file_id"):
+                legend_to_show="sha1"
+            if ((legend_to_show=="TimeDateStamp" or legend_to_show=="timeDateStamp" ) and partial_res!=None):
+                partial_res=time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(partial_res))
 
             dic[legend_to_show]=partial_res
 
