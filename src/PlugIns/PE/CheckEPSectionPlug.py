@@ -16,7 +16,7 @@ class CheckEPSectionPlug(PlugIn):
         return "ep"
 
     def getVersion(self):
-        return 1
+        return 2
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -31,5 +31,9 @@ class CheckEPSectionPlug(PlugIn):
                 break
             else:
                 pos += 1
-        s = "%s %s %d/%d" % (hex(ep+pelib.OPTIONAL_HEADER.ImageBase), name, pos, len(pelib.sections))
-        return self._normalize(s)
+        #s = "%s %s %d/%d" % (hex(ep+pelib.OPTIONAL_HEADER.ImageBase), name, pos, len(pelib.sections))        
+        s={"address": (ep+pelib.OPTIONAL_HEADER.ImageBase),
+                "name": name,
+                "pos": pos,
+                "number_of_sections": len(pelib.sections)}
+        return s
