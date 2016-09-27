@@ -45,7 +45,7 @@ class StringPlug(PlugIn):
 
         searchUsed={}
         imports=self.sample.getLastValue("particular_header.imports")
-        if(imports!=None ):
+        if(imports!=None and imports!="ERROR_EXECUTE_PLUGIN" ):
             for i in imports:
                 searchUsed[i["lib"]]=True
                 for f in i["functions"]:
