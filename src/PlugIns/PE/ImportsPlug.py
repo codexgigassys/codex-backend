@@ -43,10 +43,13 @@ class ImportsPlug(PlugIn):
             return ""
         for entry in dir_ent_imp:
 
-            dll_name=repr(entry.dll).lower()
+            dll_name=(entry.dll).lower()
             l=[]
             for imp in entry.imports:
-                l.append(repr(imp.name).lower())
+                if imp.name is not None:
+                    l.append((imp.name).lower())
+                else:
+                    l.append("")
                 #aux={}
                 #aux["name"]=imp.name
                 #aux["ordinal"]=imp.ordinal
