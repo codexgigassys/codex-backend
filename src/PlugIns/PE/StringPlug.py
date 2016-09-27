@@ -33,7 +33,7 @@ class StringPlug(PlugIn):
         strings=re.findall(regexp,data)
         aux={}
         for s in strings:
-            aux[repr(s).lower()]=True
+            aux[s.lower()]=True
 
         unique_strings=[]
         for k in aux:
@@ -91,7 +91,7 @@ class StringPlug(PlugIn):
             if(r!=None):
                 hidden.append(s)
                 continue
-            evaluado=eval(s)
+            evaluado=s
 
             #searching dll
             r=mdc.searchDllByName(s)
