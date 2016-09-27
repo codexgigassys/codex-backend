@@ -60,7 +60,10 @@ def clean_tree(s):
         else:
             return s
     elif isinstance(s,(int,long,float)):
-        return s
+        if isinstance(s,(int,long)):
+            return str(s)+" ("+str(hex(s))+")"
+        else:
+            return s
     elif s is None:
         return s
     else:
