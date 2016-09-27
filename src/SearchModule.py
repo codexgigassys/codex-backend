@@ -132,7 +132,7 @@ def searchFull(search,limit=0,retrieve={}):
             dic[legend_to_show]=partial_res
 
         ret.append(dic)
-        return ret
+    return ret
 
 
 def translate_id(id,str_value):
