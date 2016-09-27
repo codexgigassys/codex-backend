@@ -67,7 +67,6 @@ def clean_tree(s):
     elif s is None:
         return s
     else:
-        print str(type(s))
         if(is_iterable(s) and not is_printable(s)):
             return display_with_hex(s)
         else:
@@ -141,7 +140,8 @@ def process_file(file_hash):
     print "process_file("+str(file_hash)+")"
     pc=PackageController()
     res=pc.getFile(file_hash)
-    if res==None:return None
+    if res==None:
+        return None
     sam_id=file_hash
     sample=Sample()
     sample.setID(sam_id)

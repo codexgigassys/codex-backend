@@ -339,7 +339,7 @@ ids={
     67:{"path":"particular_header.headers.dos_header.maxalloc","type":"integer"},
     68:{"path":"particular_header.headers.dos_header.cs","type":"integer"},
     69:{"path":"particular_header.headers.dos_header.cparhdr","type":"integer"},
-    70:{"path":"particular_header.headers.nt_header.Signature","type":"s_string"},
+    70:{"path":"particular_header.headers.nt_header.Signature","type":"integer"},
     71:{"path":"particular_header.headers.file_header.TimeDateStamp","type":"integer"},
     72:{"path":"particular_header.headers.file_header.Characteristics","type":"integer"},
     73:{"path":"particular_header.headers.file_header.PointerToSymbolTable","type":"integer"},

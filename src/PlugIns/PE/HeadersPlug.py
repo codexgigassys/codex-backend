@@ -18,7 +18,7 @@ class HeadersPlug(PlugIn):
         return "headers"
 
     def getVersion(self):
-        return 5
+        return 6
 
     def process(self):
         pelib=self._getLibrary(PEFileModule().getName())
@@ -46,7 +46,7 @@ class HeadersPlug(PlugIn):
         dos["lfanew"]=pelib.DOS_HEADER.e_lfanew
 
         nt={}
-        nt["Signature"]=self._normalize(pelib.NT_HEADERS.Signature)
+        nt["Signature"]=pelib.NT_HEADERS.Signature
 
         fh={}
         fh["Machine"]=pelib.FILE_HEADER.Machine
