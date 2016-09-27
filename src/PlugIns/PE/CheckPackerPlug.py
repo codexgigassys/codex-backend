@@ -14,13 +14,13 @@ class CheckPackerPlug(PlugIn):
         return "packer_detection"
 
     def getVersion(self):
-        return 2
+        return 3
 
     def process(self):
         entropy=self.sample.getLastValue("file_entropy")
         sections=self.sample.getLastValue("sections")
         imports=self.sample.getLastValue("imports")
-        if(entropy==None or sections==None or imports==None):return "Unknown"
+        if(entropy==None or sections==None or imports==None):return None #http://stackoverflow.com/questions/12403240/storing-null-vs-not-storing-the-key-at-all-in-mongodb
         flags=0
 
         if (entropy>=6.7): flags+=1
@@ -62,5 +62,4 @@ class CheckPackerPlug(PlugIn):
             if(promedio<=6 and promedio>=1):flags+=1
         if(total_imports<=35 and total_imports>=1):flags+=1
 
-        if(flags>=4):return "True"
-        return "False"
+        return (flags>=4)
