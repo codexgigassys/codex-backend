@@ -198,7 +198,8 @@ def search():
     callback_name = cgi.escape(request.query.callback)
     print "callback="+str(callback_name)
     res=SearchModule.search_by_id(data,limit,columns,True)
-    add_list_to_process_queue(res[0:10])
+    if res is not None:
+        add_list_to_process_queue(res[0:10])
 
     # to only show a few columns (uggly stuff)
     if(len(columns)==0):
