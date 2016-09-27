@@ -32,7 +32,7 @@ class PEProcessor(Processor):
         self._addPlugIn(ResourceEntriesPlug.ResourceEntriesPlug())
         #self._addPlugIn(CheckEPSectionPlug.CheckEPSectionPlug()) #repeated data
         #self._addPlugIn(CRCCheckPlug.CRCCheckPlug())
-        self._addPlugIn(TimeStampPlug.TimeStampPlug())
+        #self._addPlugIn(TimeStampPlug.TimeStampPlug())
         self._addPlugIn(HeadersPlug.HeadersPlug())
         self._addPlugIn(VersionInfoPlug.VersionInfoPlug())
         self._addPlugIn(ChildOfPlug.ChildOfPlug())
