@@ -7,6 +7,7 @@ import traceback
 from pymongo import MongoClient
 from secrets import env
 #from IPython import embed
+from datetime import datetime
 
 # Saves and reads metadata to/from the db.
 class MetaController():
@@ -27,9 +28,12 @@ class MetaController():
         f=self.collection.find_one({"file_id":file_id})
         if(f==None): return None
 
+        # Antivirus stuff is in another collection
         av_analysis=self.search_av_analysis(file_id)
         if(av_analysis!=None):
-            f["av_analysis"]=av_analysis
+            # we don't want all VT metadata to get displayed.
+            f["av_analysis"] = { your_key: av_analysis.get(your_key) for your_key in ["scans","positives","total","scan_date"] }
+            #f["av_analysis"]=av_analysis
 
         return f
 
@@ -93,6 +97,17 @@ class MetaController():
         f=self.av_coll.find_one({"sha1":file_id})
         return f
 
+    def save_first_seen(self,file_id,vt_date):
+        if vt_date is None:
+            return None
+        try:
+            date=datetime.strptime(vt_date,"%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            print "MetaController()->save_first_seen: invalid date recieved by VT:"+str(vt_date)
+            return
+        self.write(file_id,{"date": date})
+
+
     def save_av_analysis(self,file_id,analysis_result):
         command={"$set":analysis_result}
         #print(command)
@@ -104,6 +119,7 @@ class MetaController():
             err=str(traceback.format_exc())
             print(err)
             return -1
+        self.save_first_seen(file_id,analysis_result.get('first_seen'))
         return 0
 
 #****************TEST_CODE******************
