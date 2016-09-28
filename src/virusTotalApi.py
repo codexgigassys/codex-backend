@@ -7,6 +7,7 @@ import traceback
 
 from MetaControl.MetaController import *
 from secrets import env
+from Utils.Functions import key_list_clean,key_dict_clean
 
 
 def download_from_virus_total(file_id):
@@ -45,45 +46,67 @@ def download_from_virus_total(file_id):
         print "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")"
         return None
 
+# Recieves VT scans dictionary
+# and returns number of AV
+# that detect the sample as
+# malware.
+def total_positive(vt_dict):
+    if vt_dict is None:
+        return None
+    count=0
+    for x in vt_dict:
+        if x.get('detected'):
+            count+=1
+    return count
+
+# Recieves the full VT response
+# it translate the antivirus scans
+# from a dictionary to an array
+# in order to be able to search
+# by AV name. The same with imports.
+# When VT request includes
+# allinfo: 1, parameters total, and positives
+# are missing, but can be calculated manually.
 def parse_vt_response(json_response):
-    #print(json_response)
     response_code=json_response.get("response_code")
-    if(response_code!=1): return None
-    sha1=json_response.get("sha1")
+    if(response_code!=1):
+        return None
+
     positives=json_response.get("positives")
     total=json_response.get("total")
-    scan_date=json_response.get("scan_date")
 
+    if positives is None and json_response.get('scans') is not None:
+        positives = total_positive(json_response.get('scans'))
+        total = len(json_response.get('scans'))
 
-    vt_scans=json_response.get("scans")
-    ret_scans=[]
-    if(vt_scans!=None):
-        for key in vt_scans.keys():
-            av_dict=vt_scans[key]
-            av_dict["name"]=key
-            ret_scans.append(av_dict)
+    # scans uses antivirus as json key, and
+    # imports uses dll's as keys. So they can't be saved
+    # to mongo or seached easily. So we convert the dictionary (of scans)
+    # and the array (of imports) into an array
+    # dictionaries, where the key is now in 'name'.
+    if json_response.get('scans') is not None:
+        json_response["scans"]=key_dict_clean(json_response["scans"])
+    if json_response.get('additional_info') is not None and json_response.get('additional_info').get('imports') is not None:
+        json_response["additional_info"]["imports"]=key_list_clean(json_response["additional_info"]["imports"])
 
-    ret={}
-    ret["sha1"]=sha1
+    ret = json_response
     ret["positives"]=positives
     ret["total"]=total
-    ret["date"]=scan_date
-    ret["scans"]=ret_scans
-
-    #print(ret)
     return ret
 
-
+# Request the VT data for a given hash
+# and converts the json response to a python
+# dictionary. In case of error, returns None.
 def get_vt_av_result(file_id):
     apikey=env["vt_apikey"]
-    params = {'apikey':apikey,'resource':file_id}
+    params = {'apikey':apikey,'resource':file_id, 'allinfo': '1'}
     try:
         response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params)
     except Exception, e:
         print str(e)
         return None
     try:
-        parsed_response = parse_vt_response(response.json())
+        parsed_response = response.json()
     except Exception, e:
         print "response.json() error. get_vt_av_result("+str(file_id)+")"
         print str(e)
@@ -91,16 +114,18 @@ def get_vt_av_result(file_id):
         return None
     return parsed_response
 
+# Returns the Antivirus scan result for a given hash.
 def get_av_result(file_id):
-    #buscar si ya existe
     mdc=MetaController()
-    analysis_result=mdc.search_av_analysis(file_id)
+    #analysis_result=mdc.search_av_analysis(file_id)
+    analysis_result = None #while we test VT function
 
     if analysis_result==None:
-        print("Buscando analysis de %s en VT" % file_id)
-        analysis_result=get_vt_av_result(file_id)
-        #guardar en la base de datos
-        if(analysis_result==None): return None
+        print("Searching analysis of %s in VT" % file_id)
+        analysis_result=parse_vt_response(get_vt_av_result(file_id))
+        # Save in mongo
+        if(analysis_result==None):
+            return None
         mdc.save_av_analysis(file_id,analysis_result)
 
     scans=analysis_result.get("scans")

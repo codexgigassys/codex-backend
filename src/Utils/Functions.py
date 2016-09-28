@@ -13,6 +13,46 @@ from Launcher import *
 import csv
 import json
 
+
+# This function recives a dictionary like
+# {"key1": { "something": 1},
+#  "key2": { "something": 2}}
+# and returns
+# [ {"name": "key1", "something": 1 },
+#   {"name": "key2", "something": 2 }]
+# This is useful for converting the format
+# VirusTotal API sends the AV scans into
+# something easily searchable by mongo.
+def key_dict_clean(json):
+    if json is None:
+        return None
+    array=[]
+    for key in json.keys():
+        tmp_dict=json.get(key)
+        tmp_dict["name"]=key
+        array.append(tmp_dict)
+    return array
+
+# This functions recieves a dictionary like
+# {"key1": ["something1", "something2"],
+#  "key2": ["something1", "something2"]}
+# and returns
+# [ {"name": "key1", "values": ["something1, something2"]},
+# {"name": "key2", "values": ["something1, something2"]} ]
+# This is useful for converting the format
+# VirusTotal API sends the imports into
+# something easily searchable by mongo.
+def key_list_clean(json):
+    if json is None:
+        return None
+    array=[]
+    for key in json.keys():
+        tmp_dict={}
+        tmp_dict["name"]=key
+        tmp_dict["values"]=json.get(key)
+        array.append(tmp_dict)
+    return array
+
 def to_bool(string):
     string=string.strip().lower()
     if string=="false" or string is None:
