@@ -8,13 +8,12 @@ import gridfs
 from secrets import env
 
 # Writes binaries on the DB
-TEMPORAL_FILES_DB=False # If True, a second database will be also used
 class PackageController():
     def __init__(self):
         client=MongoClient(env["files"]["host"],env["files"]["port"])
         db=client[env["db_files_name"]]
         self.fs=gridfs.GridFS(db)
-        if(TEMPORAL_FILES_DB):
+        if(env["temporal_files_db"]):
             client_temp=MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
             db_temp=client_temp[env["db_temp_files_name"]]
             self.fs_temp=gridfs.GridFS(db_temp)
@@ -24,7 +23,7 @@ class PackageController():
 
     # adds a file to the file database.
     def append(self,file_id,data,vt_blocked=False):
-        if(TEMPORAL_FILES_DB):
+        if(env["temporal_files_db"]):
             self.fs_temp.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
         else:
             self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
@@ -40,7 +39,7 @@ class PackageController():
             print "PackageController: invalid file_id:"+str(file_id)+"(len="+str(len(file_id))+")"
             f=None
         if f==None:
-            if TEMPORAL_FILES_DB==False:
+            if env["temporal_files_db"]==False:
                 return None
             else:
                 if( len(file_id)==40):
@@ -56,7 +55,7 @@ class PackageController():
 
 
     def last_updated(self,number):
-        if(TEMPORAL_FILES_DB):
+        if(env["temporal_files_db"]):
             client_fs = MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
         else:
             client_fs = MongoClient(env["files"]["host"],env["files"]["port"])
@@ -79,7 +78,7 @@ class PackageController():
     def searchFile(self,file_id):
         ret=self.fs.find_one({"filename":file_id})
         if(ret==None):
-            if(TEMPORAL_FILES_DB==False):return None
+            if(env["temporal_files_db"]==False):return None
             else:
                 ret=self.fs_temp.find_one({"filename":file_id})
                 if(ret==None):return None
