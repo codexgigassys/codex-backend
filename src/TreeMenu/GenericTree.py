@@ -9,7 +9,8 @@ tree_element={"name":"Generic","children":[
     {"name":"Mime type", "id": 5, "type": "string", "example": "application/x-dosexec", "children": [],"searchable":True,"projectable":True, "call_func": "", "lower": True},
     {"name":"AntiVirus","children":[
         {"name":"AV signature","id":10000,"type":"string","example":"trojan","children":[],"searchable":True,"projectable":False},
-        ]}
+        ]},
+    {"name":"Date","id":147, "type": "string","children":[], "example": "e.g.: \"[2015-05-10;2015-05-15]\", \">=2015-05-15\", \"2015-05-10\" ", "searchable": True,"projectable": True, "call_func":"","lower": False}
     ]}
 
 id_element={
@@ -21,5 +22,6 @@ id_element={
     5:{"path":"mime_type","type":"string"},
     10:{"path":"fuzzy_hash","type":"string"},
     11:{},    
-    10000:{"path":"scans.result","type":"string"}  # for searcher greater than 10000
+    10000:{"path":"scans.result","type":"string"},  # for searcher greater than 10000
+    147: {"path": "date", "type": "date_range"}
     }
