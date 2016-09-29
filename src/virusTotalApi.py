@@ -88,6 +88,8 @@ def parse_vt_response(json_response):
         json_response["scans"]=key_dict_clean(json_response["scans"])
     if json_response.get('additional_info') is not None and json_response.get('additional_info').get('imports') is not None:
         json_response["additional_info"]["imports"]=key_list_clean(json_response["additional_info"]["imports"])
+    if json_response.get('additional_info') is not None and json_response.get('additional_info').get('pe-resource-types') is not None:
+        json_response["additional_info"]["pe-resource-types"] = key_list_clean(json_response["additional_info"]["pe-resource-types"])
 
     ret = json_response
     ret["positives"]=positives
