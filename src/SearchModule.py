@@ -14,7 +14,7 @@ from virusTotalApi import download_from_virus_total
 from Sample import *
 from Launcher import *
 from secrets import env
-from Utils.Functions import clean_hash
+from Utils.Functions import clean_hash,parse_date_range
 
 def process_file(file_hash):
     #print "process_file("+str(file_hash)+")"
@@ -192,6 +192,9 @@ def translate_id(id,str_value):
     elif type_format == "s_string_nl":
         aux=str(urllib.unquote(str_value).decode('utf8'))
         value="'%s'"%(aux,)
+    elif type_format == "date_range":
+        aux=value=str(urllib.unquote(str_value).decode('utf8'))
+        value=parse_date_range(aux)
     else:
         value = None
     return path,value
