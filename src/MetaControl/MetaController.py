@@ -112,10 +112,10 @@ class MetaController():
 
     def get_first_date(self,file_id):
         meta = self.read(file_id)
-        if self.read is None:
+        if meta is None:
             return None
         else:
-            return self.read(file_id).get('date')
+            return meta.get('date')
 
 
 
