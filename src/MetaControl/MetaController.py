@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from secrets import env
 #from IPython import embed
 from datetime import datetime
+from Utils.ProcessDate import process_date
 
 # Saves and reads metadata to/from the db.
 class MetaController():
@@ -101,11 +102,21 @@ class MetaController():
         if vt_date is None:
             return None
         try:
-            date=datetime.strptime(vt_date,"%Y-%m-%d %H:%M:%S")
+            date=process_date(vt_date)
         except ValueError:
             print "MetaController()->save_first_seen: invalid date recieved by VT:"+str(vt_date)
             return
-        self.write(file_id,{"date": date})
+        old_date = self.get_first_date(file_id)
+        if old_date is None or date < old_date:
+            self.write(file_id,{"date": date})
+
+    def get_first_date(self,file_id):
+        meta = self.read(file_id)
+        if self.read is None:
+            return None
+        else:
+            return self.read(file_id).get('date')
+
 
 
     def save_av_analysis(self,file_id,analysis_result):

@@ -10,7 +10,7 @@ import copy
 import argparse
 import tempfile
 import time
-from datetime import datetime as dtdatetime
+from datetime import datetime
 import csv
 from czipfile import ZipFile
 import subprocess
@@ -31,7 +31,8 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,process_date
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date
+from Utils.ProcessDate import process_date
 import re
 from Utils.InfoExtractor import *
 from Api.last_uploaded import *
@@ -329,14 +330,15 @@ def upload_file(data_bin):
 def add_file():
     #tags = request.forms.get('name')
     upload = request.files.get('file')
-    try:
-        form_date = process_date(request.forms.get('file_date'))
+    form_date = request.forms.get('file_date')
+    try:  # validate
+        process_date(form_date)
     except ValueError:
         #response.status = 422 #status can't be added because angular will not show the message.
         return jsonize({'message': 'Invalid date format'})
     print "date="+str(form_date)
     if form_date is None:
-        form_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        form_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     name = upload.filename
     data_bin=upload.file.read()
     file_id=hashlib.sha1(data_bin).hexdigest()

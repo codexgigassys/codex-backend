@@ -14,7 +14,8 @@ from virusTotalApi import download_from_virus_total
 from Sample import *
 from Launcher import *
 from secrets import env
-from Utils.Functions import clean_hash,parse_date_range
+from Utils.Functions import clean_hash
+from Utils.ProcessDate import parse_date_range
 
 def process_file(file_hash):
     #print "process_file("+str(file_hash)+")"
