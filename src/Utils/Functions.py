@@ -92,18 +92,20 @@ def change_date_to_str(res):
     return res
 
 
-def process_file(file_hash):
+def process_file(file_hash,force=False):
     if file_hash is None:
         return None
     print "process_file("+str(file_hash)+")"
     pc=PackageController()
     res=pc.getFile(file_hash)
-    if res==None:return None
+    if res==None:
+        return None
     sam_id=file_hash
     sample=Sample()
     sample.setID(sam_id)
     sample.setBinary(res)
-    sample.setStorageVersion({})
+    if force:
+        sample.setStorageVersion({})
     lc=Launcher()
     lc.launchAnalysisByID(sample)
     log_event("process",str(file_hash))

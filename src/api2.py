@@ -178,7 +178,7 @@ def api_process_file():
         response.code = 400
         return jsonize({'message':'Invalid hash format (use sha1)'})
 
-    res=process_file(file_hash)
+    res=process_file(file_hash,True)
     if res==None:
         response.code = 404
         return jsonize("File not found in the database")
@@ -199,7 +199,7 @@ def search():
     callback_name = cgi.escape(request.query.callback)
     print "callback="+str(callback_name)
     res=SearchModule.search_by_id(data,limit,columns,True)
-    add_list_to_process_queue(res[0:10])
+#    add_list_to_process_queue(res[0:10])
 
     # to only show a few columns (uggly stuff)
     if(len(columns)==0):
