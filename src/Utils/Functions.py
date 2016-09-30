@@ -14,6 +14,8 @@ from Launcher import *
 import csv
 import json
 
+def vt_key():
+    return env.get('vt_apikey') is not None and type(env.get('vt_apikey'))==str and len(env.get("vt_apikey"))>5
 
 # This function recives a dictionary like
 # {"key1": { "something": 1},

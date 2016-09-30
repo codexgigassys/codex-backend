@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash
 from Utils.ProcessDate import process_date
 import re
 from Utils.InfoExtractor import *
@@ -567,25 +567,30 @@ def export_metadata():
 
 @route('/api/v1/av_result', method='GET')
 def get_result_from_av():
-    hash_id=clean_hash(request.query.file_hash)
-    if hash_id is None:
+    hash_id=request.query.file_hash
+    if len(hash_id) == 0:
         response.code = 400
-        return jsonize({'message':'Invalid hash format'})
+        return jsonize({'error': 4, 'error_message':'file_hash parameter is missing.'})
+    hash_id=clean_hash(hash_id)
+    if not valid_hash(hash_id):
+        return jsonize({'error': 5, 'error_message':'Invalid hash format.'})
     if(len(hash_id)!=40):
         data="1="+str(hash_id)
         res=SearchModule.search_by_id(data,1,[],True)
         if(len(res)==0):
             response.code = 400
-            return jsonize({'message':'File not found'})
+            return jsonize({'error': 6, 'error_message':'File not found'})
         else:
             sha1=res[0]["sha1"]
     else:
         sha1=hash_id
-
-    av_result=get_av_result(sha1)
-    if(av_result==None): return jsonize("Can not get analysis")
-
-    return jsonize("File processed")
+    if(vt_key()):
+        av_result=get_av_result(sha1)
+    else:
+        return jsonize({'error': 7, "error_message": "Error: VirusTotal API key missing from secrets.py file"})
+    if(av_result==None):
+        return jsonize({"error": 8, "error_message": "Cannot get analysis (hash not found in VT? out of credits?)"})
+    return jsonize({"message": "AV scans downloaded."})
 
 
 if __name__ == '__main__':
