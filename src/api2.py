@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash,clean_tree
 from Utils.ProcessDate import process_date
 import re
 from Utils.InfoExtractor import *
@@ -215,7 +215,7 @@ def search():
     responsex["normal"]=res
     responsex["show"]=show
 
-    return jsonp(responsex,callback_name)
+    return jsonp(clean_tree(responsex),callback_name)
 
 @route('/api/v1/download', method='POST')
 def get_package_file():

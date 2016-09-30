@@ -14,6 +14,71 @@ from Launcher import *
 import csv
 import json
 
+
+def is_iterable(s):
+    try:
+        iter(s)
+    except:
+        return False
+    return True
+
+def is_printable(str_value):
+    for i in str_value:
+        if i not in string.printable:
+            return False
+    return True
+
+def str_to_hex(str_value):
+    if str_value is not None:
+        return " ".join("{:02x}".format(ord(c)).upper() for c in str_value)
+    else:
+		return ""
+
+def replace_non_printable_with_dot(str_value):
+    str_list=list(str_value)
+    for index,char in enumerate(str_list):
+        if(not is_printable(char)):
+            str_list[index]=u"."
+    return "".join(str_list)
+
+def display_with_hex(str_value):
+    if str_value is not None:
+        cleaned_str = replace_non_printable_with_dot(str_value)
+        return str(str_to_hex(str_value))+" ["+str(cleaned_str)+"]"
+    else:
+		return ""
+
+
+def clean_tree(s):
+    if type(s)==dict:
+        for child in s.keys():
+            s[child] = clean_tree(s[child])
+    elif type(s)==list:
+        for index,value in enumerate(s):
+            s[index]=clean_tree(value)
+    elif type(s)==str or type(s)==unicode:
+        if(not is_printable(s)):
+            return display_with_hex(s)
+        else:
+            return s
+    elif isinstance(s,(int,long,float)):
+        if isinstance(s,(int,long)):
+            return str(s)+" ("+str(hex(s))+")"
+        else:
+            return s
+    elif isinstance(s,dtdatetime):
+        return str(s)
+    elif s is None:
+        return s
+    else:
+        if(is_iterable(s) and not is_printable(s)):
+            return display_with_hex(s)
+        else:
+            return str(s)
+    print str(s)
+        #embed()
+    return s
+
 def vt_key():
     return env.get('vt_apikey') is not None and type(env.get('vt_apikey'))==str and len(env.get("vt_apikey"))>5
 
