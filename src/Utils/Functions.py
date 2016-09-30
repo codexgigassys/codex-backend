@@ -166,7 +166,7 @@ def save_file_from_vt(hash_id):
 
 #returns true if a hash is md5 or sha1 valid. False otherwise
 def valid_hash(hash):
-    return (len(hash)==32 or len(hash)==40) and re.search('^[a-f0-9]+$',hash) is not None
+    return (len(hash)==32 or len(hash)==40 or len(hash)==64 or len(hash)==128) and re.search('^[a-f0-9]+$',hash) is not None
 
 
 # clean hashes and search in the meta collection.
