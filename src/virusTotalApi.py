@@ -119,8 +119,8 @@ def get_vt_av_result(file_id):
 # Returns the Antivirus scan result for a given hash.
 def get_av_result(file_id):
     mdc=MetaController()
-    #analysis_result=mdc.search_av_analysis(file_id)
-    analysis_result = None #while we test VT function
+    analysis_result=mdc.search_av_analysis(file_id)
+    #analysis_result = None #while we test VT function
 
     if analysis_result==None:
         print("Searching analysis of %s in VT" % file_id)
