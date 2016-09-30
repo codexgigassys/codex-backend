@@ -16,6 +16,7 @@ from Launcher import *
 from secrets import env
 from Utils.Functions import clean_hash,process_file
 from Utils.ProcessDate import parse_date_range
+from db_pool import *
 
 def add_file_from_vt(hash_id):
     downloaded_file=download_from_virus_total(hash_id)
@@ -42,8 +43,6 @@ def fuzz_search_fast(id,p,fuzz):
     #print("searching fuzz")
     block=int(fuzz.split(':')[0])
     lap=500
-    client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-    db=client[env["db_metadata_name"]]
     coll_meta=db[env["db_metadata_collection"]]
 
     f1=coll_meta.find({},{"file_id":1,p:1})
@@ -80,8 +79,6 @@ def fuzz_search_fast(id,p,fuzz):
 
 
 def searchFull(search,limit=0,retrieve={}):
-    client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-    db=client[env["db_metadata_name"]]
     coll_meta=db[env["db_metadata_collection"]]
     #count=coll_meta.find(search).count()
     #print(count)
@@ -245,8 +242,6 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
     else:
         # do AV search
         db_collection = env["db_metadata_collection"]
-        client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-        db=client[env["db_metadata_name"]]
         av_coll=db.av_analysis
 
         if limit==0:
@@ -273,8 +268,6 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             return res
 
 def count_documents():
-    client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-    db=client[env["db_metadata_name"]]
     coll_meta=db[env["db_metadata_collection"]]
     val=coll_meta.count()
     return val
