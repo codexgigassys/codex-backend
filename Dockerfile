@@ -40,9 +40,9 @@ ADD yara/yara.zip* /tmp/
 #echo a is necessary so the line returns 0 in case the file already exists.
 RUN bash -c "wget -nc https://github.com/plusvic/yara/archive/v3.4.0.zip -O /tmp/yara.zip; echo a"
 RUN unzip /tmp/yara.zip -d /tmp && \
-pip install -r /myapp/src/pip_requeriments.txt   && \
-pip install -r /myapp/src/pip_yargen_requeriments.txt && \
-pip install -r /myapp/src/pip_vt_api_requeriments.txt && \
+pip install -r /myapp/src/pip_requirements.txt   && \
+pip install -r /myapp/src/pip_yargen_requirements.txt && \
+pip install -r /myapp/src/pip_vt_api_requirements.txt && \
 cd /tmp/yara-3.4.0/ && ./bootstrap.sh && ./configure && \
 cd /tmp/yara-3.4.0/ &&  make && make install && \
 cd /myapp/yara && \
