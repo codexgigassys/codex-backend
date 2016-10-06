@@ -61,6 +61,7 @@ cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/
 #RUN bash -c "wget -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O /tmp/yarGen-master.zip; echo a"
 #RUN unzip /tmp/yarGen-master.zip -d  /tmp
 #RUN if [ $(ls /myapp/yara/yarGen-master/) ]; then echo "yarGen-master folder already exists"; else mv /tmp/yarGen-master/ /myapp/yara/; fi 
+# https://github.com/kennethreitz/requests/issues/3215
 ENV REQUESTS_CA_BUNDLE "/usr/local/lib/python2.7/site-packages/certifi/weak.pem"
 #RUN cd /myapp/yara && python ./
 
