@@ -11,9 +11,9 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
 * [Configuration (optional)](#configuration-optional)
     * [MongoDB path](#mongodb-path)
     * [VirusTotal](#virustotal)
-* [Install Codex Gigas](#install-codex-gigas)
-* [Load Files](#load-files)
 * [Ready-to-use virtual machines](#ready-to-use-virtual-machines)
+* [Manually build Codex Gigas](#manually-build-codex-gigas)
+* [Load Files](#load-files)
 * [APT-notes samples](#apt-notes-samples)
 * [Development](#development)
 * [Codex Gigas Thanks](#codex-gigas-thanks)
@@ -32,8 +32,15 @@ VirusTotal is used for retrieving antivirus results at request for a file. You c
 sudo docker-compose up
 ```
 
-## Install Codex Gigas
+## Ready-to-use virtual machines
+You can download your preferred vm file. Inside you'll find Codex Gigas running at startup on ```http://127.0.0.1:6100```.
+* [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
+* [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
+VMs password: codex
+
+## Manually build Codex Gigas 
+If you don't want to use a Virtual Machine, you can manually install Codex Gigas on your system.
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
 sudo apt-get install p7zip-full
@@ -50,6 +57,7 @@ The next time you want to stop/start the containers:
 sudo docker-compose stop
 sudo docker-compose start
 ```
+If everything goes well, Codex Gigas should be up and running on ```http://127.0.0.1:6100```. 
 
 ## Load files
 To load files on a mass scale, drop them to ```files_to_load``` folder and execute the following command:
@@ -57,12 +65,7 @@ To load files on a mass scale, drop them to ```files_to_load``` folder and execu
 curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ```
 
-## Ready-to-use virtual machines
-You can download your preferred vm file. Inside you'll find Codex Gigas running at startup.
-* [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
-* [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
-VMs password: codex
 
 ## APT-notes samples [https://github.com/kbandla/APTnotes] (https://github.com/kbandla/APTnotes)
 We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (sha1: 6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
