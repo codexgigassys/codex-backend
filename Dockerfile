@@ -1,5 +1,5 @@
 FROM python:2.7
-RUN apt-get clean && apt-get update -qq && apt-get install -y build-essential \
+RUN apt-get clean && apt-get -o Debug::pkgProblemResolver=true -o Debug::Acquire::http=true update -qq && apt-get -o Debug::pkgProblemResolver=true -o Debug::Acquire::http=true install -y build-essential \
 libpq-dev \
 python-hachoir-metadata \
 p7zip-full \
