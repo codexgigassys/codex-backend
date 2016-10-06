@@ -8,7 +8,7 @@ entropy
 validators
 ipython
 statistics
-pylab
+matplotlib
 cycler
 tqdm
 tailer
