@@ -11,7 +11,7 @@ httpd:
         - "6100:80"
 api:
   build: .
-  command: bash -c "(echo updating pip packages && pip install -r /myapp/src/pip_requeriments.txt && echo starting redis && service redis-server start && (echo starting redis worker default && rq worker --path /myapp/src/ default &) && (echo starting redis worker process && rq worker --path /myapp/src/ process &) && (echo starting redis worker checkup && rq worker --path /myapp/src/MalwareCheckUp/ checkup &)) && echo starting api...Check 127.0.0.1:8080 && python /myapp/src/api2.py -H $$HOSTNAME"
+  command: bash -c "(echo updating pip packages && pip install -r /myapp/src/pip_requirements.txt && echo starting redis && service redis-server start && (echo starting redis worker default && rq worker --path /myapp/src/ default &) && (echo starting redis worker process && rq worker --path /myapp/src/ process &) && (echo starting redis worker checkup && rq worker --path /myapp/src/MalwareCheckUp/ checkup &)) && echo starting api...Check 127.0.0.1:8080 && python /myapp/src/api2.py -H $$HOSTNAME"
   volumes:
     - .:/myapp
   ports:
