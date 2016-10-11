@@ -36,7 +36,8 @@ libtaoframework-freetype-cil-dev \
 libxft-dev && \
 echo "Installing yarGen-master" && \
 wget -nv -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O /myapp/yara/yarGen-master.zip && \
-unzip yarGen-master.zip && \
+cd /myapp/yara/ && \
+unzip /tmp/yara/yarGen-master.zip -d /myapp/yara/ && \
 7z x /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
 7z x /myapp/yara/yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
 git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ /myapp/yara/binarly-sdk && \
