@@ -5,7 +5,10 @@ import os
 import math
 import traceback
 from pymongo import MongoClient
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 #from IPython import embed
 from datetime import datetime
 from Utils.ProcessDate import process_date

@@ -49,7 +49,8 @@ git clone https://github.com/codexgigassys/codex-frontend
 cd codex-backend/yara/
 ./setupYarGen.sh
 cd ..
-cp src/secrets.py.sample src/secrets.py
+# if you want to use a DB on a different host, copy default_config and edit it (optional)
+cp src/default_config.py src/secrets.py
 sudo docker-compose up
 ```
 The next time you want to stop/start the containers:

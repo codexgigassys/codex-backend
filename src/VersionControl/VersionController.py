@@ -3,7 +3,10 @@
 # See the file 'LICENSE' for copying permission.
 import os
 from pymongo import MongoClient
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 
 # versioning controller of executed plugins.
 class VersionController:

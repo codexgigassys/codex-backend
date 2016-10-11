@@ -8,10 +8,7 @@ import gridfs
 try:
     from secrets import env
 except ImportError:
-    import sys
-    print "Error: Please copy secrets.py.sample to secrets.py and complete "+ \
-            "vt_apikey if you want to use the VirusTotal."
-    sys.exit(1)
+    from default_config import env
 
 # Writes binaries on the DB
 class PackageController():

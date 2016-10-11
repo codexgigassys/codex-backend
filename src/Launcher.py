@@ -14,7 +14,10 @@ from MetaControl.MetaController import *
 from Utils.TimeLogger import TimeLogger
 from Sample import *
 import logging
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 
 class Launcher():
 

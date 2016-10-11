@@ -6,7 +6,10 @@ import os
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 
 client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
 db=client[env["db_metadata_name"]]

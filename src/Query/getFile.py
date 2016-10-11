@@ -7,7 +7,10 @@ import os
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 
 #file_id="906f21f436b0dbb2c9cf37b80a90cdeb061ced3d"
 #file_id="109bf9de7b82ffd7b8194aa3741b5d42ee878ebb"

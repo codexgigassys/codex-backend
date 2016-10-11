@@ -6,7 +6,10 @@ import hashlib
 import traceback
 
 from MetaControl.MetaController import *
-from secrets import env
+try:
+    from secrets import env
+except ImportError:
+    from default_config import env
 from Utils.Functions import key_list_clean,key_dict_clean
 
 
