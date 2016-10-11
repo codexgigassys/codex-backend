@@ -40,7 +40,7 @@ wget -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O yarGen-master.z
 unzip yarGen-master.zip && \
 7z x yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
 7z x yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
-git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ && \
+git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ /myapp/yara/binarly-sdk && \
 bash -c "wget -nc https://github.com/plusvic/yara/archive/v3.4.0.zip -O /tmp/yara.zip; echo a"  && \
 unzip /tmp/yara.zip -d /tmp && \
 pip install -r /myapp/src/pip_requirements.txt   && \
