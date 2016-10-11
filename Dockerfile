@@ -37,8 +37,8 @@ libxft-dev && \
 echo "Installing yarGen-master" && \
 wget -nv -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O /myapp/yara/yarGen-master.zip && \
 unzip yarGen-master.zip && \
-7z x yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
-7z x yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
+7z x /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
+7z x /myapp/yara/yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
 git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ /myapp/yara/binarly-sdk && \
 wget -nv -nc https://github.com/plusvic/yara/archive/v3.4.0.zip -O /tmp/yara.zip && \
 unzip /tmp/yara.zip -d /tmp && \
@@ -51,8 +51,8 @@ cd /tmp/yara-3.4.0/ &&  make && make install && \
 cd /myapp/yara && \
 python /myapp/yara/binarly-sdk/setup.py install && \
 cd /myapp/yara/yarGen-master && \
-7z x -y good-strings.db.zip.001 -o/myapp/yara/yarGen-master && \
-7z x -y good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
+7z x -y /myapp/yara/yarGen-master/good-strings.db.zip.001 -o/myapp/yara/yarGen-master && \
+7z x -y /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
 wget -nv -nc https://winitor.com/tools/pestudio/current/pestudio.zip -O /tmp/pestudio.zip  && \
 unzip /tmp/pestudio.zip -d /tmp && \
 cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/ && \
