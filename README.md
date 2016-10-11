@@ -43,12 +43,9 @@ VMs password: codex
 If you don't want to use a Virtual Machine, you can manually install Codex Gigas on your system.
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
-sudo apt-get install p7zip-full
 git clone https://github.com/codexgigassys/codex-backend
 git clone https://github.com/codexgigassys/codex-frontend
-cd codex-backend/yara/
-./setupYarGen.sh
-cd ..
+cd codex-backend/
 # if you want to use a DB on a different host, copy default_config and edit it (optional)
 cp src/default_config.py src/secrets.py
 sudo docker-compose up

@@ -18,3 +18,5 @@ rq
 validate_email
 pyasn1
 pyasn1_modules
+scipy
+numpy

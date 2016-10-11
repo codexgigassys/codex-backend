@@ -13,9 +13,6 @@ libffi-dev \
 libssl-dev \
 python-dev \
 libfuzzy-dev \
-python-numpy \
-python-scipy \
-python-matplotlib \
 python-gevent \
 python-pip \
 python-magic \
@@ -38,6 +35,12 @@ unzip \
 libfreetype6-dev \
 libtaoframework-freetype-cil-dev \
 libxft-dev && \
+echo "Installing yarGen-master" && \
+wget -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O yarGen-master.zip && \
+unzip yarGen-master.zip && \
+7z x yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
+7z x yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
+git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ && \
 bash -c "wget -nc https://github.com/plusvic/yara/archive/v3.4.0.zip -O /tmp/yara.zip; echo a"  && \
 unzip /tmp/yara.zip -d /tmp && \
 pip install -r /myapp/src/pip_requirements.txt   && \
@@ -52,7 +55,10 @@ cd /myapp/yara/yarGen-master && \
 7z x -y good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
 bash -c "wget -nc https://winitor.com/tools/pestudio/current/pestudio.zip -O /tmp/pestudio.zip; echo a" && \
 unzip /tmp/pestudio.zip -d /tmp && \
-cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/
+cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/ && \
+rm -rf /tmp/yara-3.4.0/ && \
+rm -f /tmp/pestudio.zip && \
+rm -f /tmp/yara.zip
 #yargen
 #RUN chmod +x /myapp/yara/setupYarGen.sh && sleep 1  && cat /myapp/yara/setupYarGen.sh
 #RUN ["/myapp/yara/setupYarGen.sh"]
