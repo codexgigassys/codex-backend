@@ -71,6 +71,8 @@ def total_positive(vt_dict):
 # allinfo: 1, parameters total, and positives
 # are missing, but can be calculated manually.
 def parse_vt_response(json_response):
+    if json_response is None:
+        return None
     response_code=json_response.get("response_code")
     if(response_code!=1):
         return None
