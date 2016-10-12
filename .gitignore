@@ -22,6 +22,7 @@ src/error_log.txt
 
 #Ignore credentials
 src/secrets.py
+src/config/secrets.py
 
 #Ignore
 yara/yarGen-master/

@@ -14,7 +14,7 @@ api:
   ports:
     - "4500:8080"
   volumes:
-    - ./src/:/myapp/src/
+    - ./src/config:/myapp/src/config
   links:
     - db
     - httpd

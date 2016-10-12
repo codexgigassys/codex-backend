@@ -3,22 +3,17 @@
 # See the file 'LICENSE' for copying permission.
 import os
 import hashlib
-from pymongo import MongoClient
 import gridfs
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
+path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
+import sys
+sys.path.insert(0, path)
+from db_pool import *
 
 # Writes binaries on the DB
 class PackageController():
     def __init__(self):
-        client=MongoClient(env["files"]["host"],env["files"]["port"])
-        db=client[env["db_files_name"]]
-        self.fs=gridfs.GridFS(db)
+        self.fs=gridfs.GridFS(db_fs)
         if(env["temporal_files_db"]):
-            client_temp=MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
-            db_temp=client_temp[env["db_temp_files_name"]]
             self.fs_temp=gridfs.GridFS(db_temp)
 
     def __delete__(self):
@@ -59,10 +54,9 @@ class PackageController():
 
     def last_updated(self,number):
         if(env["temporal_files_db"]):
-            client_fs = MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
+            db_files=db_temp
         else:
-            client_fs = MongoClient(env["files"]["host"],env["files"]["port"])
-        db_files = client_fs[env["db_files_name"]]
+            db_flies=db_fs
         collection_files = db_files["fs.files"].find().sort([("_id", -1)]).limit(number)
         result=[]
         for document in collection_files:

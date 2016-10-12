@@ -2,18 +2,12 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 import os
-from pymongo import MongoClient
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
+from db_pool import *
 
 # versioning controller of executed plugins.
 class VersionController:
     def __init__(self):
-        client=MongoClient(env["versions"]["host"],env["versions"]["port"])
-        db=client[env["db_versions_name"]]
-        self.collection=db.version_container
+        self.collection=db_ver.version_container
         #print(self.collection)
 
     def __delete__(self):

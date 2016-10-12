@@ -4,11 +4,10 @@
 import os
 import math
 import traceback
-from pymongo import MongoClient
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
+path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
+import sys
+sys.path.insert(0, path)
+from db_pool import *
 #from IPython import embed
 from datetime import datetime
 from Utils.ProcessDate import process_date
@@ -19,8 +18,6 @@ class MetaController():
     def __init__(self,db_collection=None):
         if db_collection is None:
             db_collection = env["db_metadata_collection"]
-        client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-        db=client[env["db_metadata_name"]]
         self.collection=db[db_collection]
         self.import_coll=db.imports_tree
         self.av_coll=db.av_analysis
