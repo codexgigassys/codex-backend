@@ -60,5 +60,4 @@ cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/ && \
 rm -rf /tmp/yara-3.4.0/ && \
 rm -f /tmp/pestudio.zip && \
 rm -f /tmp/yara.zip
-ENV REQUESTS_CA_BUNDLE "/usr/local/lib/python2.7/site-packages/certifi/weak.pem"
 #CMD ["python","/myapp/src/api2.py"]
