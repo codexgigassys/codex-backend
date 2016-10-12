@@ -11,8 +11,10 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
 * [Configuration (optional)](#configuration-optional)
     * [MongoDB path](#mongodb-path)
     * [VirusTotal](#virustotal)
-* [Ready-to-use virtual machines](#ready-to-use-virtual-machines)
-* [Manually build Codex Gigas](#manually-build-codex-gigas)
+* [Installation](#installation)
+    * [Method 1: Download ready-to-use virtual machines](#download-ready-to-use-virtual-machines)
+    * [Method 2: Installation without virtual machines](#installation-without-virtual-machines)
+    * [Method 3: Manually build Codex Gigas](#manually-build-codex-gigas)
 * [Load Files](#load-files)
 * [APT-notes samples](#apt-notes-samples)
 * [Development](#development)
@@ -22,7 +24,7 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
 
 ## Configuration (optional)
 ### MongoDB path
-The default path of the Mongo database is the parent folder of ```codex-backend``` and ```codex-frontend```. If you want to change that edit line 4 of ```docker-compose.yml```:
+The default path of the Mongo database is the parent folder of ```codex-backend```. If you want to change that edit the following line of ```pull-install.yml``` and ```docker-compose.yml``` before installation:
 ```
     - ../mongo-data/:/data/db
 ```
@@ -32,15 +34,30 @@ VirusTotal is used for retrieving antivirus results at request for a file. You c
 ```
 sudo docker-compose up
 ```
-
-## Ready-to-use virtual machines
+## Installation
+There are three ways to install CodexGigas. We have ready-to-use Virtual Machines (easiest way). We also provide the docker pre-built images, so you can use CodexGigas without virtual machines. Lastly, you can manually build Codex Gigas docker images.
+### Download ready-to-use virtual machines
 You can download your preferred vm file. Inside you'll find Codex Gigas running at startup on ```http://127.0.0.1:6100```.
 * [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
 * [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
 VMs password: codex
 
-## Manually build Codex Gigas 
+### Installation without virtual machines
+First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
+```
+mkdir codexgigas && cd codexgigas
+git clone https://github.com/codexgigassys/codex-backend
+cd codex-backend
+sudo docker-compose -f pull-install.yml up
+```
+This will download the pre-built docker images (about 2GB) and start them up. 
+The next time you want to stop/start the containers:
+```
+sudo docker-compose stop
+sudo docker-compose start
+```
+### Manually build Codex Gigas 
 If you don't want to use a Virtual Machine, you can manually install Codex Gigas on your system.
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
@@ -66,9 +83,9 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 
 
 
-## APT-notes samples [https://github.com/kbandla/APTnotes] (https://github.com/kbandla/APTnotes)
+## APT-notes samples
 We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (sha1: 6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
-mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys)
+mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys). Source:  [https://github.com/kbandla/APTnotes] (https://github.com/kbandla/APTnotes)
 
 ## Development
 Wanna contribute? Codex Gigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
