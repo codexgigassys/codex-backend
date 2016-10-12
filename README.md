@@ -17,6 +17,7 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
 * [APT-notes samples](#apt-notes-samples)
 * [Development](#development)
 * [Codex Gigas Thanks](#codex-gigas-thanks)
+* [License](#license)
 
 
 ## Configuration (optional)
@@ -88,3 +89,12 @@ We would like to thanks the authors of the following tools, coming from other pr
 * yarGen (Florian Roth)            https://github.com/Neo23x0/yarGen
 * pefile (Ero Carrera)             https://github.com/erocarrera/pefile
 * ssdeep (jollheef)                https://github.com/jollheef/ssdeep
+
+## License
+Copyright (c) 2016 Deloitte Argentina
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
