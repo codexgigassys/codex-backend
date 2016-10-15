@@ -15,10 +15,6 @@ from Launcher import *
 from Utils.Functions import clean_hash,process_file
 from Utils.ProcessDate import parse_date_range
 from db_pool import *
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
 
 def add_file_from_vt(hash_id):
     downloaded_file=download_from_virus_total(hash_id)

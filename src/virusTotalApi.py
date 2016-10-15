@@ -7,9 +7,9 @@ import traceback
 
 from MetaControl.MetaController import *
 try:
-    from secrets import env
+    from config.secrets import env
 except ImportError:
-    from default_config import env
+    from config.default_config import env
 from Utils.Functions import key_list_clean,key_dict_clean
 
 

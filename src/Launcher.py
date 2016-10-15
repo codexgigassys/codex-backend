@@ -15,9 +15,9 @@ from Utils.TimeLogger import TimeLogger
 from Sample import *
 import logging
 try:
-    from secrets import env
+    from config.secrets import env
 except ImportError:
-    from default_config import env
+    from config.default_config import env
 
 class Launcher():
 
