@@ -85,7 +85,7 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 
 ## APT-notes samples
 We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (sha1: 6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
-mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys). Source:  [https://github.com/kbandla/APTnotes] (https://github.com/kbandla/APTnotes)
+mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys). Source:  [https://github.com/aptnotes/data] (https://github.com/aptnotes/data)
 
 ## Development
 Wanna contribute? Codex Gigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
