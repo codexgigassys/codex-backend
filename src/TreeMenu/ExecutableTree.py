@@ -137,7 +137,7 @@ tree_element={"name":"Portable Executable","children":[
         {"name":"URLs","id":103,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
         {"name":"IPs","id":104,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
         {"name":"Domains","id":105,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
-        {"name":"Interesting","id":106,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""},
+        {"name":"Interesting","id":106,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": "", "multi": True},
         {"name":"Registrys","id":107,"type":"string","children":[],"searchable":True,"projectable":False, "call_func": ""}
         ]},
     {"name":"Exports","children":[
