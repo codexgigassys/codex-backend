@@ -15,6 +15,7 @@ api:
     - "4500:8080"
   volumes:
     - ./src/config:/myapp/src/config
+    - ./files_to_load/:/myapp/files_to_load/
   links:
     - db
     - httpd
