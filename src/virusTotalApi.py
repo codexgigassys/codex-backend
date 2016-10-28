@@ -16,9 +16,12 @@ from Utils.Functions import key_list_clean,key_dict_clean
 def download_from_virus_total(file_id):
     print "download_form_virus_total(): "+str(file_id)
     apikey = env["vt_apikey"]
+    if(len(apikey)==0):
+        return None
     params = {'apikey':apikey,'hash':file_id}
     try_again = True
     fail_count=0
+    response = None
     while(try_again):
         try:
             response = requests.get('https://www.virustotal.com/vtapi/v2/file/download', params=params)
@@ -30,6 +33,8 @@ def download_from_virus_total(file_id):
             fail_count+=1
             if(fail_count >= 3):
                 break
+    if(response is None):
+        return
     if(response.status_code == 200):
         downloaded_file = response.content
         largo=len(file_id)
@@ -106,6 +111,8 @@ def parse_vt_response(json_response):
 # dictionary. In case of error, returns None.
 def get_vt_av_result(file_id):
     apikey=env["vt_apikey"]
+    if(len(apikey)==0):
+        return None
     params = {'apikey':apikey,'resource':file_id, 'allinfo': '1'}
     try:
         response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params)
