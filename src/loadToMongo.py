@@ -28,7 +28,7 @@ def load_to_mongo2(folder_path):
     count=0
     reset=0
     already_loaded=0
-    time_start = datetime.datetime.now()
+    time_start = datetime.now()
     uploaded=0
     in_mem=0
     loaded_ram_counter=0
@@ -66,7 +66,7 @@ def load_to_mongo2(folder_path):
             uploaded=uploaded+1
 
     result=str(already_loaded)+" were already loaded to mongo.\n"
-    result+=thetime(time_start,datetime.datetime.now(),count)
+    result+=thetime(time_start,datetime.now(),count)
     print result
     return result
 
