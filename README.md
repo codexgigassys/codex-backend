@@ -35,7 +35,7 @@ VirusTotal is used for retrieving antivirus results at request for a file. You c
 sudo docker-compose up
 ```
 ## Installation
-There are three ways to install CodexGigas. We have ready-to-use Virtual Machines (easiest way). We also provide the docker pre-built images, so you can use CodexGigas without virtual machines. Lastly, you can manually build Codex Gigas docker images.
+There are three ways to install CodexGigas Community version. We have ready-to-use Virtual Machines (easiest way). We also provide the docker pre-built images, so you can use CodexGigas without virtual machines. Lastly, you can manually build Codex Gigas docker images.
 ### Download ready-to-use virtual machines
 You can download your preferred vm file. Inside you'll find Codex Gigas running at startup on ```http://127.0.0.1:6100```.
 * [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
@@ -57,7 +57,7 @@ The next time you want to stop/start the containers:
 sudo docker-compose stop
 sudo docker-compose start
 ```
-### Manually build Codex Gigas 
+### Manually build Codex Gigas Community Version
 If you don't want to use a Virtual Machine, you can manually install Codex Gigas on your system.
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
@@ -88,7 +88,7 @@ We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehl
 mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys). Source:  [https://github.com/aptnotes/data] (https://github.com/aptnotes/data)
 
 ## Development
-Wanna contribute? Codex Gigas is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
+Wanna contribute? Codex Gigas Community is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
 
 When developing new modules or patches, please try to comply to the general code style that we try to maintain across the project. When introducing new features or fixing significant bugs, please also include a summary and possibly also introduce comprehensive documentation in our guide.
 If you want to debug the app it will be easier starting it as:
