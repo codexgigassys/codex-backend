@@ -13,6 +13,8 @@ from Sample import *
 from Launcher import *
 import csv
 import json
+import string
+import random
 
 
 def is_iterable(s):
@@ -122,6 +124,8 @@ def key_list_clean(json):
     return array
 
 def to_bool(string):
+    if string is None:
+        return False
     string=string.strip().lower()
     if string=="false" or string is None:
         return False
@@ -151,7 +155,7 @@ def log_event(event,file_hash,comments=""):
 def change_date_to_str(res):
     if res is None:
         return None
-    for date_key in ["date","upload_date"]:
+    for date_key in ["date","upload_date","date_start", "date_end", "date_enqueued"]:
         if res.get(date_key) is None:
             pass
         else:
@@ -215,21 +219,6 @@ def clean_hash(hash):
 
 
 
-def save_file_from_vt(hash_id):
-    downloaded_file=download_from_virus_total(hash_id)
-    if(downloaded_file==None):
-        return None
-
-    data_bin=downloaded_file
-    file_id=hashlib.sha1(data_bin).hexdigest()
-   # print "file_id="+str(file_id)
-    pc=PackageController()
-    res=pc.searchFile(file_id)
-    if(res==None): # File not found. Add it to the package.
-        pc.append(file_id,data_bin,True)
-        print("Added: %s" % (file_id,))
-    return file_id
-
 
 #returns true if a hash is md5 or sha1 valid. False otherwise
 def valid_hash(hash):
@@ -265,6 +254,34 @@ def search_by_hash_and_type(hash,type):
         return None
     else:
         return ret
+
+# Check the format of
+# a textarea hashes.
+# (string with \n's)
+def check_hashes(hashes):
+    errors = []
+    result_hashes = []
+    for hash_id in hashes.split("\n"):
+        hash_id = clean_hash(hash_id)
+        if hash_id is None:
+            continue
+        if(not valid_hash(hash_id)):
+            errors.append({"error": 5, "error_message": "invalid_hash: " + str(hash_id) })
+        else:
+            result_hashes.append(hash_id)
+    return {"hashes": result_hashes, "errors": errors}
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def add_error(resp_dict,error_code,error_message):
+    if type(resp_dict) != dict:
+        return resp_dict
+    if resp_dict.get('errors') is None:
+        resp_dict["errors"] = []
+    resp_dict["errors"].append({"code": error_code, "message": error_message })
+    return resp_dict
+
 
 def cursor_to_dict(f1,retrieve):
     l=[]

@@ -29,5 +29,13 @@ env = {
     'yara-script1': '/myapp/yara/YaraGenerator/yaraGenerator.py',
     'yara-script2': '/myapp/yara/yarGen-master/yarGen.py',
     'csv-upx-file': '',
-    'auto_get_av_result': False
+    'auto_get_av_result': False,
+    "mailsender":
+    {
+        "fromaddr": "",
+        "smtp_host": "smtp.gmail.com",
+        "smtp_ssl_port": 465,
+        "username": '',
+        "password": ''
+        }
     }

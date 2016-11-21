@@ -6,13 +6,16 @@ import hashlib
 import traceback
 
 from MetaControl.MetaController import *
+from PackageControl.PackageController import *
 try:
     from config.secrets import env
 except ImportError:
     from config.default_config import env
 from Utils.Functions import key_list_clean,key_dict_clean
 
-
+# Given a hash, it downloads the file from VirusTotal
+# it checks that the downloaded file correspond to the
+# hash. Returns the binary data of the file.
 def download_from_virus_total(file_id):
     print "download_form_virus_total(): "+str(file_id)
     apikey = env["vt_apikey"]
@@ -152,6 +155,21 @@ def get_av_result(file_id):
             return (type,positives,total)
 
     return None
+
+def save_file_from_vt(hash_id):
+    downloaded_file=download_from_virus_total(hash_id)
+    if(downloaded_file==None):
+        return None
+
+    data_bin=downloaded_file
+    file_id=hashlib.sha1(data_bin).hexdigest()
+   # print "file_id="+str(file_id)
+    pc=PackageController()
+    res=pc.searchFile(file_id)
+    if(res==None): # File not found. Add it to the package.
+        pc.append(file_id,data_bin,True)
+        print("Added: %s" % (file_id,))
+    return file_id
 
 def test():
     file_id="8260795f47f284889488c375bed2996e"

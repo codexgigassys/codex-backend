@@ -21,6 +21,7 @@ class MetaController():
         self.collection=db[db_collection]
         self.import_coll=db.imports_tree
         self.av_coll=db.av_analysis
+        self.tasks=db.tasks
 
     def __delete__(self):
         pass
@@ -117,7 +118,15 @@ class MetaController():
         else:
             return meta.get('date')
 
+    def read_task(self,task_id):
+        f=self.tasks.find_one({"task_id": task_id})
+        return f
 
+    def write_task(self,task_id,data_dic):
+        command={"$set":data_dic}
+        print "data_dic"
+        print str(data_dic)
+        return self.tasks.update_one({"task_id": task_id},command,upsert=True)
 
     def save_av_analysis(self,file_id,analysis_result):
         command={"$set":analysis_result}
