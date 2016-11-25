@@ -160,9 +160,9 @@ def translate_id(id,str_value):
         value=float(str_value)
     elif type_format == "check":
         if str_value=="true":
-            value="True"
+            value=True
         else:
-            value="False"
+            value=False
     elif type_format == "s_string":
         aux=str(urllib.unquote(str_value).decode('utf8')).lower()
         value="'%s'"%(aux,)
