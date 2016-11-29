@@ -5,7 +5,7 @@ import os
 import sys
 path=os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, path)
-from Utils.Functions import process_file,valid_hash,clean_hash
+from Utils.Functions import process_file,valid_hash,clean_hash,get_file_id
 from PackageControl.PackageController import *
 
 def generic_process_hash(hash_str):
