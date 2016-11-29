@@ -27,6 +27,8 @@ class MetaController():
         pass
 
     def read(self,file_id):
+        if file_id is None:
+            return None
         f=self.collection.find_one({"file_id":file_id})
         if(f==None): return None
 

@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash,clean_tree
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash,clean_tree,get_file_id
 from Utils.ProcessDate import process_date
 import re
 from Utils.InfoExtractor import *
@@ -136,23 +136,18 @@ def get_sample_count():
 @route('/api/v1/metadata', method='GET')
 def get_metadata():
     file_hash=clean_hash(request.query.file_hash)
-    if file_hash is None:
-        return
-    if len(file_hash) == 32: #ToDo: validate hash
-        key = 'md5'
-    elif len(file_hash) == 40:
-        key = 'sha1'
-    else:
+    if not valid_hash(file_hash):
         response.code = 400
         return jsonize({'message':'Invalid hash format (use MD5, SHA1 or SHA2)'})
+    file_hash = get_file_id(file_hash)
+    if file_hash is None:
+        response.code = 405
+        return jsonize({'message':'Metadata not found in the database'})
 
     mdc=MetaController()
     res=mdc.read(file_hash)
     if res==None:
-        response.code = 404
-        return jsonize({'message':'Metadata not found in the database'})
-    log_event("metadata",file_hash)
-
+        log_event("metadata",file_hash)
     return dumps(change_date_to_str(res))
 
 

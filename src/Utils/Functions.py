@@ -235,6 +235,8 @@ def get_file_id(hash):
         ret = search_by_hash_and_type(hash,"md5")
     elif len(hash)==40:
         ret = search_by_hash_and_type(hash,"sha1")
+    elif len(hash)==64:
+        ret = search_by_hash_and_type(hash,"sha2")
     if ret is not None and ret[0] is not None:
         return ret[0].get('sha1')
     else:
@@ -243,7 +245,7 @@ def get_file_id(hash):
 # Given a hash and a type (md5 or file_id (sha1))
 # it will search in meta collection.
 def search_by_hash_and_type(hash,type):
-    if type is not "md5" and type is not "sha1":
+    if type is not "md5" and type is not "sha1" and type is not "sha2":
         return None
     search={'$and': [{'hash.'+type: hash}]}
     retrieve={'file_id': 1}
