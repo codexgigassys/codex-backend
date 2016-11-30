@@ -9,6 +9,8 @@ from Utils.Functions import process_file,valid_hash,clean_hash,get_file_id
 from PackageControl.PackageController import *
 
 def generic_process_hash(hash_str):
+    if hash_str is None:
+        return None
     hash_str = clean_hash(hash_str)
     if(not valid_hash(hash_str)):
         return None
