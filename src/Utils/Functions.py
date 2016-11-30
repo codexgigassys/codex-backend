@@ -166,6 +166,8 @@ def change_date_to_str(res):
 def process_file(file_hash,force=False):
     if file_hash is None:
         return None
+    if len(file_hash) != 40:
+        raise ValueError("process_file only accepts sha1")
     print "process_file("+str(file_hash)+")"
     pc=PackageController()
     res=pc.getFile(file_hash)
@@ -238,7 +240,7 @@ def get_file_id(hash):
     elif len(hash)==64:
         ret = search_by_hash_and_type(hash,"sha2")
     if ret is not None and ret[0] is not None:
-        return ret[0].get('sha1')
+        return ret[0].get('hash').get('sha1')
     else:
         return None
 
@@ -248,14 +250,14 @@ def search_by_hash_and_type(hash,type):
     if type is not "md5" and type is not "sha1" and type is not "sha2":
         return None
     search={'$and': [{'hash.'+type: hash}]}
-    retrieve={'file_id': 1}
+    retrieve={'hash.sha1': 1}
     coll_meta=db.meta_container
-    f1=coll_meta.find(search,retrieve)
-    ret=cursor_to_dict(f1,retrieve)
-    if len(ret)==0:
+    f1=coll_meta.find(search,retrieve).limit(1)
+
+    if f1.count() ==0:
         return None
     else:
-        return ret
+        return f1
 
 # Check the format of
 # a textarea hashes.

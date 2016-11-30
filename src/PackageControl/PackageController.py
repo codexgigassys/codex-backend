@@ -13,8 +13,10 @@ from db_pool import *
 class PackageController():
     def __init__(self):
         self.fs=gridfs.GridFS(db_fs)
+        self.collection=db_fs["fs.files"]
         if(env["temporal_files_db"]):
             self.fs_temp=gridfs.GridFS(db_temp)
+            self.collection_tmp=db_temp["fs.files"]
 
     def __delete__(self):
         pass
@@ -50,6 +52,21 @@ class PackageController():
                 if f==None:
                     return None
         return f.read()
+
+    def md5_to_sha1(self,md5):
+        if len(md5) != 32:
+            raise ValueError("not a valid md5")
+        f=self.collection.find_one({"md5":md5})
+        if f is None:
+            if env["temporal_files_db"]==False:
+                print "md5_to_sha1= none"
+                return None
+            else:
+                f=self.collection_tmp.find_one({"md5":md5})
+                if f==None:
+                    print "md5_to_sha1= none"
+                    return None
+        return f["filename"]
 
 
     def last_updated(self,number):

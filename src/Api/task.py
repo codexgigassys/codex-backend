@@ -93,8 +93,8 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         response = add_error(response, 6, "No valid hashes provided.")
         return change_date_to_str(response)
 
+    response["not_found"] = []
     if vt_samples:
-        response["not_found"] = []
         response["downloaded"] = []
         for hash_id in hashes:
             if(get_file_id(hash_id) is None):
@@ -112,11 +112,15 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                 process_end_time = datetime.datetime.now()
                 response["processed"].append({"hash": hash_id,
                     "seconds": (process_end_time-process_start_time).seconds})
+            else:
+                response["not_found"].append(hash_id)
+    response["not_found"] = list(set(response["not_found"]))
     save(response)
     if vt_av:
         for hash_id in hashes:
-            if(get_file_id(hash_id) is not None):
-                get_av_result(hash_id)
+            sha1 = get_file_id(hash_id)
+            if(sha1 is not None):
+                get_av_result(sha1)
 
     if(bool(email)):
         send_mail(email, "task done", str(response))
