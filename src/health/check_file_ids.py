@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, path)
 from db_pool import *
 
+
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
         return False
@@ -18,8 +19,9 @@ def is_sha1(maybe_sha):
     return True
 
 def compare(_id,sha1,file_id):
-    if sha1 != file_id or not valid_hash(sha1):
+    if sha1 != file_id or not is_sha1(sha1):
         print "idsha1fileid,"+str(_id)+","+str(sha1)+","+str(file_id)
+        sys.stdout.flush()
         return True
     else:
         return False
@@ -32,8 +34,7 @@ def main():
     test = 0
     mis = 0
     print_flag = 1000000
-    print("Going to start: %s" % start)
-    res = collection.find({},no_cursor_timeout=True).skip(start)
+    res = collection.find({},{"hash": 1, "file_id": 1},no_cursor_timeout=True).skip(start)
     for r in res:
         count += 1
         test += 1
@@ -42,6 +43,7 @@ def main():
         if(test >= print_flag):
             test = 0
             print "count-miss,"+str(count)+","+str(mis)
+            sys.stdout.flush()
 
 
 if __name__ == "__main__":
