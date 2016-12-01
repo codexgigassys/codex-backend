@@ -16,7 +16,6 @@ import json
 import string
 import random
 
-
 def is_iterable(s):
     try:
         iter(s)
@@ -102,6 +101,14 @@ def key_dict_clean(json):
         tmp_dict["name"]=key
         array.append(tmp_dict)
     return array
+
+# Replace dot with _
+# in dictionaries keys
+# in order to save them in mongo
+def rec_key_replace(obj):
+	if isinstance(obj, dict):
+		return {key.replace('.', '_'): rec_key_replace(val) for key, val in obj.items()}
+	return obj
 
 # This functions recieves a dictionary like
 # {"key1": ["something1", "something2"],

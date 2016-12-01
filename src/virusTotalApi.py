@@ -11,7 +11,7 @@ try:
     from config.secrets import env
 except ImportError:
     from config.default_config import env
-from Utils.Functions import key_list_clean,key_dict_clean
+from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace
 
 # Given a hash, it downloads the file from VirusTotal
 # it checks that the downloaded file correspond to the
@@ -103,7 +103,7 @@ def parse_vt_response(json_response):
         json_response["additional_info"]["imports"]=key_list_clean(json_response["additional_info"]["imports"])
     if json_response.get('additional_info') is not None and json_response.get('additional_info').get('pe-resource-types') is not None:
         json_response["additional_info"]["pe-resource-types"] = key_list_clean(json_response["additional_info"]["pe-resource-types"])
-
+    json_response = rec_key_replace(json_response)
     ret = json_response
     ret["positives"]=positives
     ret["total"]=total
