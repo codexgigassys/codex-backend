@@ -4,7 +4,8 @@ from db_pool import *
 
 
 def send_mail(toaddrs,subject,text):
-
+    if toaddrs is None or len(toaddrs)==0:
+        return
     fromaddr = env.get('mailsender').get('fromaddr')
 
     msg = MIMEText(text)
