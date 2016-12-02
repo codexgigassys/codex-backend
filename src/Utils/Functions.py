@@ -15,6 +15,20 @@ import csv
 import json
 import string
 import random
+import re
+
+def number_of_jobs_on_queue(queue_name):
+    w=re.match("^[a-z]+$",queue_name)
+    if(w is None):
+        raise ValueError("invalid queue_name")
+    command = ["bash","-c","rq info --raw | grep -E -e \"^queue "+queue_name+" [0-9]+$\" | sed \"s/queue "+queue_name+" //g\" | tr -d \"\\n\""]
+    output = call_with_output(command)
+    print "output="+str(output)
+    try:
+        return int(output)
+    except ValueError,e:
+        print "ValueError in int(output): "+str(e)
+        return 0
 
 def is_iterable(s):
     try:
