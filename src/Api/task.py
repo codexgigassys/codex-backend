@@ -79,6 +79,7 @@ def task():
 
 
 def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_name=""):
+    generic_count = 0
     response = {}
     response["date_start"] = datetime.datetime.now()
     response["document_name"] = document_name
@@ -98,6 +99,9 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         response["downloaded"] = []
         for hash_id in hashes:
             if(get_file_id(hash_id) is None):
+                generic_count += 1
+                if (generic_count % 20 == 0):
+                    save(response)
                 if(save_file_from_vt(hash_id) is not None):
                     response["downloaded"].append(hash_id)
                     generic_process_hash(hash_id)
@@ -108,6 +112,9 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     if process:
         for hash_id in hashes:
             process_start_time = datetime.datetime.now()
+            generic_count += 1
+            if (generic_count % 20 == 0):
+                save(response)
             if(generic_process_hash(hash_id) == 0):
                 process_end_time = datetime.datetime.now()
                 response["processed"].append({"hash": hash_id,
