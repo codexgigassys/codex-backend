@@ -59,5 +59,18 @@ unzip /tmp/pestudio.zip -d /tmp && \
 cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/ && \
 rm -rf /tmp/yara-3.4.0/ && \
 rm -f /tmp/pestudio.zip && \
-rm -f /tmp/yara.zip
+rm -f /tmp/yara.zip && \
+rm -rf /tmp/pestudio/ && \
+rm -f /myapp/yara/yarGen-master.zip && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.001 && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.002 && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.003 && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.004 && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.005 && \
+rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.006 && \
+rm -f /myapp/yara/yarGen-master/good-strings.db.zip.001 && \
+rm -f /myapp/yara/yarGen-master/good-strings.db.zip.002 && \
+rm -f /myapp/yara/yarGen-master/good-strings.db.zip.003 && \
+rm -f /myapp/yara/yarGen-master/good-strings.db.zip.004
+
 #CMD ["python","/myapp/src/api2.py"]
