@@ -30,7 +30,7 @@ The default path of the Mongo database is the parent folder of ```codex-backend`
 ```
 
 ### VirusTotal
-VirusTotal is used for retrieving antivirus results at request for a file. You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/secrets.py```. Then you should restart the container:
+VirusTotal is used for retrieving antivirus results at request for a file. You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/config/secrets.py```. Then you should restart the container:
 ```
 sudo docker-compose up
 ```
@@ -65,7 +65,7 @@ git clone https://github.com/codexgigassys/codex-backend
 git clone https://github.com/codexgigassys/codex-frontend
 cd codex-backend/
 # if you want to use a DB on a different host, copy default_config and edit it (optional)
-cp src/default_config.py src/secrets.py
+cp src/config/default_config.py src/config/secrets.py
 sudo docker-compose up
 ```
 The next time you want to stop/start the containers:
