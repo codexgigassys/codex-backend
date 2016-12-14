@@ -238,7 +238,10 @@ def clean_hash(hash):
     else:
         hash = hash.strip().lower()
         m = re.search('[a-f0-9]+',hash)
-        return m.group(0)
+        if m is None:
+            return ""
+        else:
+            return m.group(0)
 
 
 
