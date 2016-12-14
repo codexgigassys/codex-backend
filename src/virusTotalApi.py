@@ -27,7 +27,7 @@ def download_from_virus_total(file_id):
     response = None
     while(try_again):
         try:
-            response = requests.get('https://www.virustotal.com/vtapi/v2/file/download', params=params)
+            response = requests.get('https://www.virustotal.com/vtapi/v2/file/download', params=params, timeout = 30)
             try_again=False
         except Exception, e:
             print(str(e))
@@ -118,7 +118,7 @@ def get_vt_av_result(file_id):
         return None
     params = {'apikey':apikey,'resource':file_id, 'allinfo': '1'}
     try:
-        response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params)
+        response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, timeout = 30)
     except Exception, e:
         print str(e)
         return None
