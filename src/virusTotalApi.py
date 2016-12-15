@@ -12,6 +12,7 @@ try:
 except ImportError:
     from config.default_config import env
 from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace
+from Utils.ProcessDate import process_date
 
 # Given a hash, it downloads the file from VirusTotal
 # it checks that the downloaded file correspond to the
@@ -107,6 +108,7 @@ def parse_vt_response(json_response):
     ret = json_response
     ret["positives"]=positives
     ret["total"]=total
+    ret["date"]=process_date(json_response.get('first_seen'))
     return ret
 
 # Request the VT data for a given hash

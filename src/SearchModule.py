@@ -76,8 +76,8 @@ def fuzz_search_fast(id,p,fuzz):
 
 
 
-def searchFull(search,limit=0,retrieve={}):
-    coll_meta=db[env["db_metadata_collection"]]
+def searchFull(search,limit=0,retrieve={},collection="meta_container"):
+    coll_meta=db[collection]
     #count=coll_meta.find(search).count()
     #print(count)
     if limit==0:
@@ -229,6 +229,28 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             query={"file_id":sha1}
             res=searchFull(query,1,retrieve)
         return res
+
+    # if the user seachs only for AV_signature and date.
+    # Because VT antivirus analysis are on a seperate collection, we used to 
+    # search AV signature first, collection the hashes, and then search hash by hash
+    # to see if the other restrictions in the query match the hash contents in meta_container.
+    # (basically split the query in two). The problem with this began when the av_anaylsis collection
+    # started to grow. Possible solutions are, query the av_analysis collection with a count(), then the
+    # meta_container also with a count(), and search first the collection with the lower number.
+    # This will improve performance a little. Other way was to search both queries and intersect the hashes.
+    # Currently, VT antivirus analysis is in a seperate collection because mongo limits the number of indexes
+    # to 64. If this limit is removed, then av_analysis and meta_container should merge.
+    # Meanwhile, we can get a decent performance for a small query with only date and av_signature.
+    if(len(query_list)==1 and len(av_collection_query_list) > 0 and query_list[0].get('date') is not None):
+        query_list.extend(av_collection_query_list)
+        query={"$and":query_list}
+        retrieve['sha1']=1
+        retrieve.pop('description',None)
+        retrieve.pop('mime_type',None)
+        retrieve.pop('file_id',None)
+        retrieve.pop('particular_header.headers.file_header.TimeDateStamp',None)
+        retrieve.pop('particular_header.packer_detection',None)
+        return searchFull(query,limit,retrieve,"av_analysis")
 
     if(len(av_collection_query_list)>0):
         av_query={"$and":av_collection_query_list}
