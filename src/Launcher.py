@@ -82,7 +82,7 @@ class Launcher():
         if(len(result_version)>0):
             logging.debug("Updating metadata")
 
-            if(self.mdc.write(sample.getID(),result_dic)!=2):
+            if(self.mdc.write(sample.getID(),result_dic)!=0):
                 logging.error("Error writing Metadata to DB, sample:%s",sample.getID())
                 return -1
             logging.debug("Metadata writed in DB")
