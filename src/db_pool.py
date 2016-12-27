@@ -11,9 +11,9 @@ if 'client' not in globals():
     client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
     db=client[env["db_metadata_name"]]
     client_fs=MongoClient(env["files"]["host"],env["files"]["port"])
-    db_fs=client[env["db_files_name"]]
+    db_fs=client_fs[env["db_files_name"]]
     client_ver=MongoClient(env["versions"]["host"],env["versions"]["port"])
-    db_ver=client[env["db_versions_name"]]
+    db_ver=client_ver[env["db_versions_name"]]
     if(env["temporal_files_db"]):
         client_temp=MongoClient(env["temp_files"]["host"],env["temp_files"]["port"])
         db_temp=client_temp[env["db_temp_files_name"]]
