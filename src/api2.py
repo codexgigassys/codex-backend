@@ -44,7 +44,7 @@ import cgi
 tmp_folder="/tmp/mass_download/"
 
 def add_hash_to_process_queue(sha1):
-    q = Queue('process',connection=Redis())
+    q = Queue('process',connection=Redis(host=env.get('redis').get('host')))
     job = q.enqueue('process_hash.generic_process_hash',args=(sha1,),timeout=70)
 
 

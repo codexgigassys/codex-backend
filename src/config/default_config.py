@@ -19,6 +19,11 @@ env = {
       "host": "codexbackend_db_1",
       "port": 27017
       },
+    "redis":
+    {
+      "host": "codexbackend_redis_1",
+      "port": 6379
+      },
     "temporal_files_db": False,
     "db_temp_files_name": "DB_temp_files",
     "db_files_name": "DB_files",

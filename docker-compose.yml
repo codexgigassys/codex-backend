@@ -1,21 +1,40 @@
-db:
-  image: mongo:3.2
-  volumes:
-    - ../mongo-data/:/data/db
+version: '2'
+services:
+  db:
+    image: mongo:3.2
+    volumes:
+      - ../mongo-data/:/data/db
 
-httpd:
+  httpd:
     image: httpd:2.4
     volumes:
-        - ../codex-frontend/:/usr/local/apache2/htdocs/
+      - ../codex-frontend/:/usr/local/apache2/htdocs/
     ports:
-        - "6100:80"
-api:
-  build: .
-  command: bash -c "(echo updating pip packages && pip install -r /myapp/src/pip_requirements.txt && echo starting redis && service redis-server start && (echo starting redis worker default && rq worker --path /myapp/src/ default &) && (echo starting redis worker process && rq worker --path /myapp/src/ process &) && (echo starting redis worker task  && rq worker --path /myapp/src/ task &) && (echo starting redis worker checkup && rq worker --path /myapp/src/ checkup &)) && echo starting api...Check 127.0.0.1:8080 && python /myapp/src/api2.py -H $$HOSTNAME"
-  volumes:
-    - .:/myapp
-  ports:
-    - "4500:8080"
-  links:
-    - db
-    - httpd
+      - "6100:80"
+
+  api:
+    #build: .
+    image: codexgigassys/codex-backend:latest
+    command: bash -c "(echo updating pip packages && pip install -r /myapp/src/pip_requirements.txt && echo starting redis && service redis-server start && (echo starting redis worker default && rq worker --path /myapp/src/  --url redis://codexbackend_redis_1:6379/0 default &) && (echo starting redis worker process && rq worker --path /myapp/src/ --url redis://codexbackend_redis_1:6379/0 process &) && (echo starting redis worker checkup && rq worker --path /myapp/src/ --url redis://codexbackend_redis_1:6379/0 checkup &)) && echo starting api...Check 127.0.0.1:8080 && python /myapp/src/api2.py -H $$HOSTNAME"
+    volumes:
+      - .:/myapp
+    ports:
+      - "4500:8080"
+    links:
+      - db
+      - httpd
+
+  redis:
+    image: redis:latest
+    links:
+      - api
+
+  worker:
+    #image: codexgigassys/codex-backend:worker
+    build:
+      context: ./src
+      dockerfile: workerDockerfile
+    #command: bash -c "rq worker --path /myapp/ --url redis://codexbackend_redis_1:6379/0 task"
+    links:
+      - db
+      - redis

@@ -72,7 +72,7 @@ def task():
         "date_enqueued": datetime.datetime.now(),
         "task_id": task_id }
     save(response)
-    q = Queue('task', connection=Redis())
+    q = Queue('task', connection=Redis(host=env.get('redis').get('host')))
     job = q.enqueue('Api.task.generic_task', args=(
         process, file_hash, vt_av, vt_samples, email,task_id,document_name), timeout=31536000)
     return dumps({"task_id": task_id})
