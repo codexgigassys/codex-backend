@@ -21,7 +21,7 @@ def number_of_jobs_on_queue(queue_name):
     w=re.match("^[a-z]+$",queue_name)
     if(w is None):
         raise ValueError("invalid queue_name")
-    command = ["bash","-c","rq info --raw | grep -E -e \"^queue "+queue_name+" [0-9]+$\" | sed \"s/queue "+queue_name+" //g\" | tr -d \"\\n\""]
+    command = ["bash","-c","rq info --url redis://"+env.get('redis').get('host')+":"+env.get('redis').get('port')+" --raw | grep -E -e \"^queue "+queue_name+" [0-9]+$\" | sed \"s/queue "+queue_name+" //g\" | tr -d \"\\n\""]
     output = call_with_output(command)
     print "output="+str(output)
     try:
