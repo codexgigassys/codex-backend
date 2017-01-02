@@ -56,7 +56,7 @@ cd /myapp/yara/yarGen-master && \
 7z x -y /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
 wget -nv -nc https://winitor.com/tools/pestudio/current/pestudio.zip -O /tmp/pestudio.zip  && \
 unzip /tmp/pestudio.zip -d /tmp && \
-cp /tmp/pestudio/xml/strings.xml /myapp/yara/yarGen-master/ && \
+cp /tmp/xml/strings.xml /myapp/yara/yarGen-master/ && \
 rm -rf /tmp/yara-3.4.0/ && \
 rm -f /tmp/pestudio.zip && \
 rm -f /tmp/yara.zip && \
