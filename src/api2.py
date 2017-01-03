@@ -38,6 +38,7 @@ from Utils.InfoExtractor import *
 from Api.last_uploaded import *
 from Api.task import *
 from Api.queue_count import *
+from Api.export import *
 from loadToMongo import *
 import cgi
 
@@ -534,33 +535,6 @@ def check_imp():
     else:
         return jsonize({"valid":False})
 
-@route('/api/v1/export', method='POST')
-def export_metadata():
-    mdc=MetaController()
-    hashes = request.forms.dict.get("file_hash[]")
-    dump_to_save=""
-    for hash in hashes:
-        hash = clean_hash(hash.replace('\r',''))
-
-        res=mdc.read(hash)
-        dump=dumps(res,indent=4)
-        line="\n\n#### File:%s\n"%hash
-        dump_to_save=dump_to_save+line+dump
-
-    id_random=id_generator()
-
-    tmp_folder="/tmp/meta_export"
-    subprocess.call(["mkdir","-p",tmp_folder])
-
-    file_name=os.path.join(tmp_folder,str(id_random)+'.txt')
-
-    fd=open(file_name,"w")
-    fd.write(dump_to_save)
-    fd.close()
-
-    resp =  static_file(str(id_random)+'.txt',root=tmp_folder,download=True)
-    resp.set_cookie('fileDownload','true');
-    return resp
 
 @route('/api/v1/av_result', method='GET')
 def get_result_from_av():
