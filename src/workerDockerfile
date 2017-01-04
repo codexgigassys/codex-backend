@@ -2,6 +2,7 @@ FROM python:2.7
 RUN mkdir /myapp
 WORKDIR /myapp
 ADD . /myapp/
+ENV PYTHONUNBUFFERED=0
 RUN apt-get clean && apt-get update && apt-get install -y build-essential \
 libpq-dev \
 libffi-dev \

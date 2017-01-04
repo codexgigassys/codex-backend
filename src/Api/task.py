@@ -15,8 +15,10 @@ from Utils.Functions import id_generator
 from Utils.Functions import to_bool
 from Utils.Functions import get_file_id
 from Utils.Functions import add_error
+from Utils.Functions import valid_hash
 from PackageControl.PackageController import *
 from MetaControl.MetaController import *
+from VersionControl.VersionController import *
 from process_hash import generic_process_hash
 from virusTotalApi import get_av_result
 from virusTotalApi import save_file_from_vt
@@ -79,6 +81,7 @@ def task():
 
 
 def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_name=""):
+    print "task_id="+str(task_id)
     generic_count = 0
     response = {}
     response["date_start"] = datetime.datetime.now()
@@ -86,7 +89,10 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     response["task_id"] = task_id
     check_hashes_output = check_hashes(file_hash)
     errors = check_hashes_output.get('errors')
-    for key,value in errors:
+    for error in errors:
+        key = error.get('error')
+        value = error.get('error_message')
+        print "errors (key="+str(key)+", value="+str(value)+")"
         response = add_error(response, key, value)
     hashes = check_hashes_output.get('hashes')
     response["hashes"] = hashes
@@ -94,11 +100,21 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         response = add_error(response, 6, "No valid hashes provided.")
         return change_date_to_str(response)
 
-    response["not_found"] = []
+    save(response)
+
+    response["inconsistencies"]=[]
+    for hash_id in hashes:
+        if fix_inconsistency(hash_id) == 1:
+            response["inconsistencies"].append(hash_id)
+
+    save(response)
+
+    response["not_found_on_vt"] = []
     if vt_samples:
         response["downloaded"] = []
         for hash_id in hashes:
-            if(get_file_id(hash_id) is None):
+            if(get_file_id(hash_id) is None or db_inconsistency(hash_id)):
+                print "task(): "+hash_id+" was not found (get_file_id returned None). "
                 generic_count += 1
                 if (generic_count % 20 == 0):
                     save(response)
@@ -106,11 +122,14 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                     response["downloaded"].append(hash_id)
                     generic_process_hash(hash_id)
                 else:
-                    response["not_found"].append(hash_id)
+                    response["not_found_on_vt"].append(hash_id)
     save(response)
     response["processed"] = []
+    response["not_found_for_processing"] = []
     if process:
+        print "process=true"
         for hash_id in hashes:
+            print "task: hash_id="+str(hash_id)
             process_start_time = datetime.datetime.now()
             generic_count += 1
             if (generic_count % 20 == 0):
@@ -120,8 +139,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                 response["processed"].append({"hash": hash_id,
                     "seconds": (process_end_time-process_start_time).seconds})
             else:
-                response["not_found"].append(hash_id)
-    response["not_found"] = list(set(response["not_found"]))
+                response["not_found_for_processing"].append(hash_id)
     save(response)
     if vt_av:
         for hash_id in hashes:
@@ -134,6 +152,59 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     response["date_end"] = datetime.datetime.now()
     save(response)
     return response
+
+# Fix db inconsistencies
+# This can happen in old setups
+def fix_inconsistency(file_hash):
+    status = db_inconsistency(file_hash)
+    if status==1 or status==3:
+        generic_process_hash(file_hash)
+        return 1
+    elif status==2:
+        file_id = get_file_id(file_hash)
+        save_file_from_vt(file_id)
+        return 1
+    else:
+        return 0
+
+
+# The DB is consistent if the
+# file has sample, meta and version,
+# or nothing. Is inconsistent otherwise.
+# returns 0 if everything is ok
+# returns 1 if hash has sample, but not meta
+# returns 2 if hash has meta, but not sample
+# returns 3 if hash has meta and sample, but not version
+def db_inconsistency(file_hash):
+    if(not valid_hash(file_hash)):
+        raise ValueError("db_inconsistency invalid hash")
+    pc = PackageController()
+    v = VersionController()
+    file_id = get_file_id(file_hash)
+    if file_id is not None: #meta exists
+        file_bin = pc.getFile(file_id)
+        if file_bin is not None: #sample exists
+            version = v.searchVersion(file_id)
+            if version is not None:
+                return 0 # ok
+            else: #version does not exist
+                return 3
+        else: # has meta but not sample
+            return 2
+    else: # does not have meta
+        if len(file_hash)==64:
+            return 0 # cant search in grid by sha256
+        if len(file_hash)==40:
+            file_bin = pc.getFile(file_hash)
+        else: # md5
+            sha1 = pc.md5_to_sha1(file_hash)
+            if sha1 is None:
+                return 0 # does not have meta or sample
+            file_bin = pc.getFile(file_hash)
+        if file_bin is None:
+             return 1
+        else:
+             return 0
 
 def save(document):
     mc = MetaController()

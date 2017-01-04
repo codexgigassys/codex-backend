@@ -11,7 +11,7 @@ try:
     from config.secrets import env
 except ImportError:
     from config.default_config import env
-from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace
+from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace,process_file
 from Utils.ProcessDate import process_date
 
 # Given a hash, it downloads the file from VirusTotal
@@ -168,9 +168,15 @@ def save_file_from_vt(hash_id):
    # print "file_id="+str(file_id)
     pc=PackageController()
     res=pc.searchFile(file_id)
+    print "save_file_from_vt. file_id="+str(file_id)
+    print "save_file_from_vt. res="+str(res)
     if(res==None): # File not found. Add it to the package.
         pc.append(file_id,data_bin,True)
         print("Added: %s" % (file_id,))
+    else:
+        print "save_file_from_vt("+hash_id+"): File was found on the db. not added. Going to process right now"
+        process_file(file_id)
+
     return file_id
 
 def test():

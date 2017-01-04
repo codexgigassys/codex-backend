@@ -17,6 +17,16 @@ import string
 import random
 import re
 
+
+def is_sha1(maybe_sha):
+    if len(maybe_sha) != 40:
+        return False
+    try:
+        sha_int = int(maybe_sha, 16)
+    except ValueError:
+        return False
+    return True
+
 def number_of_jobs_on_queue(queue_name):
     w=re.match("^[a-z]+$",queue_name)
     if(w is None):
@@ -185,14 +195,13 @@ def change_date_to_str(res):
 
 
 def process_file(file_hash,force=False):
-    if file_hash is None:
-        return None
-    if len(file_hash) != 40:
+    if not is_sha1(file_hash):
         raise ValueError("process_file only accepts sha1")
     print "process_file("+str(file_hash)+")"
     pc=PackageController()
     res=pc.getFile(file_hash)
     if res==None:
+        print "Error: process_file("+str(file_hash)+"): pc.getFile returned None"
         return None
     sam_id=file_hash
     sample=Sample()
@@ -272,6 +281,7 @@ def get_file_id(hash):
 # it will search in meta collection.
 def search_by_hash_and_type(hash,type):
     if type is not "md5" and type is not "sha1" and type is not "sha2":
+        raise ValueError("type is not valid. (search_by_hash_and_type)")
         return None
     search={'$and': [{'hash.'+type: hash}]}
     retrieve={'hash.sha1': 1}
