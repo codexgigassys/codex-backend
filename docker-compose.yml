@@ -35,6 +35,8 @@ services:
       context: ./src
       dockerfile: workerDockerfile
     #command: bash -c "rq worker --path /myapp/ --url redis://codexbackend_redis_1:6379/0 task"
+    volumes:
+      - ./src/config/:/myapp/config/
     links:
       - db
       - redis
