@@ -73,7 +73,7 @@ class PackageController():
         if(env["temporal_files_db"]):
             db_files=db_temp
         else:
-            db_flies=db_fs
+            db_files=db_fs
         collection_files = db_files["fs.files"].find().sort([("_id", -1)]).limit(number)
         result=[]
         for document in collection_files:
