@@ -300,13 +300,13 @@ def check_hashes(hashes):
     errors = []
     result_hashes = []
     for hash_id in hashes.split("\n"):
-        hash_id = clean_hash(hash_id)
-        if hash_id is None:
+        hash_id_cleaned = clean_hash(hash_id)
+        if hash_id is None or len(hash_id.strip())==0:
             continue
-        if(not valid_hash(hash_id)):
-            errors.append({"error": 5, "error_message": "invalid_hash: " + str(hash_id) })
+        if(not valid_hash(hash_id_cleaned)):
+            errors.append({"error": 5, "error_message": "invalid_hash: " + str(hash_id.strip()) })
         else:
-            result_hashes.append(hash_id)
+            result_hashes.append(hash_id_cleaned)
     return {"hashes": result_hashes, "errors": errors}
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
