@@ -2,8 +2,7 @@ FROM python:2.7
 RUN mkdir /myapp
 WORKDIR /myapp
 ADD . /myapp
-ADD yara/yara.zip* /tmp/
-ADD yara/pestudio.zip* /tmp/
+ENV PYTHONUNBUFFERED=0
 RUN apt-get clean && apt-get -o Debug::pkgProblemResolver=true -o Debug::Acquire::http=true update -qq && apt-get -o Debug::pkgProblemResolver=true -o Debug::Acquire::http=true install -y build-essential \
 libpq-dev \
 python-hachoir-metadata \
