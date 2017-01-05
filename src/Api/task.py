@@ -95,9 +95,44 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         print "errors (key="+str(key)+", value="+str(value)+")"
         response = add_error(response, key, value)
     hashes = check_hashes_output.get('hashes')
+    remove_dups_output = remove_dups(hashes)
+    # remove duplicated hashes
+    hashes = remove_dups_output.get('list')
+    response["duplicated_hashes"] = remove_dups_output.get('dups')
     response["hashes"] = hashes
+
+    hash_dicts = []
+    mc = MetaController()
+    for x in hashes:
+        x_dict = {}
+        x_dict["original"] = x
+        x_dict["sha1"] = get_file_id(x)
+        if(x_dict["sha1"] is not None):
+            doc = mc.read(x_dict["sha1"])
+            if doc is not None and doc.get('hash') is not None:
+                if doc.get('hash').get('md5') is not None:
+                    x_dict["md5"] = doc.get('hash').get('md5')
+                if doc.get('hash').get('sha2') is not None:
+                    x_dict["sha2"] = doc.get('hash').get('sha2')
+        hash_dicts.append(x_dict)
+    response["duplicated_samples"] = []
+    for x in hash_dicts:
+        for y in hash_dicts:
+            if x.get('original') != y.get('original') and (
+                    x.get('original') == y.get('sha1') or
+                    x.get('original') == y.get('md5') or
+                    x.get('original') == y.get('sha2')):
+                response["duplicated_samples"].append(y.get('original'))
+                hash_dicts.remove(y)
+    hashes=[]
+    for x in hash_dicts:
+        hashes.append(x.get('original'))
+    response["hashes"]=hashes
+
     if(len(hashes) == 0):
         response = add_error(response, 6, "No valid hashes provided.")
+        response["date_end"] = datetime.datetime.now()
+        save(response)
         return change_date_to_str(response)
 
     save(response)
@@ -210,3 +245,18 @@ def save(document):
     mc = MetaController()
     task_id = document["task_id"]
     return mc.write_task(task_id,document)
+
+def remove_dups(biglist):
+    known_links = set()
+    newlist = []
+    dups = []
+
+    for d in biglist:
+        link = d
+        if link in known_links:
+            dups.append(link)
+            continue
+        newlist.append(d)
+        known_links.add(link)
+    biglist[:] = newlist
+    return {'list': biglist,'dups': dups}
