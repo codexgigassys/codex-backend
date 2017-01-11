@@ -2,3 +2,4 @@ texttable
 olefile 
 requests
 python-dateutil
+redis-semaphore

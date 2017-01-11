@@ -27,6 +27,16 @@ def is_sha1(maybe_sha):
         return False
     return True
 
+def valid_hash(some_hash):
+    length=len(some_hash)
+    if length not in [32,40,64,128]:
+        return False
+    try:
+        sha_int = int(some_hash, 16)
+    except ValueError:
+        return False
+    return True
+
 def number_of_jobs_on_queue(queue_name):
     w=re.match("^[a-z]+$",queue_name)
     if(w is None):
@@ -103,9 +113,6 @@ def clean_tree(s):
     print str(s)
         #embed()
     return s
-
-def vt_key():
-    return env.get('vt_apikey') is not None and type(env.get('vt_apikey'))==str and len(env.get("vt_apikey"))>5
 
 # This function recives a dictionary like
 # {"key1": { "something": 1},
@@ -255,9 +262,6 @@ def clean_hash(hash):
 
 
 
-#returns true if a hash is md5 or sha1 valid. False otherwise
-def valid_hash(hash):
-    return hash is not None and (len(hash)==32 or len(hash)==40 or len(hash)==64 or len(hash)==128) and re.search('^[a-f0-9]+$',hash) is not None
 
 
 # clean hashes and search in the meta collection.
