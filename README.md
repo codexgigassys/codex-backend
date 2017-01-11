@@ -30,7 +30,7 @@ The default path of the Mongo database is the parent folder of ```codex-backend`
 ```
 
 ### VirusTotal
-VirusTotal is used for retrieving antivirus results at request for a file. You can add your own [VirusTotal API key](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/config/secrets.py```. Then you should restart the container:
+VirusTotal is used for retrieving antivirus results at request for a file or downloading new files. You can add one private API key, and one public API key. The private API key will only be used when required (downloading samples). Public API key will be used for downloading Antivirus scans. You can add your own [VirusTotal API keys](https://www.virustotal.com/es-ar/documentation/public-api/) in ```src/config/secrets.py```. Then you should restart the container:
 ```
 sudo docker-compose up
 ```

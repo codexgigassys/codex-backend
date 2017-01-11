@@ -27,6 +27,7 @@ import datetime
 from rq import Queue
 from redis import Redis
 from IPython import embed
+import time
 
 @route('/api/v1/task', method='OPTIONS')
 def enable_cors_for_task():
@@ -184,7 +185,8 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         for hash_id in hashes:
             sha1 = get_file_id(hash_id)
             if(sha1 is not None):
-                get_av_result(sha1)
+                if get_av_result(sha1) is not None:
+                    time.sleep(15)
 
     if(bool(email)):
         send_mail(email, "task done", str(response))

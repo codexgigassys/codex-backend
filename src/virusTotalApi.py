@@ -19,7 +19,7 @@ from Utils.ProcessDate import process_date
 # hash. Returns the binary data of the file.
 def download_from_virus_total(file_id):
     print "download_form_virus_total(): "+str(file_id)
-    apikey = env["vt_apikey"]
+    apikey = env["vt_private_apikey"]
     if(len(apikey)==0):
         return None
     params = {'apikey':apikey,'hash':file_id}
@@ -115,7 +115,7 @@ def parse_vt_response(json_response):
 # and converts the json response to a python
 # dictionary. In case of error, returns None.
 def get_vt_av_result(file_id):
-    apikey=env["vt_apikey"]
+    apikey=env["vt_public_apikey"]
     if(len(apikey)==0):
         return None
     params = {'apikey':apikey,'resource':file_id, 'allinfo': '1'}
