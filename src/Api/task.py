@@ -62,7 +62,10 @@ def task():
     process = to_bool(request.forms.get('process'))
     email = request.forms.get('email')
     document_name = request.forms.get('document_name')
+    task_id = add_task(process, file_hash, vt_av, vt_samples, email, document_name)
+    return dumps({"task_id": task_id})
 
+def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
     task_id = id_generator(40)
     response = {"requested": {
         "vt_av": vt_av,
@@ -75,15 +78,19 @@ def task():
         "date_enqueued": datetime.datetime.now(),
         "task_id": task_id }
     save(response)
-    if vt_av or vt_samples:
-        queue_name = "task"
+    if vt_samples:
+        queue_name = "task_private_vt" # task needs a private VT api
+    elif vt_av and not vt_samples:
+        queue_name = "task_public_vt" # task needs a public VT api
     else:
-        queue_name = "task_no_vt"
+        queue_name = "task_no_vt" # task doesn't need VT
     q = Queue(queue_name, connection=Redis(host=env.get('redis').get('host')))
     job = q.enqueue('Api.task.generic_task', args=(
         process, file_hash, vt_av, vt_samples, email,task_id,document_name), timeout=31536000)
-    return dumps({"task_id": task_id})
+    return task_id
 
+def add_task_to_download_av_result(file_hash):
+    return add_task(True,file_hash,True,False,"","[automatic-request-from-api]")
 
 def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_name=""):
     print "task_id="+str(task_id)
@@ -150,6 +157,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     save(response)
 
     response["not_found_on_vt"] = []
+    response["private_credits_spent"] = 0
     if vt_samples:
         response["downloaded"] = []
         for hash_id in hashes:
@@ -158,11 +166,24 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                 generic_count += 1
                 if (generic_count % 20 == 0):
                     save(response)
-                if(save_file_from_vt(hash_id) is not None):
+                output = save_file_from_vt(hash_id)
+                if(output.get('status') == 'out_of_credits'):
+                    request_successful = False
+                    while not request_successful:
+                        output = save_file_from_vt(hash_id)
+                        if output.get('status') != 'out_of_credits':
+                            request_successful = True
+                if(output.get('status') == 'added'):
                     response["downloaded"].append(hash_id)
+                    response["private_credits_spent"]+=1
+                elif(output.get('status') == 'inconsistency_found'):
+                    response["private_credits_spent"]+=1
                     generic_process_hash(hash_id)
-                else:
+                elif(output.get('status') == 'not_found'):
                     response["not_found_on_vt"].append(hash_id)
+                else:
+                    response = add_error(response,11,"Unknown error when downloading sample from VT."+str(output))
+                save(response)
     save(response)
     response["processed"] = []
     response["not_found_for_processing"] = []
@@ -182,11 +203,31 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                 response["not_found_for_processing"].append(hash_id)
     save(response)
     if vt_av:
+        response["vt_av_added"] = []
+        response["vt_av_out_of_credits"] = []
+        response["not_found_on_vt_av"] = []
+        response["vt_av_already_downloaded"] = []
+        response["public_credits_spent"] = 0
         for hash_id in hashes:
             sha1 = get_file_id(hash_id)
             if(sha1 is not None):
-                if get_av_result(sha1) is not None:
-                    time.sleep(15)
+                av_result_output = get_av_result(sha1)
+                if(av_result_output.get('status')=="added"):
+                    response["vt_av_added"].append(hash_id)
+                    response["public_credits_spent"]+=1
+                elif(av_result_output.get('status')=="already_had_it"):
+                    response["vt_av_already_downloaded"].append(hash_id)
+                elif(av_result_output.get('status')=='error'):
+                    response = add_error(response, 9, "Error in av_result: "+str(av_result_output.get('error_message')))
+                elif(av_result_output.get('status')=='out_of_credits'):
+                    response["vt_av_out_of_credits"].append(hash_id)
+                    response = add_error(response, 10, "Error in av_result(out_of_credits): "+str(hash_id))
+                elif(av_result_output.get('status')=='not_found'):
+                    response["not_found_on_vt_av"].append(hash_id)
+                else:
+                    response = add_error(response, 12, "Unknown error in av_result(): "+str(hash_id)+" "+str(av_result_output))
+                save(response)
+
 
     if(bool(email)):
         send_mail(email, "task done", str(response))
@@ -229,8 +270,10 @@ def db_inconsistency(file_hash):
             if version is not None:
                 return 0 # ok
             else: #version does not exist
+                print "inconsistency: meta and sample exists. Version does not"
                 return 3
         else: # has meta but not sample
+            print "inconsistency: meta exists, sample does not"
             return 2
     else: # does not have meta
         if len(file_hash)==64:
@@ -243,9 +286,10 @@ def db_inconsistency(file_hash):
                 return 0 # does not have meta or sample
             file_bin = pc.getFile(file_hash)
         if file_bin is None:
-             return 1
-        else:
              return 0
+        else:
+            print "inconsistency: does not have meta. has sample"
+            return 1
 
 def save(document):
     mc = MetaController()

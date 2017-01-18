@@ -31,7 +31,7 @@ import random
 from IPython import embed
 from rq import Queue
 from redis import Redis
-from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,vt_key,valid_hash,clean_tree,get_file_id
+from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,valid_hash,clean_tree,get_file_id
 from Utils.ProcessDate import process_date
 import re
 from Utils.InfoExtractor import *
@@ -40,8 +40,10 @@ from Api.task import *
 from Api.queue_count import *
 from Api.export import *
 from Api.av_count import *
+from Api.cron import *
 from loadToMongo import *
 import cgi
+from KeyManager.KeyManager import KeyManager
 
 tmp_folder="/tmp/mass_download/"
 
@@ -431,7 +433,7 @@ def api_batch_process_debug_file():
                 print "Processing right now: "+str(hash_id)
                 process_file(hash_id)
                 if(env['auto_get_av_result']):
-                    get_av_result(hash_id)
+                    add_task_to_download_av_result(hash_id)
                     continue
         res=SearchModule.search_by_id(data,1,[],False)
         if(len(res)==0):
@@ -445,7 +447,8 @@ def api_batch_process_debug_file():
                     print "process_debug(): hash was not found("+str(hash_id)+")"
             print "process_debug():"
             print "process_debug(): going to search "+str(hash_id)+" in vt"
-            sha1=SearchModule.add_file_from_vt(hash_id)
+            add_response=SearchModule.add_file_from_vt(hash_id)
+            sha1=add_response.get('hash')
             if(sha1==None):
                 print "process_debug(): sha1 is None: "+str(hash_id)
                 not_found.append(hash_id)
@@ -458,7 +461,7 @@ def api_batch_process_debug_file():
         added_to_queue+=1
         add_hash_to_process_queue(sha1)
         if(env['auto_get_av_result']):
-            get_av_result(sha1)
+            add_task_to_download_av_result(sha1)
         yield str(sha1)+"\n"
 
     responsex=str(added_to_queue)+" files added to the process queue.\n"
@@ -499,8 +502,6 @@ def api_batch_process_file():
         added_to_queue+=1
         print str(hash_id)+" added to queue"
         add_hash_to_process_queue(sha1)
-        if(env['auto_get_av_result']):
-            get_av_result(sha1)
 
     responsex=str(added_to_queue)+" files added to the process queue.\n"
     if(downloaded_from_vt > 0):
@@ -556,13 +557,18 @@ def get_result_from_av():
             sha1=res[0]["sha1"]
     else:
         sha1=hash_id
-    if(vt_key()):
-        av_result=get_av_result(sha1)
+    key_manager = KeyManager()
+
+    if(key_manager.check_keys_in_secrets()):
+        av_result=get_av_result(sha1,'high')
     else:
         return jsonize({'error': 7, "error_message": "Error: VirusTotal API key missing from secrets.py file"})
-    if(av_result==None):
-        return jsonize({"error": 8, "error_message": "Cannot get analysis (hash not found in VT? out of credits?)"})
-    return jsonize({"message": "AV scans downloaded."})
+    if(av_result.get('status')=="added"):
+        return jsonize({"message": "AV scans downloaded."})
+    elif(av_result.get('status')=="already_had_it"):
+        return jsonize({"message": "File already have AV scans."})
+    else:
+        return jsonize({"error": 9, "error_message": "Cannot get analysis: "+av_result.get('status','')+"."+av_result.get('error_message','')})
 
 
 if __name__ == '__main__':

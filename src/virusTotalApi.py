@@ -7,22 +7,38 @@ import traceback
 
 from MetaControl.MetaController import *
 from PackageControl.PackageController import *
+from KeyManager.KeyManager import KeyManager
 try:
     from config.secrets import env
 except ImportError:
     from config.default_config import env
-from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace,process_file
+from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace,process_file,valid_hash
 from Utils.ProcessDate import process_date
+import time
 
 # Given a hash, it downloads the file from VirusTotal
 # it checks that the downloaded file correspond to the
 # hash. Returns the binary data of the file.
 def download_from_virus_total(file_id):
-    print "download_form_virus_total(): "+str(file_id)
-    apikey = env["vt_private_apikey"]
-    if(len(apikey)==0):
-        return None
-    params = {'apikey':apikey,'hash':file_id}
+    print "download_from_virus_total(): "+str(file_id)
+    if not valid_hash(file_id):
+        raise ValueError("download_from_virus_total recieved an invalid hash")
+    key_manager = KeyManager()
+    #apikey = env["vt_private_apikey"]
+    has_key = False
+    while not has_key:
+        apikey = key_manager.get_key('download_sample')
+        if(apikey.get('key') is None and apikey.get('timeleft') is None):
+            return None
+        elif apikey.get('key') is not None:
+            has_key = True
+        elif((isinstance(apikey.get('timeleft'),int) or
+                isinstance(apikey.get('timeleft'),float)) and
+                apikey.get('timeleft') > 0):
+            print "timeleft="+str(apikey.get('timeleft'))
+            time.sleep(apikey.get('timeleft'))
+
+    params = {'apikey': apikey.get('key'),'hash':file_id}
     try_again = True
     fail_count=0
     response = None
@@ -38,7 +54,7 @@ def download_from_virus_total(file_id):
             if(fail_count >= 3):
                 break
     if(response is None):
-        return
+        return {"status": None, "file": None}
     if(response.status_code == 200):
         downloaded_file = response.content
         largo=len(file_id)
@@ -48,15 +64,24 @@ def download_from_virus_total(file_id):
             check=hashlib.sha1(downloaded_file).hexdigest()
         elif(largo==64):
             check=hashlib.sha256(downloaded_file).hexdigest()
-        else: return None
+
         if(check!=file_id):
             print "download_from_virus_total(): check!="+str(file_id)
-            return None
-        return downloaded_file
-
+            return {"status": "invalid_hash", "file": None}
+        else:
+            return {"status": "ok", "file": downloaded_file}
+    elif(response.status_code == 204):
+        key_manager.block_key(apikey.get('key'))
+        return {"status": "out_of_credits", "file": None}
+    elif(response.status_code == 403):
+        print "params="+str(params)
+        print "apikey="+str(apikey.get('key'))
+        return {"status": "invalid_key", "file": None}
+    elif(response.status_code == 404):
+        return {"status": "not_found", "file": None}
     else:
         print "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")"
-        return None
+        return {"status": response.status_code, "file": None}
 
 # Recieves VT scans dictionary
 # and returns number of AV
@@ -114,70 +139,118 @@ def parse_vt_response(json_response):
 # Request the VT data for a given hash
 # and converts the json response to a python
 # dictionary. In case of error, returns None.
-def get_vt_av_result(file_id):
-    apikey=env["vt_public_apikey"]
-    if(len(apikey)==0):
-        return None
-    params = {'apikey':apikey,'resource':file_id, 'allinfo': '1'}
+def get_vt_av_result(file_id,priority="low"):
+    key_manager = KeyManager()
+    #apikey = env["vt_private_apikey"]
+    has_key = False
+    while not has_key:
+        apikey = key_manager.get_key('av_analysis',priority)
+        if(apikey.get('key') is None and apikey.get('timeleft') is None):
+            return None
+        elif apikey.get('key') is not None:
+            has_key = True
+        elif apikey.get('key') is None and priority == "high":
+            return {"status": "no_key_available"}
+        elif(((isinstance(apikey.get('timeleft'),int) or
+                isinstance(apikey.get('timeleft'),float))) and
+                apikey.get('timeleft') > 0):
+            time.sleep(apikey.get('timeleft'))
+
+    params = {'apikey':apikey.get('key'),'resource':file_id, 'allinfo': '1'}
     try:
         response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, timeout = 30)
     except Exception, e:
         print str(e)
-        return None
+        return {"status": "error", "error_message": str(e), "response": None}
     try:
         parsed_response = response.json()
     except Exception, e:
         print "response.json() error. get_vt_av_result("+str(file_id)+")"
         print str(e)
         print "response="+str(response)
-        return None
-    return parsed_response
+        return {"status": "error", "status_code": -1, "error_message": str(e), "response": response}
+    if response.status_code == 200:
+        print "get_vt_av_result-->=200"
+        if parsed_response.get('response_code')==1:
+            return {"status": "ok", "response": parsed_response}
+        elif parsed_response.get('response_code')==0:
+            return {"status": "not_found", "response": parsed_response}
+        else:
+            print "response="+str(parsed_response)
+            return {"status": "error", "error_message": "Error in av_analysis. HTTP status 200, but response_code="+str(parsed_response.get('response_code')), "response": parsed_response}
+    elif respone.status_code == 204:
+        print "get_vt_av_result-->204"
+        #raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
+        return {"status": "out_of_credits", "response": None}
+    elif response.status_code == 403:
+        return {"status": "error", "error_message": "VT returned 403 for av_analysis (invalid key?)", "response": None}
+    elif response.status_code == 404:
+        print "get_vt_av_result-->404"
+        return {"status": "error", "error_message": "VT returned 404 for av_analysis", "response": None}
+    else:
+        print "get_vt_av_result-->error"
+        return {"status": "error", "status_code": response.status_code, "error_message": "in get_vt_av_result: response.status_code="+str(response.status_code), "response": None}
 
-# Returns the Antivirus scan result for a given hash.
-def get_av_result(file_id):
+
+
+# Returns a dictionary with:
+# * scans: Antivirus scan result for a given hash.
+# * status:
+#       - added: when VT was downloaded
+#       - ok: when was already in the DB
+#       - out_of_credits:
+#       - error
+def get_av_result(file_id,priority="low"):
+    if not valid_hash(file_id):
+        raise ValueError("Invalid hash")
+
     mdc=MetaController()
     analysis_result=mdc.search_av_analysis(file_id)
-    #analysis_result = None #while we test VT function
-
+    added=False
+    status = None
     if analysis_result==None:
         print("Searching analysis of %s in VT" % file_id)
-        analysis_result=parse_vt_response(get_vt_av_result(file_id))
-        # Save in mongo
-        if(analysis_result==None):
-            return None
-        mdc.save_av_analysis(file_id,analysis_result)
+        vt_av_result = get_vt_av_result(file_id,priority)
+        status = vt_av_result.get('status')
+        if vt_av_result.get('status') == "ok":
+            vt_av_result_response = vt_av_result.get('response')
+            analysis_result=parse_vt_response(vt_av_result_response)
+            # Save in mongo
+            if(analysis_result is not None):
+                print "saving vt av from "+str(file_id)+ " in mongo"
+                mdc.save_av_analysis(file_id,analysis_result)
+            status = "added"
+        elif vt_av_result.get('status') == "error":
+            return {"scans": None, "hash": file_id, "status": "error", "error_message": vt_av_result.get('error_message')}
+    else:
+        status = "already_had_it"
 
-    scans=analysis_result.get("scans")
-    for s in scans:
-        av_name=s.get("name")
-        if(av_name=="ESET-NOD32" or av_name=="NOD32" or av_name=="NOD32v2"):
-            type=s.get("result")
-            positives=analysis_result.get("positives")
-            total=analysis_result.get("total")
-            return (type,positives,total)
-
-    return None
+    if analysis_result is not None:
+        scans=analysis_result.get("scans")
+    else:
+        scans = None
+    response = {"scans": scans, "hash": file_id, "status": status}
+    return response
 
 def save_file_from_vt(hash_id):
     downloaded_file=download_from_virus_total(hash_id)
     if(downloaded_file==None):
-        return None
-
-    data_bin=downloaded_file
-    file_id=hashlib.sha1(data_bin).hexdigest()
-   # print "file_id="+str(file_id)
-    pc=PackageController()
-    res=pc.searchFile(file_id)
-    print "save_file_from_vt. file_id="+str(file_id)
-    print "save_file_from_vt. res="+str(res)
-    if(res==None): # File not found. Add it to the package.
-        pc.append(file_id,data_bin,True)
-        print("Added: %s" % (file_id,))
-    else:
-        print "save_file_from_vt("+hash_id+"): File was found on the db. not added. Going to process right now"
-        process_file(file_id)
-
-    return file_id
+        return {"status": "unknown", "hash": None}
+    if downloaded_file.get('status') == "out_of_credits":
+        return {"status": "out_of_credits", "hash": None}
+    if downloaded_file.get('status') == "not_found":
+        return {"status": "not_found", "hash": None}
+    if downloaded_file.get('status') == 'ok':
+        data_bin=downloaded_file.get('file')
+        file_id=hashlib.sha1(data_bin).hexdigest()
+        pc=PackageController()
+        res=pc.searchFile(file_id)
+        if(res==None): # File not found. Add it to the package.
+            pc.append(file_id,data_bin,True)
+            return {"status": "added", "hash": file_id}
+        else:
+            process_file(file_id)
+            return {"status": "inconsistency_found", "hash": file_id}
 
 def test():
     file_id="8260795f47f284889488c375bed2996e"

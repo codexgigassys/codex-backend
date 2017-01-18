@@ -36,6 +36,7 @@ env = {
     'yara-script2': '/myapp/yara/yarGen-master/yarGen.py',
     'csv-upx-file': '',
     'auto_get_av_result': False,
+    'debug': False,
     "mailsender":
     {
         "fromaddr": "",
