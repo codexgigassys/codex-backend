@@ -13,8 +13,8 @@ services:
       - "6100:80"
 
   api:
-    #build: .
-    image: codexgigassys/codex-backend:latest
+    build: .
+    #image: codexgigassys/codex-backend:latest
     command: bash -c "(echo updating pip packages && pip install -r /myapp/src/pip_requirements.txt && pip install -r /myapp/src/pip_vt_api_requirements.txt && echo starting redis && service redis-server start && (echo starting redis worker default && rq worker --path /myapp/src/  --url redis://codexbackend_redis_1:6379/0 default &) && (echo starting redis worker process && rq worker --path /myapp/src/ --url redis://codexbackend_redis_1:6379/0 process &) && (echo starting redis worker checkup && rq worker --path /myapp/src/ --url redis://codexbackend_redis_1:6379/0 checkup &)) && echo starting api...Check 127.0.0.1:8080 && python -u /myapp/src/api2.py -H $$HOSTNAME"
     volumes:
       - .:/myapp
