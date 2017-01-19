@@ -28,6 +28,8 @@ def is_sha1(maybe_sha):
     return True
 
 def valid_hash(some_hash):
+    if some_hash is None:
+        return None
     length=len(some_hash)
     if length not in [32,40,64,128]:
         return False
