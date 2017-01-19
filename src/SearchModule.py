@@ -15,6 +15,7 @@ from Launcher import *
 from Utils.Functions import clean_hash,process_file
 from Utils.ProcessDate import parse_date_range
 from db_pool import *
+from KeyManager.KeyManager import KeyManager
 
 def fuzz_search_fast(id,p,fuzz):
     #print("searching fuzz")
@@ -200,7 +201,8 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
     if(len(query_list)>0 and len(av_collection_query_list)==0):
         query={"$and":query_list}
         res=searchFull(query,limit,retrieve)
-        if(hash_search and len(res)==0 and search_on_vt):# searching in VT.
+        key_manager = KeyManager()
+        if(hash_search and len(res)==0 and search_on_vt and key_manager.check_private_key()):# searching in VT.
             print "search_by_id() -> save_file_from_vt()"
             add_response=save_file_from_vt(hash_for_search)
             sha1=add_response.get('hash')

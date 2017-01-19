@@ -38,8 +38,23 @@ class KeyManager():
             db.vtkeys.update_one({"doc": 1},{"$set": {key+".blocked": False}},upsert=False)
         return True
 
+    def check_private_key(self):
+        keys = self.get_keys_from_secrets()
+        if len(keys.get('private'))==0:
+            return False
+        for private_key in keys.get('private'):
+            if not self.is_key_blocked(private_key):
+                return True
+        return False
 
-    # Returns True if there is at least one VirusTotal key in 
+    def is_key_blocked(self,key_str):
+        doc = db.vtkeys.find({"doc": 1, key_str+".blocked": True})
+        if doc.count()==0:
+            return False
+        else:
+            return True
+
+    # Returns True if there is at least one VirusTotal key in
     # secrets file.
     def check_keys_in_secrets(self):
         if ((env.get('vt_public_apikey') is None or env.get('vt_public_apikey') == "" ) and
@@ -66,8 +81,8 @@ class KeyManager():
     # get_key returns the key that optimize the use
     # of credits. There are only two valid operations:
     # 'av_analysis' and 'download_sample'. 'av_analysis'
-    # operation is to download the Antivirus scans 
-    # for a specific sample. It can be donde  with 
+    # operation is to download the Antivirus scans
+    # for a specific sample. It can be donde  with
     # VirusTotal public API. While 'download_sample'
     # needs a private VirusTotal API key.
     # If operation is av_analysis, a public key will
@@ -75,8 +90,8 @@ class KeyManager():
     # available for use at the moment (there is an anti-flood
     # protection of 15 seconds) one of two things can happen.
     # if the priority is low, it will return a dictionary like this:
-    # { 'key': None, 'timeleft': 5 seconds}, where 5 seconds is the minimun 
-    # time the worker needs to wait to ask again for a key. 
+    # { 'key': None, 'timeleft': 5 seconds}, where 5 seconds is the minimun
+    # time the worker needs to wait to ask again for a key.
     # If the priority is high, it will return a private key.
     # (It chooses the private key that has less credits spent in the day
     def get_key(self, operation, priority=None):
