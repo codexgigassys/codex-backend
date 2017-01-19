@@ -167,6 +167,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                 if (generic_count % 20 == 0):
                     save(response)
                 output = save_file_from_vt(hash_id)
+                sha1 = output.get('hash')
                 if(output.get('status') == 'out_of_credits'):
                     request_successful = False
                     while not request_successful:
@@ -175,10 +176,13 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
                             request_successful = True
                 if(output.get('status') == 'added'):
                     response["downloaded"].append(hash_id)
+                    # we need to process the sha1, and not the sha2 because
+                    # the grid does not save the sha2.
+                    generic_process_hash(sha1)
                     response["private_credits_spent"]+=1
                 elif(output.get('status') == 'inconsistency_found'):
                     response["private_credits_spent"]+=1
-                    generic_process_hash(hash_id)
+                    generic_process_hash(sha1)
                 elif(output.get('status') == 'not_found'):
                     response["not_found_on_vt"].append(hash_id)
                 else:
