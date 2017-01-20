@@ -32,6 +32,7 @@ class Processor():
         self._addPlugIn(SizePlug.SizePlug())
         self._addPlugIn(DescPlug.DescPlug())
         self._addPlugIn(MimePlug.MimePlug())
+        self._addPlugIn(DatePlug.DatePlug())
 
         return self.metadata_to_store
 
