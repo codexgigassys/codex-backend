@@ -105,8 +105,8 @@ class MetaController():
         if vt_date is None:
             return None
         old_date = self.get_first_date(file_id)
-        if old_date is None or date < old_date:
-            self.write(file_id,{"date": date})
+        if old_date is None or vt_date < old_date:
+            self.write(file_id,{"date": vt_date})
 
     def get_first_date(self,file_id):
         meta = self.read(file_id)
