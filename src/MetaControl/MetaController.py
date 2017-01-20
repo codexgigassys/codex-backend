@@ -104,11 +104,6 @@ class MetaController():
     def save_first_seen(self,file_id,vt_date):
         if vt_date is None:
             return None
-        try:
-            date=process_date(vt_date)
-        except ValueError:
-            print "MetaController()->save_first_seen: invalid date recieved by VT:"+str(vt_date)
-            return
         old_date = self.get_first_date(file_id)
         if old_date is None or date < old_date:
             self.write(file_id,{"date": date})
@@ -141,7 +136,7 @@ class MetaController():
             err=str(traceback.format_exc())
             print(err)
             return -1
-        self.save_first_seen(file_id,analysis_result.get('first_seen'))
+        self.save_first_seen(file_id,analysis_result.get('date'))
         return 0
 
 #****************TEST_CODE******************

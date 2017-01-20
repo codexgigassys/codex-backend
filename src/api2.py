@@ -339,7 +339,7 @@ def add_file():
         return jsonize({'message': 'Invalid date format'})
     print "date="+str(form_date)
     if form_date is None:
-        form_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        form_date = datetime.now()
     name = upload.filename
     data_bin=upload.file.read()
     file_id=hashlib.sha1(data_bin).hexdigest()
