@@ -95,7 +95,6 @@ def add_task_to_download_av_result(file_hash):
 
 def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name=""):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    logging.info(args)
     logging.info("task_id="+str(task_id))
     generic_count = 0
     response = {}
