@@ -17,6 +17,7 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
     * [Method 3: Manually build Codex Gigas](#manually-build-codex-gigas)
 * [Load Files](#load-files)
 * [APT-notes samples](#apt-notes-samples)
+* [Logs](#logs)
 * [Development](#development)
 * [Codex Gigas Thanks](#codex-gigas-thanks)
 * [License](#license)
@@ -86,6 +87,11 @@ curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ## APT-notes samples
 We have gathered 5437 [executable samples](https://www.dropbox.com/s/zhv2du99ehlmm24/APTnotes-Samples.zip?dl=0) (sha1: 6EA9BBFBB5FB0EB0D025221A522D907E6D4956A0)
 mentioned in APT reports over the last years. Ask for the zip password sending a DM to [CodexGigasSys twitter](https://twitter.com/codexgigassys). Source:  [https://github.com/aptnotes/data] (https://github.com/aptnotes/data)
+
+## Logs
+From 2017-01-23, logging system has been moved from the default docker logging system, to a syslog container that uses rsyslog deamon. To view logs, cd to the codex-backend folder and execute:
+```sudo docker-compose exec syslog tail -f /var/log/messages```
+(change ```tail -f ``` for ```cat```, ```less``` or whatever suits your needs)
 
 ## Development
 Wanna contribute? Codex Gigas Community is an open, BSD-licensed, collaborative development effort that heavily relies on contributions from the whole community. We welcome tickets, pull requests, feature suggestions and bug fixing.
