@@ -4,6 +4,12 @@ services:
     image: mongo:3.2
     volumes:
       - ../mongo-data/:/data/db
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "db"
 
   httpd:
     image: httpd:2.4
@@ -11,6 +17,13 @@ services:
       - ../codex-frontend/:/usr/local/apache2/htdocs/
     ports:
       - "6100:80"
+    links:
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "httpd"
 
   api:
     #image: codexgigassys/codex-backend:latest
@@ -23,11 +36,23 @@ services:
     links:
       - db
       - httpd
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "api"
 
   redis:
     image: redis:latest
     links:
       - api
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "redis"
 
   worker:
     #image: codexgigassys/codex-backend:worker
@@ -40,6 +65,12 @@ services:
     links:
       - db
       - redis
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "worker"
 
   worker_private_vt:
     #image: codexgigassys/codex-backend:worker
@@ -52,6 +83,12 @@ services:
     links:
       - db
       - redis
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "worker_private_vt"
 
   worker_public_vt:
     #image: codexgigassys/codex-backend:worker
@@ -64,6 +101,12 @@ services:
     links:
       - db
       - redis
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "worker_public_vt"
 
   worker_no_vt:
     #image: codexgigassys/codex-backend:worker
@@ -76,6 +119,12 @@ services:
     links:
       - db
       - redis
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "worker_no_vt"
 
   cron:
     #image: codexgigassys/codex-backend:cron
@@ -86,3 +135,14 @@ services:
       - CRON_ENTRY=5 0 * * * wget -O - http://codexbackend_api_1:8080/api/v1/cron
     links:
       - api
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        syslog-tag: "cron"
+
+  syslog:
+    image: voxxit/rsyslog
+    ports:
+        - "5514:514/udp"
