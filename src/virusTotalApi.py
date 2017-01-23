@@ -17,6 +17,20 @@ from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace,proces
 from Utils.ProcessDate import process_date
 import time
 
+
+#Walk through a dictionary structure
+def read_from_dictionary(source,dic):
+    path = source.split('.')
+    root = dic
+    for p in path:
+        try:
+            root = root.get(p)
+            if(root == None): return None
+        except Exception, e:
+            print str(e)
+            return None
+    return root
+
 # Given a hash, it downloads the file from VirusTotal
 # it checks that the downloaded file correspond to the
 # hash. Returns the binary data of the file.
@@ -135,7 +149,20 @@ def parse_vt_response(json_response):
     ret = json_response
     ret["positives"]=positives
     ret["total"]=total
-    ret["date"]=process_date(json_response.get('first_seen'))
+    
+    #Trying to get the best date
+    date_registers = ['first_seen','additional_info.first_seen_itw','scan_date']
+    for register in date_registers:
+        vt_date = read_from_dictionary(register,json_response)
+        if vt_date != None: break
+    
+    try:
+        #The "date" value is use to speed up time queries for av signatures
+        ret["date"] = process_date(vt_date)        
+    except ValueError:
+        ret["date"] = None        
+        print "virusTotalApi->parse_vt_response: invalid date recieved by VT:"+str(vt_date)    
+    
     return ret
 
 # Request the VT data for a given hash
