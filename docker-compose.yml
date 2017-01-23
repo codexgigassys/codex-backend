@@ -9,7 +9,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "db"
+        tag: "db"
 
   httpd:
     image: httpd:2.4
@@ -23,7 +23,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "httpd"
+        tag: "httpd"
 
   api:
     #image: codexgigassys/codex-backend:latest
@@ -41,7 +41,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "api"
+        tag: "api"
 
   redis:
     image: redis:latest
@@ -52,7 +52,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "redis"
+        tag: "redis"
 
   worker:
     #image: codexgigassys/codex-backend:worker
@@ -70,7 +70,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "worker"
+        tag: "worker"
 
   worker_private_vt:
     #image: codexgigassys/codex-backend:worker
@@ -88,7 +88,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "worker_private_vt"
+        tag: "worker_private_vt"
 
   worker_public_vt:
     #image: codexgigassys/codex-backend:worker
@@ -106,7 +106,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "worker_public_vt"
+        tag: "worker_public_vt"
 
   worker_no_vt:
     #image: codexgigassys/codex-backend:worker
@@ -124,7 +124,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "worker_no_vt"
+        tag: "worker_no_vt"
 
   cron:
     #image: codexgigassys/codex-backend:cron
@@ -140,7 +140,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:5514"
-        syslog-tag: "cron"
+        tag: "cron"
 
   syslog:
     image: voxxit/rsyslog
