@@ -13,6 +13,7 @@ from Modules.PEFileModule import PEFileModule
 import pefile
 from pyasn1.codec.der import encoder, decoder
 from pyasn1_modules import rfc2315
+import logging
 
 class CertficatePlug(PlugIn):
     def __init__(self,sample=None):
@@ -99,7 +100,7 @@ class CertficatePlug(PlugIn):
             try:
                 output=check_output(cmd)
             except Exception, e:
-                print str(e)
+                logging.exception("Plugins: Cert")
                 return {}
             #print(output)
 
@@ -169,7 +170,7 @@ class CertficatePlug(PlugIn):
             # Always in DER format AFAIK
             derData = pe.write()[address + 8:]
         else:
-            print("address 0")
+            logging.debug("address 0")
             return
 
         (contentInfo, rest) = decoder.decode(derData, asn1Spec=rfc2315.ContentInfo())

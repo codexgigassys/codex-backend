@@ -67,11 +67,11 @@ def testCode():
     sample.setBinary(data)
     pe=PEProcessor(sample,dic)
     res=pe.process()
-    print(res)
+    #print(res)
     #print(res["particular_header"]["sections"])
     elapsed=time.time()-start_time
-    print("Time Elapsed: "+str(elapsed*1000)+" ms")
-    print("")
+    #print("Time Elapsed: "+str(elapsed*1000)+" ms")
+    #print("")
 
 
 #****************TEST_EXECUTE******************

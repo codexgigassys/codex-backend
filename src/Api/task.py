@@ -28,6 +28,7 @@ from rq import Queue
 from redis import Redis
 from IPython import embed
 import time
+import logging
 
 @route('/api/v1/task', method='OPTIONS')
 def enable_cors_for_task():
@@ -92,8 +93,10 @@ def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
 def add_task_to_download_av_result(file_hash):
     return add_task(True,file_hash,True,False,"","[automatic-request-from-api]")
 
-def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_name=""):
-    print "task_id="+str(task_id)
+def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name=""):
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    logging.info(args)
+    logging.info("task_id="+str(task_id))
     generic_count = 0
     response = {}
     response["date_start"] = datetime.datetime.now()
@@ -104,7 +107,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     for error in errors:
         key = error.get('error')
         value = error.get('error_message')
-        print "errors (key="+str(key)+", value="+str(value)+")"
+        logging.error("errors (key="+str(key)+", value="+str(value)+")")
         response = add_error(response, key, value)
     hashes = check_hashes_output.get('hashes')
     remove_dups_output = remove_dups(hashes)
@@ -162,7 +165,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
         response["downloaded"] = []
         for hash_id in hashes:
             if(get_file_id(hash_id) is None or db_inconsistency(hash_id)):
-                print "task(): "+hash_id+" was not found (get_file_id returned None). "
+                logging.debug( "task(): "+hash_id+" was not found (get_file_id returned None). ")
                 generic_count += 1
                 if (generic_count % 20 == 0):
                     save(response)
@@ -192,9 +195,9 @@ def generic_task(process, file_hash, vt_av, vt_samples, email,task_id,document_n
     response["processed"] = []
     response["not_found_for_processing"] = []
     if process:
-        print "process=true"
+        logging.debug("process=true")
         for hash_id in hashes:
-            print "task: hash_id="+str(hash_id)
+            logging.debug( "task: hash_id="+str(hash_id))
             process_start_time = datetime.datetime.now()
             generic_count += 1
             if (generic_count % 20 == 0):
@@ -274,10 +277,10 @@ def db_inconsistency(file_hash):
             if version is not None:
                 return 0 # ok
             else: #version does not exist
-                print "inconsistency: meta and sample exists. Version does not"
+                logging.info("inconsistency: meta and sample exists. Version does not")
                 return 3
         else: # has meta but not sample
-            print "inconsistency: meta exists, sample does not"
+            logging.info("inconsistency: meta exists, sample does not")
             return 2
     else: # does not have meta
         if len(file_hash)==64:
@@ -292,7 +295,7 @@ def db_inconsistency(file_hash):
         if file_bin is None:
              return 0
         else:
-            print "inconsistency: does not have meta. has sample"
+            logging.info("inconsistency: does not have meta. has sample")
             return 1
 
 def save(document):

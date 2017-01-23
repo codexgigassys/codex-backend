@@ -16,6 +16,7 @@ import json
 import string
 import random
 import re
+import logging
 
 
 def is_sha1(maybe_sha):
@@ -45,11 +46,11 @@ def number_of_jobs_on_queue(queue_name):
         raise ValueError("invalid queue_name")
     command = ["bash","-c","rq info --url redis://"+env.get('redis').get('host')+":"+str(env.get('redis').get('port'))+" --raw | grep -E -e \"^queue "+queue_name+" [0-9]+$\" | sed \"s/queue "+queue_name+" //g\" | tr -d \"\\n\""]
     output = call_with_output(command)
-    print "output="+str(output)
+    logging.debug("output="+str(output))
     try:
         return int(output)
     except ValueError,e:
-        print "ValueError in int(output): "+str(e)
+        logging.exception("ValueError in int(output): "+str(e))
         return 0
 
 def is_iterable(s):
@@ -112,7 +113,6 @@ def clean_tree(s):
             return display_with_hex(s)
         else:
             return str(s)
-    print str(s)
         #embed()
     return s
 
@@ -206,11 +206,11 @@ def change_date_to_str(res):
 def process_file(file_hash,force=False):
     if not is_sha1(file_hash):
         raise ValueError("process_file only accepts sha1")
-    print "process_file("+str(file_hash)+")"
+    logging.debug( "process_file("+str(file_hash)+")")
     pc=PackageController()
     res=pc.getFile(file_hash)
     if res==None:
-        print "Error: process_file("+str(file_hash)+"): pc.getFile returned None"
+        logging.warning( "Error: process_file("+str(file_hash)+"): pc.getFile returned None")
         return None
     sam_id=file_hash
     sample=Sample()
@@ -240,7 +240,7 @@ def recursive_read(object):
     elif os.path.isfile(object):
         files.append(object)
     else:
-        print "You must supply a file or directory!"
+        logging.error("You must supply a file or directory!")
         return None
     return files
 

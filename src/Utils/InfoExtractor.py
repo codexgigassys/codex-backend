@@ -4,6 +4,7 @@
 import hashlib
 import magic
 import ssdeep
+import logging
 
 def MIME_TYPE(data,mime=True):
     try:
@@ -25,7 +26,7 @@ def getSsdeep(data):
         res=ssdeep.hash(data)
         return res
     except Exception, e:
-        print str(e)
+        logging.exception(str(e))
         return ''
 
 #****************TEST_CODE******************

@@ -4,6 +4,7 @@
 import os
 import math
 import traceback
+import logging
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
@@ -43,14 +44,13 @@ class MetaController():
 
     def write(self,file_id,data_dic):
         command={"$set":data_dic}
-        #print(command)
         try:
             self.collection.update_one({"file_id":file_id},command,upsert=True)
         except:
-            print("**** Error File: %s ****"%(file_id,))
-            print(command)
-            err=str(traceback.format_exc())
-            print(err)
+            logging.exception("MetaController() write(). file_id="+str(file_id)+"\ncommand="+str(command))
+            #print(command)
+            #err=str(traceback.format_exc())
+            #print(err)
             return -1
         return 0
 
@@ -71,9 +71,9 @@ class MetaController():
         try:
             if(execute_bool):bulk.execute({'w':0})
         except:
-            print("**** Error Imports Tree ****")
-            err=str(traceback.format_exc())
-            print(err)
+            logging.exception("MetaController(): "+str("**** Error Imports Tree ****"))
+            #err=str(traceback.format_exc())
+            #print(err)
             return -1
         return 0
 
@@ -107,7 +107,7 @@ class MetaController():
         try:
             date=process_date(vt_date)
         except ValueError:
-            print "MetaController()->save_first_seen: invalid date recieved by VT:"+str(vt_date)
+            logging.exception( "MetaController()->save_first_seen: invalid date recieved by VT:"+str(vt_date))
             return
         old_date = self.get_first_date(file_id)
         if old_date is None or date < old_date:
@@ -126,20 +126,19 @@ class MetaController():
 
     def write_task(self,task_id,data_dic):
         command={"$set":data_dic}
-        print "data_dic"
-        print str(data_dic)
+        logging.debug("write_task(): data_dic=")
+        logging.debug(str(data_dic))
         return self.tasks.update_one({"task_id": task_id},command,upsert=True)
 
     def save_av_analysis(self,file_id,analysis_result):
         command={"$set":analysis_result}
-        #print(command)
         try:
             self.av_coll.update_one({"sha1":file_id},command,upsert=True)
         except:
-            print("**** Error File: %s ****"%(file_id,))
-            print(command)
-            err=str(traceback.format_exc())
-            print(err)
+            logging.exception("**** Error File: %s ****"%(file_id,))
+            #print(command)
+            #err=str(traceback.format_exc())
+            #print(err)
             return -1
         self.save_first_seen(file_id,analysis_result.get('first_seen'))
         return 0

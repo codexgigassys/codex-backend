@@ -44,6 +44,7 @@ from Api.cron import *
 from loadToMongo import *
 import cgi
 from KeyManager.KeyManager import KeyManager
+import logging
 
 tmp_folder="/tmp/mass_download/"
 
@@ -129,7 +130,7 @@ def api_status_files_to_load_folder():
 @route('/api/v1/load_to_mongo', method='GET')
 def api_load_to_mongo():
     path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','files_to_load'))
-    print path
+    logging.debug("api_load_to_mongo().path="+str(path))
     return load_to_mongo2(path)
 
 @get('/api/v1/samples')
@@ -161,7 +162,7 @@ def logs():
     try:
         csvfile = open('logs.csv','r')
     except Exception, e:
-        print str(e)
+        logging.exception("logs() exception")
         return jsonize([])
 
     fieldnames = ("datetime","message","hash","comments")
@@ -191,14 +192,13 @@ def search():
     data=request.query.data
     str_lim=request.query.limit
     columns=request.query.getall("selected[]")
-    #print(request.query.keys())
-    print(columns)
+    logging.debug("search(). columns="+str(columns))
     if(str_lim==''):
         limit=0
     else:
         limit=int(str_lim)
     callback_name = cgi.escape(request.query.callback)
-    print "callback="+str(callback_name)
+    logging.debug("search(). callback="+str(callback_name))
     res=SearchModule.search_by_id(data,limit,columns,True)
     add_list_to_process_queue(res[0:10])
 
@@ -264,7 +264,7 @@ def get_package_file():
             fd.write(str(file_hash)+" not found.")
             fd.close()
         else:
-            print "Unknown res:"+str(res)
+            logging.error("get_package_file(). Unknown res:"+str(res))
 
     subprocess.call(["zip","-P","codex","-jr", zip_name,folder_path])
     resp =  static_file(str(random_id)+".zip",root=tmp_folder,download=True)
@@ -314,7 +314,7 @@ def upload_file(data_bin):
     res=pc.searchFile(file_id)
     if(res==None): # File not found. Add it to the package.
         pc.append(file_id,data_bin)
-        print("Added: %s" % (file_id,))
+        logging.info("upload_file(). Added: %s" % (file_id,))
         log_event("file added",str(file_id))
         return "ok"
     else:
@@ -337,13 +337,13 @@ def add_file():
     except ValueError:
         #response.status = 422 #status can't be added because angular will not show the message.
         return jsonize({'message': 'Invalid date format'})
-    print "date="+str(form_date)
+    logging.debug("add_file(). date="+str(form_date))
     if form_date is None:
         form_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     name = upload.filename
     data_bin=upload.file.read()
     file_id=hashlib.sha1(data_bin).hexdigest()
-    print "file_id="+str(file_id)
+    logging.debug("add_file(): file_id="+str(file_id))
     status=upload_file(data_bin)
     process_file(file_id) #ToDo: add a redis job
     update_date(file_id,form_date)
@@ -412,11 +412,9 @@ def api_batch_process_debug_file():
     file_hashes=request.forms.get('file_hash')
     if file_hashes is None:
         response.status=422
-        print "file_hash is missing"
+        logging.debug("api_batch_process_debug_file(): file_hash is missing")
         yield "file_hash parameter is missing"
 
-    #print(dir(request.forms))
-    #print(request.forms.keys())
     # transform file_hashes in a list of hashes.
     not_found=[]
     added_to_queue=0
@@ -430,27 +428,27 @@ def api_batch_process_debug_file():
             pc=PackageController()
             res=pc.getFile(hash_id)
             if res is not None and len(SearchModule.search_by_id(data,1,[],False))==0:
-                print "Processing right now: "+str(hash_id)
+                logging.debug("Processing right now: "+str(hash_id))
                 process_file(hash_id)
                 if(env['auto_get_av_result']):
                     add_task_to_download_av_result(hash_id)
                     continue
         res=SearchModule.search_by_id(data,1,[],False)
         if(len(res)==0):
-            print "process_debug(): metadata of "+str(hash_id)+" was not found. We will look in Pc. hash length: "+str(len(hash_id))
+            legging.debug("process_debug(): metadata of "+str(hash_id)+" was not found. We will look in Pc. hash length: "+str(len(hash_id)))
             if(len(hash_id)==40 or len(hash_id) == 32):
                 pc=PackageController()
                 res=pc.getFile(hash_id)
                 if res is not None:
-                    print "process_debug(): hash was found ("+str(hash_id)+")"
+                    logging.debug("process_debug(): hash was found ("+str(hash_id)+")")
                 else:
-                    print "process_debug(): hash was not found("+str(hash_id)+")"
-            print "process_debug():"
-            print "process_debug(): going to search "+str(hash_id)+" in vt"
+                    logging.debug("process_debug(): hash was not found("+str(hash_id)+")")
+            logging.debug("process_debug():")
+            logging.debug("process_debug(): going to search "+str(hash_id)+" in vt")
             add_response=SearchModule.add_file_from_vt(hash_id)
             sha1=add_response.get('hash')
             if(sha1==None):
-                print "process_debug(): sha1 is None: "+str(hash_id)
+                logging.debug("process_debug(): sha1 is None: "+str(hash_id))
                 not_found.append(hash_id)
                 continue
             else:
@@ -477,10 +475,8 @@ def api_batch_process_debug_file():
 
 @route('/api/v1/process', method='POST')
 def api_batch_process_file():
-    print("Running Batch process")
+    logging.debug("api_batch_process_file(): Running Batch process")
     file_hashes=request.forms.get('file_hash')
-    #print(dir(request.forms))
-    #print(request.forms.keys())
     # transform file_hashes in a list of hashes
     if file_hashes is None:
         return jsonize({"Error: file_hash parameter is missing."})
@@ -500,7 +496,7 @@ def api_batch_process_file():
             sha1=res[0]["sha1"]
 
         added_to_queue+=1
-        print str(hash_id)+" added to queue"
+        logging.debug(str(hash_id)+" added to queue")
         add_hash_to_process_queue(sha1)
 
     responsex=str(added_to_queue)+" files added to the process queue.\n"
@@ -577,6 +573,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', help='Port to bind the API server on', default=8080, action='store', required=False)
     args = parser.parse_args()
     args.port=int(args.port)
-    print args
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    logging.info(args)
     run(host=args.host, port=args.port, server='gevent')
 

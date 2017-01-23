@@ -15,12 +15,10 @@ class VersionController:
 
     def updateVersion(self,file_id,ver_dic):
         command={"$set":ver_dic}
-        #print(command)
         self.collection.update_one({"file_id":file_id},command,upsert=True)
 
     def searchVersion(self,file_id):
         f=self.collection.find_one({"file_id":file_id})
-        #print(f)
         return f
 
 

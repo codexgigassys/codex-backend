@@ -62,16 +62,15 @@ class Processor():
             #tl.startCounter()
             res=plugin.process()
             #tl.logTime(info_string)
-            #print(str(tl))
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
             logging.error("Error in %s PlugIn with sample:%s",info_string,self.sample.getID(),exc_info=True)
             res="ERROR_EXECUTE_PLUGIN"
-            print("**** Error File: %s ****"%(self.sample.getID(),))
-            print("**** PlugIn    : %s ****"%(info_string,))
+            logging.exception("**** Error File: %s ****"%(self.sample.getID(),))
+            logging.info("**** PlugIn    : %s ****"%(info_string,))
             err=str(traceback.format_exc())
-            print(err)
+            logging.info(err)
         self._update(plugin,res)
         return 0
 

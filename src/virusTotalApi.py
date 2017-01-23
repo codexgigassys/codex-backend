@@ -4,6 +4,7 @@
 import requests
 import hashlib
 import traceback
+import logging
 
 from MetaControl.MetaController import *
 from PackageControl.PackageController import *
@@ -20,7 +21,7 @@ import time
 # it checks that the downloaded file correspond to the
 # hash. Returns the binary data of the file.
 def download_from_virus_total(file_id):
-    print "download_from_virus_total(): "+str(file_id)
+    logging.debug("download_from_virus_total(): "+str(file_id))
     if not valid_hash(file_id):
         raise ValueError("download_from_virus_total recieved an invalid hash")
     key_manager = KeyManager()
@@ -35,7 +36,7 @@ def download_from_virus_total(file_id):
         elif((isinstance(apikey.get('timeleft'),int) or
                 isinstance(apikey.get('timeleft'),float)) and
                 apikey.get('timeleft') > 0):
-            print "timeleft="+str(apikey.get('timeleft'))
+            logging.debug("download_from_virus_total(): timeleft="+str(apikey.get('timeleft')))
             time.sleep(apikey.get('timeleft'))
 
     params = {'apikey': apikey.get('key'),'hash':file_id}
@@ -47,8 +48,9 @@ def download_from_virus_total(file_id):
             response = requests.get('https://www.virustotal.com/vtapi/v2/file/download', params=params, timeout = 30)
             try_again=False
         except Exception, e:
-            print(str(e))
-            print(traceback.format_exc())
+            logging.exception("requests to virustotal / download")
+            #print(str(e))
+            #print(traceback.format_exc())
             try_again=True
             fail_count+=1
             if(fail_count >= 3):
@@ -66,7 +68,7 @@ def download_from_virus_total(file_id):
             check=hashlib.sha256(downloaded_file).hexdigest()
 
         if(check!=file_id):
-            print "download_from_virus_total(): check!="+str(file_id)
+            logging.warning("download_from_virus_total(): check!="+str(file_id))
             return {"status": "invalid_hash", "file": None}
         else:
             return {"status": "ok", "file": downloaded_file}
@@ -74,13 +76,13 @@ def download_from_virus_total(file_id):
         key_manager.block_key(apikey.get('key'))
         return {"status": "out_of_credits", "file": None}
     elif(response.status_code == 403):
-        print "params="+str(params)
-        print "apikey="+str(apikey.get('key'))
+        logging.error("params="+str(params))
+        logging.error("apikey="+str(apikey.get('key')))
         return {"status": "invalid_key", "file": None}
     elif(response.status_code == 404):
         return {"status": "not_found", "file": None}
     else:
-        print "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")"
+        logging.error( "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")")
         return {"status": response.status_code, "file": None}
 
 # Recieves VT scans dictionary
@@ -160,35 +162,34 @@ def get_vt_av_result(file_id,priority="low"):
     try:
         response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, timeout = 30)
     except Exception, e:
-        print str(e)
+        logging.exception("VT /report request. "+str(e))
         return {"status": "error", "error_message": str(e), "response": None}
     try:
         parsed_response = response.json()
     except Exception, e:
-        print "response.json() error. get_vt_av_result("+str(file_id)+")"
-        print str(e)
-        print "response="+str(response)
+        logging.exception("response.json() error. get_vt_av_result("+str(file_id)+")"+"e="+str(e))
+        logging.info("response="+str(response))
         return {"status": "error", "status_code": -1, "error_message": str(e), "response": response}
     if response.status_code == 200:
-        print "get_vt_av_result-->=200"
+        logging.debug("get_vt_av_result-->=200")
         if parsed_response.get('response_code')==1:
             return {"status": "ok", "response": parsed_response}
         elif parsed_response.get('response_code')==0:
             return {"status": "not_found", "response": parsed_response}
         else:
-            print "response="+str(parsed_response)
+            logging.debug("response="+str(parsed_response))
             return {"status": "error", "error_message": "Error in av_analysis. HTTP status 200, but response_code="+str(parsed_response.get('response_code')), "response": parsed_response}
     elif respone.status_code == 204:
-        print "get_vt_av_result-->204"
+        logging.info("get_vt_av_result-->204")
         #raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
         return {"status": "out_of_credits", "response": None}
     elif response.status_code == 403:
         return {"status": "error", "error_message": "VT returned 403 for av_analysis (invalid key?)", "response": None}
     elif response.status_code == 404:
-        print "get_vt_av_result-->404"
+        logging.error( "get_vt_av_result-->404")
         return {"status": "error", "error_message": "VT returned 404 for av_analysis", "response": None}
     else:
-        print "get_vt_av_result-->error"
+        logging.error("get_vt_av_result-->error")
         return {"status": "error", "status_code": response.status_code, "error_message": "in get_vt_av_result: response.status_code="+str(response.status_code), "response": None}
 
 
@@ -209,7 +210,7 @@ def get_av_result(file_id,priority="low"):
     added=False
     status = None
     if analysis_result==None:
-        print("Searching analysis of %s in VT" % file_id)
+        logging.info("Searching analysis of %s in VT" % file_id)
         vt_av_result = get_vt_av_result(file_id,priority)
         status = vt_av_result.get('status')
         if vt_av_result.get('status') == "ok":
@@ -217,7 +218,7 @@ def get_av_result(file_id,priority="low"):
             analysis_result=parse_vt_response(vt_av_result_response)
             # Save in mongo
             if(analysis_result is not None):
-                print "saving vt av from "+str(file_id)+ " in mongo"
+                logging.info( "saving vt av from "+str(file_id)+ " in mongo")
                 mdc.save_av_analysis(file_id,analysis_result)
             status = "added"
         elif vt_av_result.get('status') == "error":

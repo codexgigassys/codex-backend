@@ -4,6 +4,7 @@
 import os
 import hashlib
 import gridfs
+import logging
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
@@ -36,7 +37,7 @@ class PackageController():
         elif(len(file_id) == 32):
             f=self.fs.find_one({"md5":file_id})
         else:
-            print "PackageController: invalid file_id:"+str(file_id)+"(len="+str(len(file_id))+")"
+            logging.warning("PackageController: invalid file_id:"+str(file_id)+"(len="+str(len(file_id))+")")
             f=None
         if f==None:
             if env["temporal_files_db"]==False:
@@ -48,7 +49,7 @@ class PackageController():
                     f=self.fs_temp.find_one({"md5":file_id})
                 else:
                     f=None
-                    print "PackageController tmp: invalid file_id"+str(file_id)
+                    logging.warning("PackageController tmp: invalid file_id"+str(file_id))
                 if f==None:
                     return None
         return f.read()
@@ -59,12 +60,12 @@ class PackageController():
         f=self.collection.find_one({"md5":md5})
         if f is None:
             if env["temporal_files_db"]==False:
-                print "md5_to_sha1= none"
+                logging.debug("md5_to_sha1= none")
                 return None
             else:
                 f=self.collection_tmp.find_one({"md5":md5})
                 if f==None:
-                    print "md5_to_sha1= none"
+                    logging.debug( "md5_to_sha1= none")
                     return None
         return f["filename"]
 

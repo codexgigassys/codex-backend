@@ -6,6 +6,7 @@ import ssdeep
 import operator
 import hashlib
 import time
+import logging
 
 from PackageControl.PackageController import *
 import tree_menu
@@ -18,7 +19,6 @@ from db_pool import *
 from KeyManager.KeyManager import KeyManager
 
 def fuzz_search_fast(id,p,fuzz):
-    #print("searching fuzz")
     block=int(fuzz.split(':')[0])
     lap=500
     coll_meta=db[env["db_metadata_collection"]]
@@ -27,7 +27,6 @@ def fuzz_search_fast(id,p,fuzz):
     l=[]
     for f in f1:
         l.append(f)
-    #print("comparing")
     dic={}
     for a in l:
         res=-1
@@ -39,11 +38,9 @@ def fuzz_search_fast(id,p,fuzz):
                 if(res>0):
                     dic[a["file_id"]]=res
         except Exception, e:
-            print str(e)
-            #print(str(res)+"------"+str(a[p])+"-----"+str(a["file_id"]))
+            logging.exception("fuzz_search_fast(id="+str(id)+",p="+str(p)+",fuzz="+str(fuzz))
             continue
 
-    #print("sorting")
     order=sorted(dic.items(),key=operator.itemgetter(1))
     ret=[]
     count=0
@@ -51,7 +48,6 @@ def fuzz_search_fast(id,p,fuzz):
         ret.append(o[0])
         count+=1
         if count>=100: break
-    #print("finishing")
     return ret
 
 
@@ -59,7 +55,6 @@ def fuzz_search_fast(id,p,fuzz):
 def searchFull(search,limit=0,retrieve={},collection="meta_container"):
     coll_meta=db[collection]
     #count=coll_meta.find(search).count()
-    #print(count)
     if limit==0:
         f1=coll_meta.find(search,retrieve)
     else:
@@ -71,7 +66,6 @@ def searchFull(search,limit=0,retrieve={},collection="meta_container"):
 
     ret=[]
     for a in l:
-        #print(a)
         dic={}
         for key in retrieve.keys():
             steps=key.split('.')
@@ -133,7 +127,6 @@ def translate_id(id,str_value):
             value=str(urllib.unquote(str_value).decode('utf8')).lower()
         else:
             value=str(urllib.unquote(str_value).decode('utf8'))
-        #print(value)
     elif type_format == "int":
         value=int(str_value)
     elif type_format == "float":
@@ -173,13 +166,11 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             retrieve[path]=1
 
     search_list=data.split('&')
-    #print(len(search_list))
     query_list=[]
     av_collection_query_list=[]
     hash_search=False
     hash_for_search=""
     for search in search_list:
-        #print(search)
         str_id,str_value=search.split('=')
         id=int(str_id.split('.')[0])
         if(id<=0):
@@ -203,7 +194,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         res=searchFull(query,limit,retrieve)
         key_manager = KeyManager()
         if(hash_search and len(res)==0 and search_on_vt and key_manager.check_private_key()):# searching in VT.
-            print "search_by_id() -> save_file_from_vt()"
+            logging.debug("search_by_id() -> save_file_from_vt()")
             add_response=save_file_from_vt(hash_for_search)
             sha1=add_response.get('hash')
             if sha1==None:
@@ -254,7 +245,6 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         lista_av=[]
         for f in av_res:
             lista_av.append(f)
-        #print(lista_av)# results of AV searchs
 
         res=[]
         for l in lista_av:
