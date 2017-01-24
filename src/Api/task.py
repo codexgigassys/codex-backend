@@ -11,7 +11,6 @@ from bson.json_util import dumps
 from Utils.Functions import clean_hash
 from Utils.Functions import check_hashes
 from Utils.Functions import change_date_to_str
-from Utils.Functions import id_generator
 from Utils.Functions import to_bool
 from Utils.Functions import get_file_id
 from Utils.Functions import add_error
@@ -24,11 +23,13 @@ from virusTotalApi import get_av_result
 from virusTotalApi import save_file_from_vt
 from Utils.mailSender import send_mail
 import datetime
-from rq import Queue
-from redis import Redis
 from IPython import embed
 import time
 import logging
+from Utils.task import save
+from Utils.task import get_task
+from Utils.task import add_task
+
 
 @route('/api/v1/task', method='OPTIONS')
 def enable_cors_for_task():
@@ -47,13 +48,6 @@ def api_get_task():
     task_id = request.query.get('task_id')
     return dumps(get_task(task_id))
 
-def get_task(task_id):
-    mc = MetaController()
-    task_report = mc.read_task(task_id)
-    if task_report is not None:
-        return change_date_to_str(task_report)
-    else:
-        return add_error({}, 8, "Task not found")
 
 @route('/api/v1/task', method='POST')
 def task():
@@ -66,32 +60,6 @@ def task():
     task_id = add_task(process, file_hash, vt_av, vt_samples, email, document_name)
     return dumps({"task_id": task_id})
 
-def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
-    task_id = id_generator(40)
-    response = {"requested": {
-        "vt_av": vt_av,
-        "vt_samples": vt_samples,
-        "process": process,
-        "email": email,
-        "document_name": document_name,
-        "file_hash": file_hash
-        },
-        "date_enqueued": datetime.datetime.now(),
-        "task_id": task_id }
-    save(response)
-    if vt_samples:
-        queue_name = "task_private_vt" # task needs a private VT api
-    elif vt_av and not vt_samples:
-        queue_name = "task_public_vt" # task needs a public VT api
-    else:
-        queue_name = "task_no_vt" # task doesn't need VT
-    q = Queue(queue_name, connection=Redis(host=env.get('redis').get('host')))
-    job = q.enqueue('Api.task.generic_task', args=(
-        process, file_hash, vt_av, vt_samples, email,task_id,document_name), timeout=31536000)
-    return task_id
-
-def add_task_to_download_av_result(file_hash):
-    return add_task(True,file_hash,True,False,"","[automatic-request-from-api]")
 
 def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name=""):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -301,10 +269,6 @@ def db_inconsistency(file_hash):
             logging.info("inconsistency: does not have meta. has sample")
             return 1
 
-def save(document):
-    mc = MetaController()
-    task_id = document["task_id"]
-    return mc.write_task(task_id,document)
 
 def remove_dups(biglist):
     known_links = set()
