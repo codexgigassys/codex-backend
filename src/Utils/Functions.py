@@ -5,7 +5,7 @@ import os
 from db_pool import *
 #from IPython import embed
 import re
-from datetime import datetime as dtdatetime,timedelta
+import datetime
 import subprocess
 from PackageControl.PackageController import *
 from MetaControl.MetaController import *
@@ -112,7 +112,7 @@ def clean_tree(s):
             return str(s)+" ("+str(hex(s))+")"
         else:
             return s
-    elif isinstance(s,dtdatetime):
+    elif isinstance(s,datetime.datetime):
         return str(s)
     elif s is None:
         return s
@@ -197,7 +197,7 @@ def update_date(file_id,date):
 def log_event(event,file_hash,comments=""):
     with open("logs.csv","a+") as logfile:
         csv_writer=csv.writer(logfile)
-        csv_writer.writerow([str(dtdatetime.now().isoformat()),str(event),str(file_hash),str(comments)])
+        csv_writer.writerow([str(datetime.datetime.now().isoformat()),str(event),str(file_hash),str(comments)])
 
 
 def change_date_to_str(res):

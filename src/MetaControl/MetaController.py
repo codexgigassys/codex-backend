@@ -10,7 +10,6 @@ import sys
 sys.path.insert(0, path)
 from db_pool import *
 #from IPython import embed
-from datetime import datetime
 from Utils.ProcessDate import process_date
 
 # Saves and reads metadata to/from the db.

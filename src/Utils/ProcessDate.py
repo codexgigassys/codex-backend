@@ -1,7 +1,7 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-from datetime import datetime as dtdatetime,timedelta
+import datetime
 
 
 # Given a date in str (epoch or ISO)
@@ -13,17 +13,17 @@ def process_date(str_date):
     if str_date=="":
         return None
     if str_date.isdigit():
-        return dtdatetime.fromtimestamp(int(str_date))
+        return datetime.datetime.fromtimestamp(int(str_date))
     elif len(str_date)==19 and str_date[10]==" ":
-        return dtdatetime.strptime(str_date,"%Y-%m-%d %H:%M:%S")
+        return datetime.datetime.strptime(str_date,"%Y-%m-%d %H:%M:%S")
     elif len(str_date)==19 and str_date[10]=="T":
-        return dtdatetime.strptime(str_date,"%Y-%m-%dT%H:%M:%S")
+        return datetime.datetime.strptime(str_date,"%Y-%m-%dT%H:%M:%S")
     elif len(str_date)==16 and str_date[10]=="T":
-        return dtdatetime.strptime(str_date,"%Y-%m-%dT%H:%M")
+        return datetime.datetime.strptime(str_date,"%Y-%m-%dT%H:%M")
     elif len(str_date)==16 and str_date[10]==" ":
-        return dtdatetime.strptime(str_date,"%Y-%m-%d %H:%M")
+        return datetime.datetime.strptime(str_date,"%Y-%m-%d %H:%M")
     else:
-        return dtdatetime.strptime(str_date,"%Y-%m-%d")
+        return datetime.datetime.strptime(str_date,"%Y-%m-%d")
 
 # Given a string like >=YYYY-MM-DD
 # returns an object like
@@ -56,7 +56,7 @@ def parse_date_range(str_date):
          date2 = process_date(dates[1])
          return {operator1: date1, operator2: date2}
     elif len(str_date)==10:
-         return {"$gte": process_date(str_date), "$lt": process_date(str_date)+timedelta(hours=24)}
+         return {"$gte": process_date(str_date), "$lt": process_date(str_date)+datetime.timedelta(hours=24)}
     else:
          print "Invalid date for parse_date_range: "+str(str_date)
          raise ValueError

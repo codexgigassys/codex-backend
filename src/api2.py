@@ -10,7 +10,7 @@ import copy
 import argparse
 import tempfile
 import time
-from datetime import datetime
+import datetime
 import csv
 from czipfile import ZipFile
 import subprocess
@@ -33,6 +33,7 @@ from rq import Queue
 from redis import Redis
 from Utils.Functions import call_with_output,clean_hash,process_file,log_event,recursive_read,jsonize,change_date_to_str,update_date,valid_hash,clean_tree,get_file_id
 from Utils.ProcessDate import process_date
+from Utils.task import add_task_to_download_av_result
 import re
 from Utils.InfoExtractor import *
 from Api.last_uploaded import *
@@ -339,7 +340,7 @@ def add_file():
         return jsonize({'message': 'Invalid date format'})
     logging.debug("add_file(). date="+str(form_date))
     if form_date is None:
-        form_date = datetime.now()
+        form_date = datetime.datetime.now()
     name = upload.filename
     data_bin=upload.file.read()
     file_id=hashlib.sha1(data_bin).hexdigest()
@@ -563,6 +564,10 @@ def get_result_from_av():
         return jsonize({"message": "AV scans downloaded."})
     elif(av_result.get('status')=="already_had_it"):
         return jsonize({"message": "File already have AV scans."})
+    elif(av_result.get('status')=="not_found"):
+        return jsonize({"error": 10, "error_message": "Not found on VT."})
+    elif(av_result.get('status')=="no_key_available"):
+        return jsonize({"error": 11, "error_message": "No key available right now. Please try again later."})
     else:
         logging.error("av_result for hash="+str(sha1))
         logging.error("av_result="+str(av_result))

@@ -255,10 +255,14 @@ def get_av_result(file_id,priority="low"):
 
     if analysis_result is not None:
         scans=analysis_result.get("scans")
+        positives = analysis_result.get('positives')
+        total = analysis_result.get('total')
     else:
+        positives = 0
+        total = 0
         scans = None
-    response = {"scans": scans, "positives": analysis_result.get('positives'),
-            "total": analysis_result.get('total'), "hash": file_id, "status": status}
+    response = {"scans": scans, "positives": positives,
+            "total": total, "hash": file_id, "status": status}
     return response
 
 def save_file_from_vt(hash_id):

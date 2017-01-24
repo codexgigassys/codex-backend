@@ -8,8 +8,7 @@ path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..
 import sys
 sys.path.insert(0, path)
 from db_pool import *
-from datetime import timedelta
-from datetime import datetime
+import datetime
 import logging
 
 class KeyManager():
@@ -130,7 +129,7 @@ class KeyManager():
                     else: # not the first time the key is used.
                         logging.debug("key_data="+str(key_data))
                         date_last_used=key_data.get("last_modified")
-                        fifteen_sec_ago=(datetime.now()-timedelta(seconds=15))
+                        fifteen_sec_ago=(datetime.datetime.now()-datetime.timedelta(seconds=15))
 
                         if(key_data.get('blocked') == False and date_last_used < fifteen_sec_ago ):
                             # key is ready to be used
