@@ -19,6 +19,14 @@ import re
 import logging
 
 
+def get_eset_sig_from_scan(scans):
+    if scans is None:
+        return None
+    for scan in scans:
+        if scan.get('name') in ['ESET-NOD32','NOD32','NOD32v2']:
+            return scan.get('result')
+    return ''
+
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
         return False
