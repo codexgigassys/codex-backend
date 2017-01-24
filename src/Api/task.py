@@ -188,7 +188,9 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
                 elif(output.get('status') == 'not_found'):
                     response["not_found_on_vt"].append(hash_id)
                 else:
-                    response = add_error(response,11,"Unknown error when downloading sample from VT."+str(output))
+                    logging.error("task_id="+str(task_id))
+                    logging.error(str(output))
+                    response = add_error(response,11,"Unknown error when downloading sample from VT.")
                 save(response)
     save(response)
     response["processed"] = []
@@ -231,7 +233,9 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
                 elif(av_result_output.get('status')=='not_found'):
                     response["not_found_on_vt_av"].append(hash_id)
                 else:
-                    response = add_error(response, 12, "Unknown error in av_result(): "+str(hash_id)+" "+str(av_result_output))
+                    logging.error("task_id="+str(task_id))
+                    logging.error("unknown error in av_result: "+str(hash_id)+" ; "+str(av_result_output))
+                    response = add_error(response, 12, "Unknown error in av_result()")
                 save(response)
 
 

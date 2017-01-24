@@ -564,7 +564,9 @@ def get_result_from_av():
     elif(av_result.get('status')=="already_had_it"):
         return jsonize({"message": "File already have AV scans."})
     else:
-        return jsonize({"error": 9, "error_message": "Cannot get analysis: "+av_result.get('status','')+"."+av_result.get('error_message','')})
+        logging.error("av_result for hash="+str(sha1))
+        logging.error("av_result="+str(av_result))
+        return jsonize({"error": 9, "error_message": "Cannot get analysis."})
 
 
 if __name__ == '__main__':
