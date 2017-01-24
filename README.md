@@ -12,10 +12,11 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
     * [MongoDB path](#mongodb-path)
     * [VirusTotal](#virustotal)
 * [Installation](#installation)
-    * [Method 1: Download ready-to-use virtual machines](#download-ready-to-use-virtual-machines)
-    * [Method 2: Installation without virtual machines](#installation-without-virtual-machines)
-    * [Method 3: Manually build Codex Gigas](#manually-build-codex-gigas)
+    * [Method 1: files_to_load Folder](#files_to_load-folder)
+    * [Method 2: via upload API](#via-upload-api)
 * [Load Files](#load-files)
+    * [Method 1: Download ready-to-use virtual machines](#method-1-download-ready-to-use-virtual-machines)
+    * [Method 2: Installation without virtual machines](#method-2-installation-without-virtual-machines)
 * [APT-notes samples](#apt-notes-samples)
 * [Logs](#logs)
 * [Development](#development)
@@ -77,10 +78,26 @@ sudo docker-compose start
 If everything goes well, Codex Gigas should be up and running on ```http://127.0.0.1:6100```. 
 
 ## Load files
+### Method 1: files_to_load folder
 To load files on a mass scale, drop them to ```files_to_load``` folder and execute the following command:
 ```
 curl http://127.0.0.1:4500/api/v1/load_to_mongo
 ```
+
+### Method 2: via upload API
+Is possible to upload a file via POST
+```
+curl -F file="@/home/user/somefile.exe" http://127.0.0.1:4500/api/v1/file/add
+```
+
+You can upload all the files under a folder with find+curl
+```
+find . -type f -exec curl -F file="@{}" http://127.0.0.1:4500/api/v1/file/add \;
+```
+
+### Method 3: via loadFile python script.
+
+
 
 
 
