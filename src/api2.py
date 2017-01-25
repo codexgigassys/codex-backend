@@ -142,6 +142,9 @@ def get_sample_count():
 
 @route('/api/v1/metadata', method='GET')
 def get_metadata():
+    if request.query.file_hash == '':
+        response.status = 400
+        return jsonize({'message': 'file_hash parameter is missing'})
     file_hash=clean_hash(request.query.file_hash)
     if not valid_hash(file_hash):
         response.status = 400
