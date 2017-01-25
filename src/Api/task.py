@@ -188,6 +188,16 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
             sha1 = get_file_id(hash_id)
             if(sha1 is not None):
                 av_result_output = get_av_result(sha1)
+                if (av_result_output.get('status')=='out_of_credits'):
+                    request_successful = False
+                    count = 0
+                    while not request_successful:
+                        av_result_output = get_av_result(sha1)
+                        count += 1
+                        if av_result_output.get('status') != 'out_of_credits':
+                            response["vt_av_out_of_credits"].append(hash_id)
+                            response = add_error(response, 10, "Had to retried "+str(count)+" times in av_result(out_of_credits) for hash= "+str(hash_id)+". Is someone else using the same public key?")
+                            request_successful = True
                 if(av_result_output.get('status')=="added"):
                     response["vt_av_added"].append(hash_id)
                     response["public_credits_spent"]+=1
@@ -195,9 +205,6 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
                     response["vt_av_already_downloaded"].append(hash_id)
                 elif(av_result_output.get('status')=='error'):
                     response = add_error(response, 9, "Error in av_result: "+str(av_result_output.get('error_message')))
-                elif(av_result_output.get('status')=='out_of_credits'):
-                    response["vt_av_out_of_credits"].append(hash_id)
-                    response = add_error(response, 10, "Error in av_result(out_of_credits): "+str(hash_id))
                 elif(av_result_output.get('status')=='not_found'):
                     response["not_found_on_vt_av"].append(hash_id)
                 else:

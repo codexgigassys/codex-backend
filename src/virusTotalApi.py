@@ -122,7 +122,8 @@ def total_positive(vt_dict):
 # are missing, but can be calculated manually.
 def parse_vt_response(json_response):
     if json_response is None:
-        return None
+        logging.exception("parse_vt_response recieved None")
+        raise ValueError("json_response is None")
     response_code=json_response.get("response_code")
     if(response_code!=1):
         return None
@@ -160,8 +161,8 @@ def parse_vt_response(json_response):
         #The "date" value is use to speed up time queries for av signatures
         ret["date"] = process_date(vt_date)        
     except ValueError:
-        ret["date"] = None        
-        print "virusTotalApi->parse_vt_response: invalid date recieved by VT:"+str(vt_date)    
+        ret["date"] = None
+        logging.exception("virusTotalApi->parse_vt_response: invalid date recieved by VT: "+str(vt_date))
     
     return ret
 
@@ -170,7 +171,6 @@ def parse_vt_response(json_response):
 # dictionary. In case of error, returns None.
 def get_vt_av_result(file_id,priority="low"):
     key_manager = KeyManager()
-    #apikey = env["vt_private_apikey"]
     has_key = False
     while not has_key:
         apikey = key_manager.get_key('av_analysis',priority)
@@ -191,13 +191,13 @@ def get_vt_av_result(file_id,priority="low"):
     except Exception, e:
         logging.exception("VT /report request. "+str(e))
         return {"status": "error", "error_message": str(e), "response": None}
-    try:
-        parsed_response = response.json()
-    except Exception, e:
-        logging.exception("response.json() error. get_vt_av_result("+str(file_id)+")"+"e="+str(e))
-        logging.info("response="+str(response))
-        return {"status": "error", "status_code": -1, "error_message": str(e), "response": response}
     if response.status_code == 200:
+        try:
+            parsed_response = response.json()
+        except Exception, e:
+            logging.exception("response.json() error. get_vt_av_result("+str(file_id)+")"+"e="+str(e))
+            logging.info("response="+str(response))
+            return {"status": "error", "error_message": "Error when parsing response"}
         logging.debug("get_vt_av_result-->=200")
         if parsed_response.get('response_code')==1:
             return {"status": "ok", "response": parsed_response}
