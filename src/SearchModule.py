@@ -171,6 +171,9 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
     hash_search=False
     hash_for_search=""
     for search in search_list:
+        if '=' not in search:
+            logging.warning("= not in search. search="+str(search))
+            continue
         str_id,str_value=search.split('=')
         id=int(str_id.split('.')[0])
         if(id<=0):
