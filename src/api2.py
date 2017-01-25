@@ -144,11 +144,11 @@ def get_sample_count():
 def get_metadata():
     file_hash=clean_hash(request.query.file_hash)
     if not valid_hash(file_hash):
-        response.code = 400
+        response.status = 400
         return jsonize({'message':'Invalid hash format (use MD5, SHA1 or SHA2)'})
     file_hash = get_file_id(file_hash)
     if file_hash is None:
-        response.code = 405
+        response.status = 405
         return jsonize({'message':'Metadata not found in the database'})
 
     mdc=MetaController()
@@ -178,12 +178,12 @@ def logs():
 def api_process_file():
     file_hash=clean_hash(request.query.file_hash)
     if len(file_hash) != 40:
-        response.code = 400
+        response.status = 400
         return jsonize({'message':'Invalid hash format (use sha1)'})
 
     res=process_file(file_hash,True)
     if res==None:
-        response.code = 404
+        response.status = 404
         return jsonize("File not found in the database")
 
     return jsonize("File processed")
@@ -283,17 +283,17 @@ def get_file():
     if len(file_hash) == 40:
         key = 'sha1'
     else:
-        response.code = 400
+        response.status = 400
         return jsonize({'message':'Invalid hash format (use sha1)'})
 
     pc=PackageController()
     res=pc.searchFile(file_hash)
 
     if res==None:
-        response.code = 404
+        response.status = 404
         return jsonize({'message':'File not found in the database'})
     if res==1:
-        response.code = 400
+        response.status = 400
         return jsonize({'message':'File not available for downloading'})
     res=pc.getFile(file_hash)
     zip_name=os.path.join(tmp_folder,str(file_hash)+'.zip')
@@ -377,13 +377,13 @@ def yara():
         if len(file_hash) == 40:
             key = 'sha1'
         else:
-            response.code = 400
+            response.status = 400
             return jsonize({'message':'Invalid hash format (use sha1)'})
 
         pc=PackageController()
         res=pc.searchFile(file_hash)
         if res==None:
-            response.code = 404
+            response.status = 404
             return jsonize({'message':'File not found in the database'}) #needs a better fix
         res=pc.getFile(file_hash)
 
@@ -539,7 +539,7 @@ def check_imp():
 def get_result_from_av():
     hash_id=request.query.file_hash
     if len(hash_id) == 0:
-        response.code = 400
+        response.status = 400
         return jsonize({'error': 4, 'error_message':'file_hash parameter is missing.'})
     hash_id=clean_hash(hash_id)
     if not valid_hash(hash_id):
@@ -548,7 +548,7 @@ def get_result_from_av():
         data="1="+str(hash_id)
         res=SearchModule.search_by_id(data,1,[],True)
         if(len(res)==0):
-            response.code = 400
+            response.status = 400
             return jsonize({'error': 6, 'error_message':'File not found'})
         else:
             sha1=res[0]["sha1"]
