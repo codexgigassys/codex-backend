@@ -12,11 +12,13 @@ Read the [user guide](doc/user-guide.md) to learn how it works.
     * [MongoDB path](#mongodb-path)
     * [VirusTotal](#virustotal)
 * [Installation](#installation)
-    * [Method 1: files_to_load Folder](#files_to_load-folder)
-    * [Method 2: via upload API](#via-upload-api)
-* [Load Files](#load-files)
     * [Method 1: Download ready-to-use virtual machines](#method-1-download-ready-to-use-virtual-machines)
     * [Method 2: Installation without virtual machines](#method-2-installation-without-virtual-machines)
+    * [Method 3: Manually build Codex Gigas Community Version](#method-3-manually-build-codex-gigas-community-version)
+* [Load files](#load-files)
+    * [Method 1: files_to_load folder](#method-1-files_to_load-folder)
+    * [Method 2: via upload API](#method-2-via-upload-api)
+    * [Method 3: via loadFile python script.](#method-3-via-loadfile-python-script)
 * [APT-notes samples](#apt-notes-samples)
 * [Logs](#logs)
 * [Development](#development)
@@ -38,14 +40,14 @@ sudo docker-compose up
 ```
 ## Installation
 There are three ways to install CodexGigas Community version. We have ready-to-use Virtual Machines (easiest way). We also provide the docker pre-built images, so you can use CodexGigas without virtual machines. Lastly, you can manually build Codex Gigas docker images.
-### Download ready-to-use virtual machines
+### Method 1: Download ready-to-use virtual machines
 You can download your preferred vm file. Inside you'll find Codex Gigas running at startup on ```http://127.0.0.1:6100```.
 * [VMware](https://www.dropbox.com/s/9qn13x9d8eegpgr/codex_vmware.zip?dl=0) (sha1: 9C6B3F8F37C8BD119E5C8A07050CB28C1A7E2DF3)
 * [VirtualBox](https://www.dropbox.com/s/a6hxhkjpa8a3ek0/codex_vtbox.ova?dl=0) (sha1: 8289A8BEAF2D75A6D2B4E80ADEB943A806E26373)
 
 VMs password: codex
 
-### Installation without virtual machines
+### Method 2: Installation without virtual machines
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
 mkdir codexgigas && cd codexgigas
@@ -59,7 +61,7 @@ The next time you want to stop/start the containers:
 sudo docker-compose stop
 sudo docker-compose start
 ```
-### Manually build Codex Gigas Community Version
+### Method 3: Manually build Codex Gigas Community Version
 If you don't want to use a Virtual Machine, you can manually install Codex Gigas on your system.
 First install [docker](https://www.docker.com) and [docker-compose](https://docs.docker.com/compose/), then:
 ```
