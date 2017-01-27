@@ -151,7 +151,7 @@ def get_metadata():
         return jsonize({'message':'Invalid hash format (use MD5, SHA1 or SHA2)'})
     file_hash = get_file_id(file_hash)
     if file_hash is None:
-        response.status = 405
+        response.status = 404
         return jsonize({'message':'Metadata not found in the database'})
 
     mdc=MetaController()
