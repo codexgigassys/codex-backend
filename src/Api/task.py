@@ -120,7 +120,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
     save(response)
 
     response["inconsistencies"]=[]
-    if(av_samples or process):
+    if(vt_samples or process):
         for hash_id in hashes:
             if fix_inconsistency(hash_id) == 1:
                 response["inconsistencies"].append(hash_id)
