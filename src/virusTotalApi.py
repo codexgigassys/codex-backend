@@ -206,7 +206,7 @@ def get_vt_av_result(file_id,priority="low"):
         else:
             logging.debug("response="+str(parsed_response))
             return {"status": "error", "error_message": "Error in av_analysis. HTTP status 200, but response_code="+str(parsed_response.get('response_code')), "response": parsed_response}
-    elif respone.status_code == 204:
+    elif response.status_code == 204:
         logging.info("get_vt_av_result-->204")
         #raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
         return {"status": "out_of_credits", "response": None}
