@@ -70,6 +70,7 @@ def download_from_virus_total(file_id):
             if(fail_count >= 3):
                 break
     if(response is None):
+        key_manager.log_operation_result(apikey.get('key'),"download_sample",'error')
         return {"status": None, "file": None}
     if(response.status_code == 200):
         downloaded_file = response.content
@@ -83,19 +84,25 @@ def download_from_virus_total(file_id):
 
         if(check!=file_id):
             logging.warning("download_from_virus_total(): check!="+str(file_id))
+            key_manager.log_operation_result(apikey.get('key'),"download_sample",'invalid_hash')
             return {"status": "invalid_hash", "file": None}
         else:
+            key_manager.log_operation_result(apikey.get('key'),"download_sample",'ok')
             return {"status": "ok", "file": downloaded_file}
     elif(response.status_code == 204):
         key_manager.block_key(apikey.get('key'))
+        key_manager.log_operation_result(apikey.get('key'),"download_sample",'out_of_credits')
         return {"status": "out_of_credits", "file": None}
     elif(response.status_code == 403):
         logging.error("params="+str(params))
         logging.error("apikey="+str(apikey.get('key')))
+        key_manager.log_operation_result(apikey.get('key'),"download_sample",'invalid_key')
         return {"status": "invalid_key", "file": None}
     elif(response.status_code == 404):
+        key_manager.log_operation_result(apikey.get('key'),"download_sample",'not_found')
         return {"status": "not_found", "file": None}
     else:
+        key_manager.log_operation_result(apikey.get('key'),"download_sample",'unknown_error')
         logging.error( "download_from_virus_total(): status_code="+str(response.status_code)+". ("+str(file_id)+")")
         return {"status": response.status_code, "file": None}
 
@@ -190,6 +197,7 @@ def get_vt_av_result(file_id,priority="low"):
         response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, timeout = 30)
     except Exception, e:
         logging.exception("VT /report request. "+str(e))
+        key_manager.log_operation_result(apikey.get('key'),"av_analysis",'error')
         return {"status": "error", "error_message": str(e), "response": None}
     if response.status_code == 200:
         try:
@@ -197,26 +205,34 @@ def get_vt_av_result(file_id,priority="low"):
         except Exception, e:
             logging.exception("response.json() error. get_vt_av_result("+str(file_id)+")"+"e="+str(e))
             logging.info("response="+str(response))
+            key_manager.log_operation_result(apikey.get('key'),"av_analysis",'error')
             return {"status": "error", "error_message": "Error when parsing response"}
         logging.debug("get_vt_av_result-->=200")
         if parsed_response.get('response_code')==1:
+            key_manager.log_operation_result(apikey.get('key'),"av_analysis",'ok')
             return {"status": "ok", "response": parsed_response}
         elif parsed_response.get('response_code')==0:
+            key_manager.log_operation_result(apikey.get('key'),"av_analysis",'not_found')
             return {"status": "not_found", "response": parsed_response}
         else:
             logging.debug("response="+str(parsed_response))
+            key_manager.log_operation_result(apikey.get('key'),"av_analysis",'error')
             return {"status": "error", "error_message": "Error in av_analysis. HTTP status 200, but response_code="+str(parsed_response.get('response_code')), "response": parsed_response}
     elif response.status_code == 204:
         logging.info("get_vt_av_result-->204")
         #raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
+        key_manager.log_operation_result(apikey.get('key'),"av_analysis",'out_of_credits')
         return {"status": "out_of_credits", "response": None}
     elif response.status_code == 403:
+        key_manager.log_operation_result(apikey.get('key'),"av_analysis",'invalid_key')
         return {"status": "error", "error_message": "VT returned 403 for av_analysis (invalid key?)", "response": None}
     elif response.status_code == 404:
         logging.error( "get_vt_av_result-->404")
+        key_manager.log_operation_result(apikey.get('key'),"av_analysis",'not_found')
         return {"status": "error", "error_message": "VT returned 404 for av_analysis", "response": None}
     else:
         logging.error("get_vt_av_result-->error")
+        key_manager.log_operation_result(apikey.get('key'),"av_analysis",'error')
         return {"status": "error", "status_code": response.status_code, "error_message": "in get_vt_av_result: response.status_code="+str(response.status_code), "response": None}
 
 

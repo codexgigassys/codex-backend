@@ -15,6 +15,22 @@ class KeyManager():
     def __init__(self):
         self.semaphore = Semaphore(Redis(host=env.get('redis').get('host')), count=1, namespace='example')
 
+    def log_daily_key_use(self):
+        logging.debug("KeyManager(): log_key_use")
+        doc = db.vtkeys.find()
+        if doc.count()!=1:
+            raise ValueError("doc.count() != 1! (check db.vtkeys in DB_Metadata)")
+        doc = doc[0]
+        date = datetime.datetime.now()
+        doc["date"]=date
+        doc.pop('_id',None)
+        db.logs.insert_one(doc)
+
+    def log_operation_result(self,key,operation,result):
+        db.vtkeys.update_one({"doc": 1},{"$inc": { key+"."+operation+".daily."+result: 1,
+            key+"."+operation+".total."+result: 1}})
+
+
     # When a private key is out of credits
     # we will block it until 00:00 UTC
     def block_key(self,apikey):
@@ -25,6 +41,9 @@ class KeyManager():
 
     def reset_daily_counter(self):
         logging.debug("KeyManager(): reset_daily_counter")
+        logging.debug("KeyManager(): log_key_use")
+        self.log_daily_key_use()
+        logging.debug("KeyManager():</log_key_use>")
         doc = db.vtkeys.find()
         if doc.count()!=1:
             raise ValueError("doc.count() != 1! (check db.vtkeys in DB_Metadata)")
@@ -35,6 +54,8 @@ class KeyManager():
                 continue
             logging.debug("KeyManager(): key="+str(key))
             db.vtkeys.update_one({"doc": 1},{"$set": {key+".daily": 0}},upsert=False)
+            db.vtkeys.update_one({"doc": 1},{"$set": {key+".download_sample.daily": {} }},upsert=False)
+            db.vtkeys.update_one({"doc": 1},{"$set": {key+".av_analysis.daily": {} }},upsert=False)
             db.vtkeys.update_one({"doc": 1},{"$set": {key+".blocked": False}},upsert=False)
         return True
 
@@ -76,6 +97,17 @@ class KeyManager():
                 elif isinstance(env.get(config_str),basestring):
                     keys[p].append(env.get(config_str))
             return keys
+
+    def init_key_in_document(self, key):
+        new_document = { key: { "total": 1, "daily": 1,
+            "download_sample": {}, "av_analysis": {}, "blocked": False }}
+        db.vtkeys.update_one({"doc": 1},{"$set": new_document },upsert=True)
+        db.vtkeys.update_one({"doc": 1},{'$currentDate':{ key+".last_modified": { '$type': "date" } }})
+
+    def add_one_to_key(self, key):
+        db.vtkeys.update_one({"doc": 1},{"$inc": { key+".daily": 1, key+".total": 1 } })
+        db.vtkeys.update_one({"doc": 1},{"$currentDate": { key+".last_modified": {"$type": "date"} }  })
+
 
 
     # get_key returns the key that optimize the use
@@ -122,9 +154,7 @@ class KeyManager():
                     key_data = doc.get(key)
                     logging.debug("key_data="+str(key_data))
                     if key_data is None: # first time a key is used.
-                        new_document = { key: { "total": 1, "daily": 1, "blocked": False  }}
-                        db.vtkeys.update_one({"doc": 1},{"$set": new_document },upsert=True)
-                        db.vtkeys.update_one({"doc": 1},{'$currentDate':{ key+".last_modified": { '$type': "date" } }})
+                        init_key_in_document(key)
                         return {"key": key}
                     else: # not the first time the key is used.
                         logging.debug("key_data="+str(key_data))
@@ -134,10 +164,7 @@ class KeyManager():
                         if(key_data.get('blocked') == False and date_last_used < fifteen_sec_ago ):
                             # key is ready to be used
                             logging.debug("not blocked")
-                            doc_to_update = { key+".total": key_data.get('total')+1,
-                                key+".daily": key_data.get('daily')+1}
-                            db.vtkeys.update_one({"doc": 1},{"$set": doc_to_update })
-                            db.vtkeys.update_one({"doc": 1},{'$currentDate': { key+".last_modified": { '$type': "date" }}})
+                            self.add_one_to_key(key)
                             return {"key": key}
                         else: # key is not ready to be used.
                             if key_data.get('blocked')==True:
@@ -164,9 +191,7 @@ class KeyManager():
                 for key in keys["private"]:
                     key_data = doc.get(key)
                     if key_data is None: #first time the private key is used
-                        new_document = { key: {"total": 1, "daily": 1, "blocked" : False}}
-                        db.vtkeys.update_one({"doc": 1},{"$set": new_document})
-                        db.vtkeys.update_one({"doc": 1},{"$currentDate": { key+".last_modified": {"$type": "date"} }  })
+                        init_key_in_document(key)
                         return {"key": key}
                     else:
                         if key_data.get('blocked') == False:
@@ -174,8 +199,7 @@ class KeyManager():
                 private_keys_sorted = sorted(private_keys_vec,key=lambda k: k["daily"])
                 if len(private_keys_sorted)>0:
                     key = private_keys_sorted[0].get('key')
-                    db.vtkeys.update_one({"doc": 1},{"$inc": { key+".daily": 1, key+".total": 1 } })
-                    db.vtkeys.update_one({"doc": 1},{"$currentDate": { key+".last_modified": {"$type": "date"} }  })
+                    self.add_one_to_key(key)
                     return {"key": private_keys_sorted[0].get('key')}
                 elif len(keys["private"])!=0: #we have private keys, but they are blocked
                     return {"key": None, "timeleft": 60}
