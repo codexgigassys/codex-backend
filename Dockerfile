@@ -37,8 +37,8 @@ echo "Installing yarGen-master" && \
 wget -nv -nc https://github.com/Neo23x0/yarGen/archive/master.zip -O /myapp/yara/yarGen-master.zip && \
 cd /myapp/yara/ && \
 unzip /myapp/yara/yarGen-master.zip -d /myapp/yara/ && \
-7z x /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
-7z x /myapp/yara/yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
+#7z x /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -oyarGen-master && \
+#7z x /myapp/yara/yarGen-master/good-strings.db.zip.001 -oyarGen-master && \
 git clone --depth 1 https://github.com/binarlyhq/binarly-sdk/ /myapp/yara/binarly-sdk && \
 wget -nv -nc https://github.com/plusvic/yara/archive/v3.4.0.zip -O /tmp/yara.zip && \
 unzip /tmp/yara.zip -d /tmp && \
@@ -51,8 +51,9 @@ cd /tmp/yara-3.4.0/ &&  make && make install && \
 cd /myapp/yara && \
 python /myapp/yara/binarly-sdk/setup.py install && \
 cd /myapp/yara/yarGen-master && \
-7z x -y /myapp/yara/yarGen-master/good-strings.db.zip.001 -o/myapp/yara/yarGen-master && \
-7z x -y /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
+python yarGen.py --update && \
+#7z x -y /myapp/yara/yarGen-master/good-strings.db.zip.001 -o/myapp/yara/yarGen-master && \
+#7z x -y /myapp/yara/yarGen-master/good-opcodes.db.zip.001 -o/myapp/yara/yarGen-master && \
 wget -nv -nc https://winitor.com/tools/pestudio/current/pestudio.zip -O /tmp/pestudio.zip  && \
 unzip /tmp/pestudio.zip -d /tmp && \
 cp /tmp/xml/strings.xml /myapp/yara/yarGen-master/ && \
@@ -60,16 +61,16 @@ rm -rf /tmp/yara-3.4.0/ && \
 rm -f /tmp/pestudio.zip && \
 rm -f /tmp/yara.zip && \
 rm -rf /tmp/pestudio/ && \
-rm -f /myapp/yara/yarGen-master.zip && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.001 && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.002 && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.003 && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.004 && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.005 && \
-rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.006 && \
-rm -f /myapp/yara/yarGen-master/good-strings.db.zip.001 && \
-rm -f /myapp/yara/yarGen-master/good-strings.db.zip.002 && \
-rm -f /myapp/yara/yarGen-master/good-strings.db.zip.003 && \
-rm -f /myapp/yara/yarGen-master/good-strings.db.zip.004
+rm -f /myapp/yara/yarGen-master.zip 
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.001 && \
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.002 && \
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.003 && \
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.004 && \
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.005 && \
+#rm -f /myapp/yara/yarGen-master/good-opcodes.db.zip.006 && \
+#rm -f /myapp/yara/yarGen-master/good-strings.db.zip.001 && \
+#rm -f /myapp/yara/yarGen-master/good-strings.db.zip.002 && \
+#rm -f /myapp/yara/yarGen-master/good-strings.db.zip.003 && \
+#rm -f /myapp/yara/yarGen-master/good-strings.db.zip.004
 
 #CMD ["python","/myapp/src/api2.py"]
