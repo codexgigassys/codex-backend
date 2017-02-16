@@ -118,17 +118,20 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
         return change_date_to_str(response)
 
     save(response)
+    response["private_credits_spent"] = 0
 
     response["inconsistencies"]=[]
     if(vt_samples or process):
         for hash_id in hashes:
-            if fix_inconsistency(hash_id) == 1:
+            inconsistency_output = fix_inconsistency(hash_id)
+            if inconsistency_output.get('fixed'):
                 response["inconsistencies"].append(hash_id)
+                if inconsistency_output.get('credit_spent'):
+                    response["private_credits_spent"]+=1
 
     save(response)
 
     response["not_found_on_vt"] = []
-    response["private_credits_spent"] = 0
     if vt_samples:
         response["downloaded"] = []
         for hash_id in hashes:
@@ -227,13 +230,13 @@ def fix_inconsistency(file_hash):
     status = db_inconsistency(file_hash)
     if status==1 or status==3:
         generic_process_hash(file_hash)
-        return 1
+        return {"fixed": True, "credit_spent": False}
     elif status==2:
         file_id = get_file_id(file_hash)
         save_file_from_vt(file_id)
-        return 1
+        return {"fixed": True, "credit_spent": True}
     else:
-        return 0
+        return {"fixed": False}
 
 
 # The DB is consistent if the
