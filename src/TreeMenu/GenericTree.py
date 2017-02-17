@@ -3,7 +3,7 @@
 # See the file 'LICENSE' for copying permission.
 
 tree_element={"name":"Generic","children":[
-    {"name":"Hash","id":1,"type":"string","example":"MD5, SHA1, SHA2","children":[],"searchable":True,"projectable":True, "call_func": "", "lower": True},
+    {"name":"Hash","id":1,"type":"string","example":"MD5, SHA1, SHA2","children":[],"searchable":True,"projectable":True, "call_func": "validate_hash", "lower": True},
     {"name":"Description","id":146,"type":"string","children":[],"searchable":False,"projectable":True, "call_func": "", "lower": False},
     {"name":"Size","id":4,"type":"number","min":0,"example":103140,"children":[],"searchable":True,"projectable":True, "call_func": ""},
     {"name":"Mime type", "id": 5, "type": "string", "example": "application/x-dosexec", "children": [],"searchable":True,"projectable":True, "call_func": "", "lower": True},
