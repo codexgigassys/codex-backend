@@ -11,6 +11,7 @@ sys.path.insert(0, path)
 from db_pool import *
 #from IPython import embed
 from Utils.ProcessDate import process_date
+import datetime
 
 # Saves and reads metadata to/from the db.
 class MetaController():
@@ -112,7 +113,15 @@ class MetaController():
         if meta is None:
             return None
         else:
-            return meta.get('date')
+            date = meta.get('date')
+            if(type(date)==type(datetime.datetime.now())):
+                return date
+            else:
+                try:
+                    date = datetime.datetime.strptime(date,"%Y-%m-%d %H:%M:%S")
+                except:
+                    date = None
+                return date
 
     def read_task(self,task_id):
         f=self.tasks.find_one({"task_id": task_id})
