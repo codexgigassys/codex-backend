@@ -18,7 +18,6 @@ python-crypto \
 zip \
 python-dateutil \
 python-mysqldb \
-redis-server \
 autoconf \
 openssl \
 file \
