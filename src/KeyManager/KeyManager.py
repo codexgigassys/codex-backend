@@ -37,7 +37,9 @@ class KeyManager():
         doc = db.vtkeys.find()
         if doc.count()!=1:
             raise ValueError("doc.count() != 1! (check db.vtkeys in DB_Metadata)")
+        date = datetime.datetime.now()
         db.vtkeys.update_one({"doc": 1},{"$set": {apikey+".blocked": True }},upsert=False)
+        db.vtkeys.update_one({"doc": 1},{"$set": {apikey+".blocked_time": date }},upsert=False)
 
     def reset_daily_counter(self):
         logging.debug("KeyManager(): reset_daily_counter")
