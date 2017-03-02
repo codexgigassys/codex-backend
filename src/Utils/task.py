@@ -19,7 +19,7 @@ def get_task(task_id):
     else:
         return add_error({}, 8, "Task not found")
 
-def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
+def add_task(process,file_hash,vt_av,vt_samples,email,document_name,ip):
     task_id = id_generator(40)
     response = {"requested": {
         "vt_av": vt_av,
@@ -30,6 +30,7 @@ def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
         "file_hash": file_hash
         },
         "date_enqueued": datetime.datetime.now(),
+        "ip": ip,
         "task_id": task_id }
     save(response)
     if vt_samples:
@@ -40,11 +41,11 @@ def add_task(process,file_hash,vt_av,vt_samples,email,document_name):
         queue_name = "task_no_vt" # task doesn't need VT
     q = Queue(queue_name, connection=Redis(host=env.get('redis').get('host')))
     job = q.enqueue('Api.task.generic_task', args=(
-        process, file_hash, vt_av, vt_samples, email,task_id,document_name), timeout=31536000)
+        process, file_hash, vt_av, vt_samples, email,task_id,document_name,ip), timeout=31536000)
     return task_id
 
 def add_task_to_download_av_result(file_hash):
-    return add_task(True,file_hash,True,False,"","[automatic-request-from-api]")
+    return add_task(True,file_hash,True,False,"","[automatic-request-from-api]","127.0.0.1")
 
 def save(document):
     mc = MetaController()

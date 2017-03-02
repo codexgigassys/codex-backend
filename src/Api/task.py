@@ -57,11 +57,12 @@ def task():
     process = to_bool(request.forms.get('process'))
     email = request.forms.get('email')
     document_name = request.forms.get('document_name')
-    task_id = add_task(process, file_hash, vt_av, vt_samples, email, document_name)
+    ip = request.environ.get('REMOTE_ADDR')
+    task_id = add_task(process, file_hash, vt_av, vt_samples, email, document_name,ip)
     return dumps({"task_id": task_id})
 
 
-def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name=""):
+def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name="",ip="127.0.0.1"):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.info("task_id="+str(task_id))
     generic_count = 0
@@ -69,6 +70,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
     response["date_start"] = datetime.datetime.now()
     response["document_name"] = document_name
     response["task_id"] = task_id
+    response["ip"]=ip
     check_hashes_output = check_hashes(file_hash)
     errors = check_hashes_output.get('errors')
     for error in errors:
