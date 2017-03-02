@@ -154,9 +154,14 @@ def parse_vt_response(json_response):
     if json_response.get('additional_info') is not None and json_response.get('additional_info').get('pe-resource-types') is not None:
         json_response["additional_info"]["pe-resource-types"] = key_list_clean(json_response["additional_info"]["pe-resource-types"])
     json_response = rec_key_replace(json_response)
+    for av_scan in json_response["scans"]:
+        if av_scan["result"] is not None:
+            av_scan["result"]=av_scan["result"].strip()
+
     ret = json_response
     ret["positives"]=positives
     ret["total"]=total
+
     
     #Trying to get the best date
     date_registers = ['first_seen','additional_info.first_seen_itw','scan_date']
