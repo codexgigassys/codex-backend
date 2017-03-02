@@ -37,6 +37,7 @@ env = {
     'csv-upx-file': '',
     'auto_get_av_result': False,
     'debug': False,
+    'spend_credit_to_fix_inconsistency': False,
     "mailsender":
     {
         "fromaddr": "",

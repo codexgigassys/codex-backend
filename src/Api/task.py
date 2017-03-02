@@ -124,7 +124,7 @@ def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document
     if(vt_samples or process):
         for hash_id in hashes:
             inconsistency_output = fix_inconsistency(hash_id)
-            if inconsistency_output.get('fixed'):
+            if inconsistency_output.get('inconsistency'):
                 response["inconsistencies"].append(hash_id)
                 if inconsistency_output.get('credit_spent'):
                     response["private_credits_spent"]+=1
@@ -230,13 +230,15 @@ def fix_inconsistency(file_hash):
     status = db_inconsistency(file_hash)
     if status==1 or status==3:
         generic_process_hash(file_hash)
-        return {"fixed": True, "credit_spent": False}
-    elif status==2:
+        return {"inconsistency": True, "fixed": True, "credit_spent": False}
+    elif status==2 and env.get('spend_credit_to_fix_inconsistency'):
         file_id = get_file_id(file_hash)
         save_file_from_vt(file_id)
-        return {"fixed": True, "credit_spent": True}
-    else:
-        return {"fixed": False}
+        return {"inconsistency": True, "fixed": True, "credit_spent": True}
+    elif status==2 and not env.get('spend_credit_to_fix_inconsistency'):
+        return {"inconsistency": True, "fixed": False}
+    elif status==0:
+        return {"inconsistency": False, "fixed": False}
 
 
 # The DB is consistent if the
