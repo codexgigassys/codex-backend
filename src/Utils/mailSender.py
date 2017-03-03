@@ -6,7 +6,7 @@ from db_pool import *
 def send_mail(toaddrs,subject,text):
     if toaddrs is None or len(toaddrs)==0:
         return
-    fromaddr = env.get('mailsender').get('fromaddr')
+    fromaddr = envget('mailsender.fromaddr')
 
     msg = MIMEText(text)
     msg['Subject'] = subject
@@ -14,11 +14,11 @@ def send_mail(toaddrs,subject,text):
     msg['To'] = toaddrs
 
     # Credentials (if needed)
-    username = env.get('mailsender').get('username')
-    password = env.get('mailsender').get('password')
+    username = envget('mailsender.username')
+    password = envget('mailsender.password')
 
     # The actual mail send
-    server = smtplib.SMTP_SSL(env.get('mailsender').get('smtp_host'),env.get('mailsender').get('smtp_ssl_port'))
+    server = smtplib.SMTP_SSL(envget('mailsender.smtp_host'),envget('mailsender.smtp_ssl_port'))
     server.login(username,password)
     server.sendmail(fromaddr, toaddrs,  msg.as_string())
     server.quit()

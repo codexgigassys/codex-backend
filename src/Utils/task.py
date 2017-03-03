@@ -39,7 +39,7 @@ def add_task(process,file_hash,vt_av,vt_samples,email,document_name,ip):
         queue_name = "task_public_vt" # task needs a public VT api
     else:
         queue_name = "task_no_vt" # task doesn't need VT
-    q = Queue(queue_name, connection=Redis(host=env.get('redis').get('host')))
+    q = Queue(queue_name, connection=Redis(host=envget('redis.host')))
     job = q.enqueue('Api.task.generic_task', args=(
         process, file_hash, vt_av, vt_samples, email,task_id,document_name,ip), timeout=31536000)
     return task_id

@@ -10,9 +10,9 @@ import ssdeep
 
 fuzzy_to_compare="12288:lTurEUKhROhnCzrwsrsNuRIHZB62atXtjBIuMAI0VpnJJyeVxy5la8AJv:lqrEJhROh8rwKsNrDK9xM3cJyeg0Jv"
 
-client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-db=client[env["db_metadata_name"]]
-coll_meta=db[env["db_metadata_collection"]]
+client=MongoClient(envget('metadata.host'),envget('metadata.port'))
+db=client[envget('db_metadata_name')]
+coll_meta=db[envget('db_metadata_collection')]
 print("loading")
 f1=coll_meta.find({},{"file_id":1,"fuzzy_hash":1})
 l=[]

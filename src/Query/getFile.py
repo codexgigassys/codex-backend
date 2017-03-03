@@ -7,17 +7,14 @@ import os
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
+from env import envget
 
 #file_id="906f21f436b0dbb2c9cf37b80a90cdeb061ced3d"
 #file_id="109bf9de7b82ffd7b8194aa3741b5d42ee878ebb"
 file_id="6abec077e93226f4d9d9a5351092f3e0baef6d78"
 
-client=MongoClient(env["files"]["host"],env["files"]["port"])
-db=client[env["db_files_name"]]
+client=MongoClient(envget('files.host'),envget('files.port'))
+db=client[envget('db_files_name')]
 fs=gridfs.GridFS(db)
 f=fs.find_one({"filename":file_id})
 if(f==None):

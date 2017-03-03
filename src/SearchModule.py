@@ -21,7 +21,7 @@ from KeyManager.KeyManager import KeyManager
 def fuzz_search_fast(id,p,fuzz):
     block=int(fuzz.split(':')[0])
     lap=500
-    coll_meta=db[env["db_metadata_collection"]]
+    coll_meta=db[envget("db_metadata_collection")]
 
     f1=coll_meta.find({},{"file_id":1,p:1})
     l=[]
@@ -238,7 +238,7 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
         return []
     else:
         # do AV search
-        db_collection = env["db_metadata_collection"]
+        db_collection = envget('db_metadata_collection')
         av_coll=db.av_analysis
 
         if limit==0:
@@ -264,6 +264,6 @@ def search_by_id(data,limit,columns=[],search_on_vt=False):
             return res
 
 def count_documents():
-    coll_meta=db[env["db_metadata_collection"]]
+    coll_meta=db[envget('db_metadata_collection')]
     val=coll_meta.count()
     return val

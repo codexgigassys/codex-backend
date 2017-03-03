@@ -7,10 +7,11 @@ path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..
 import sys
 sys.path.insert(0, path)
 import ssdeep
+from env import envget
 
 def searchFuzzy(fuzz,limit,thresh):
-    client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-    db=client[env["db_metadata_name"]]
+    client=MongoClient(envget('metadata.host'),envget('metadata.port'))
+    db=client[envget('db_metadata_name')]
     coll_meta=db["db_metadata_collection"]
 
     f1=coll_meta.find({},{"file_id":1,"fuzzy_hash":1}).limit(limit)
@@ -33,9 +34,9 @@ def searchFuzzy(fuzz,limit,thresh):
 
 def searchFull(search,limit):
     #print("1")
-    client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
+    client=MongoClient(envget('metadata.host'),envget('metadata.port'))
     #print("2")
-    db=client[env["db_metadata_name"]]
+    db=client[envget('db_metadata_name')]
     #print("3")
     coll_meta=db["db_metadata_collection"]
     #print("4")

@@ -65,8 +65,8 @@ def check_if_index_exist(index,list_indexes):
 
 
 if __name__ == '__main__':
-    db_ip = env["metadata"]["host"]
-    db_port = env["metadata"]["port"]
+    db_ip = envget('metadata.host')
+    db_port = envget('metadata.port')
 
     for index in index_list:
         client=pymongo.MongoClient(db_ip,db_port)

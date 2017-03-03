@@ -15,7 +15,7 @@ class PackageController():
     def __init__(self):
         self.fs=gridfs.GridFS(db_fs)
         self.collection=db_fs["fs.files"]
-        if(env["temporal_files_db"]):
+        if(envget('temporal_files_db')):
             self.fs_temp=gridfs.GridFS(db_temp)
             self.collection_tmp=db_temp["fs.files"]
 
@@ -24,7 +24,7 @@ class PackageController():
 
     # adds a file to the file database.
     def append(self,file_id,data,vt_blocked=False):
-        if(env["temporal_files_db"]):
+        if(envget('temporal_files_db')):
             self.fs_temp.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
         else:
             self.fs.put(data,filename=file_id,metadata={ "vt_blocked" :vt_blocked})
@@ -40,7 +40,7 @@ class PackageController():
             logging.warning("PackageController: invalid file_id:"+str(file_id)+"(len="+str(len(file_id))+")")
             f=None
         if f==None:
-            if env["temporal_files_db"]==False:
+            if envget('temporal_files_db')==False:
                 return None
             else:
                 if( len(file_id)==40):
@@ -59,7 +59,7 @@ class PackageController():
             raise ValueError("not a valid md5")
         f=self.collection.find_one({"md5":md5})
         if f is None:
-            if env["temporal_files_db"]==False:
+            if envget('temporal_files_db')==False:
                 logging.debug("md5_to_sha1= none")
                 return None
             else:
@@ -71,7 +71,7 @@ class PackageController():
 
 
     def last_updated(self,number):
-        if(env["temporal_files_db"]):
+        if(envget('temporal_files_db')):
             db_files=db_temp
         else:
             db_files=db_fs
@@ -93,7 +93,7 @@ class PackageController():
     def searchFile(self,file_id):
         ret=self.fs.find_one({"filename":file_id})
         if(ret==None):
-            if(env["temporal_files_db"]==False):return None
+            if(envget('temporal_files_db')==False):return None
             else:
                 ret=self.fs_temp.find_one({"filename":file_id})
                 if(ret==None):return None

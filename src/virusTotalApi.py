@@ -9,10 +9,6 @@ import logging
 from MetaControl.MetaController import *
 from PackageControl.PackageController import *
 from KeyManager.KeyManager import KeyManager
-try:
-    from config.secrets import env
-except ImportError:
-    from config.default_config import env
 from Utils.Functions import key_list_clean,key_dict_clean,rec_key_replace,process_file,valid_hash
 from Utils.ProcessDate import process_date
 import time
@@ -39,7 +35,6 @@ def download_from_virus_total(file_id):
     if not valid_hash(file_id):
         raise ValueError("download_from_virus_total recieved an invalid hash")
     key_manager = KeyManager()
-    #apikey = env["vt_private_apikey"]
     has_key = False
     while not has_key:
         apikey = key_manager.get_key('download_sample')

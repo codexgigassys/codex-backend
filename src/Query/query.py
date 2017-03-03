@@ -6,14 +6,11 @@ import os
 path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 import sys
 sys.path.insert(0, path)
-try:
-    from secrets import env
-except ImportError:
-    from default_config import env
+from env import envget
 
-client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-db=client[env["db_metadata_name"]]
-coll_meta=db[env["db_metadata_collection"]]
+client=MongoClient(envget('metadata.host'),envget('metadata.port'))
+db=client[envget('db_metadata_name')]
+coll_meta=db[envget('db_metadata_collection')]
 
 query={}
 query["particular_header.file_entropy"]={"$gt":7.999}

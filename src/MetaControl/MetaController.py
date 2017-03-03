@@ -18,7 +18,7 @@ class MetaController():
 
     def __init__(self,db_collection=None):
         if db_collection is None:
-            db_collection = env["db_metadata_collection"]
+            db_collection = envget('db_metadata_collection')
         self.collection=db[db_collection]
         self.import_coll=db.imports_tree
         self.av_coll=db.av_analysis

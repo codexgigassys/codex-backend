@@ -14,10 +14,7 @@ from MetaControl.MetaController import *
 from Utils.TimeLogger import TimeLogger
 from Sample import *
 import logging
-try:
-    from config.secrets import env
-except ImportError:
-    from config.default_config import env
+from env import envget
 
 class Launcher():
 
@@ -180,8 +177,8 @@ def testCode3():
 #----------------------------------------------
 def testCode4():
     inicio=10569000
-    client=MongoClient(env["files"]["host"],env["files"]["port"])
-    db=client[env["db_files_name"]]
+    client=MongoClient(envget('files.host'),envget('files.port'))
+    db=client[envget('db_files_name')]
     fs=gridfs.GridFS(db)
     res=fs.find(timeout=False).skip(inicio)
     lc=Launcher()
@@ -211,8 +208,8 @@ def testCode5():
 #----------------------------------------------
 def testCode6():
     inicio=0
-    client=MongoClient(env["files"]["host"],env["files"]["port"])
-    db=client[env["db_files_name"]]
+    client=MongoClient(envget('files.host'),envget('files.port'))
+    db=client[envget('db_files_name')]
     fs=gridfs.GridFS(db)
     res=fs.find(timeout=False).skip(inicio)
     lc=Launcher()

@@ -233,11 +233,11 @@ def fix_inconsistency(file_hash):
     if status==1 or status==3:
         generic_process_hash(file_hash)
         return {"inconsistency": True, "fixed": True, "credit_spent": False}
-    elif status==2 and env.get('spend_credit_to_fix_inconsistency'):
+    elif status==2 and envget('spend_credit_to_fix_inconsistency'):
         file_id = get_file_id(file_hash)
         save_file_from_vt(file_id)
         return {"inconsistency": True, "fixed": True, "credit_spent": True}
-    elif status==2 and not env.get('spend_credit_to_fix_inconsistency'):
+    elif status==2 and not envget('spend_credit_to_fix_inconsistency'):
         return {"inconsistency": True, "fixed": False}
     elif status==0:
         return {"inconsistency": False, "fixed": False}

@@ -17,7 +17,7 @@ def check_if_has_version(file_id,collection_version):
 
 def main():
     collection_version = db["version_container"]
-    collection_meta = db[env["db_metadata_collection"]]
+    collection_meta = db[envget('db_metadata_collection')]
     start = 0
     count = 0
     test = 0

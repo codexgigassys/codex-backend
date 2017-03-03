@@ -10,9 +10,9 @@ import ssdeep
 
 
 
-client=MongoClient(env["metadata"]["host"],env["metadata"]["port"])
-db=client[env["db_metadata_name"]]
-coll_meta=db[env["db_metadata_collection"]]
+client=MongoClient(envget('metadata.host'),envget('metadata.port'))
+db=client[envget('db_metadata_name')]
+coll_meta=db[envget('db_metadata_collection')]
 
 """
 f=coll_meta.count({"particular_header.packer_detection":"True"})

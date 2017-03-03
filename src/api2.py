@@ -50,7 +50,7 @@ import logging
 tmp_folder="/tmp/mass_download/"
 
 def add_hash_to_process_queue(sha1):
-    q = Queue('process',connection=Redis(host=env.get('redis').get('host')))
+    q = Queue('process',connection=Redis(host=envget('redis').get('host')))
     job = q.enqueue('process_hash.generic_process_hash',args=(sha1,),timeout=70)
 
 
@@ -395,8 +395,8 @@ def yara():
             fd=open(file_name,"wb")
             fd.write(res)
             fd.close()
-    yara_cli_output = call_with_output(["python",env['yara-script2'],"--opcodes","--excludegood","--nosimple","-z","5","-m",folder_path,"-o", yara_output_file])
-    #yara_cli_output = call_with_output(["python",env['yara-script1'],"-f","exe","-a","Codex Gigas","-r",yara_output_file, folder_path+"/"])
+    yara_cli_output = call_with_output(["python",envget('yara-script2'),"--opcodes","--excludegood","--nosimple","-z","5","-m",folder_path,"-o", yara_output_file])
+    #yara_cli_output = call_with_output(["python",envget('yara-script1'),"-f","exe","-a","Codex Gigas","-r",yara_output_file, folder_path+"/"])
 #    yara_output_file += ".yar" # because the script yara-script2 is ugly and saves the file to x.yar.yar
     if os.path.isfile(yara_output_file) is False:
         fp = open(yara_output_file,'w+')
@@ -434,7 +434,7 @@ def api_batch_process_debug_file():
             if res is not None and len(SearchModule.search_by_id(data,1,[],False))==0:
                 logging.debug("Processing right now: "+str(hash_id))
                 process_file(hash_id)
-                if(env['auto_get_av_result']):
+                if(envget('auto_get_av_result')):
                     add_task_to_download_av_result(hash_id)
                     continue
         res=SearchModule.search_by_id(data,1,[],False)
@@ -462,7 +462,7 @@ def api_batch_process_debug_file():
 
         added_to_queue+=1
         add_hash_to_process_queue(sha1)
-        if(env['auto_get_av_result']):
+        if(envget('auto_get_av_result')):
             add_task_to_download_av_result(sha1)
         yield str(sha1)+"\n"
 

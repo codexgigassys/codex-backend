@@ -25,13 +25,13 @@ def fix_date(r):
             sys.stdout.flush()
             return False
         
-    collection = db[env["db_metadata_collection"]]
+    collection = db[envget('db_metadata_collection')]
     collection.update_one({"_id": ObjectId(r.get('_id'))},{"$set": {"date": date}})
     return True
 
 
 def main():
-    collection = db[env["db_metadata_collection"]]
+    collection = db[envget('db_metadata_collection')]
     start = 0
     count = 0
     test = 0

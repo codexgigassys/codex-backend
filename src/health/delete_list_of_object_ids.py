@@ -10,7 +10,7 @@ from db_pool import *
 from bson.objectid import ObjectId
 
 def main():
-    collection = db[env["db_metadata_collection"]]
+    collection = db[envget('db_metadata_collection')]
     f = open("ids.txt","r")
     for idd in f.readlines():
         clean_id = idd.replace('\n','')

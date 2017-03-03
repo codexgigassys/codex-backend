@@ -13,7 +13,7 @@ import logging
 
 class KeyManager():
     def __init__(self):
-        self.semaphore = Semaphore(Redis(host=env.get('redis').get('host')), count=1, namespace='example')
+        self.semaphore = Semaphore(Redis(host=envget('redis.host')), count=1, namespace='example')
 
     def log_daily_key_use(self):
         logging.debug("KeyManager(): log_key_use")
@@ -80,8 +80,8 @@ class KeyManager():
     # Returns True if there is at least one VirusTotal key in
     # secrets file.
     def check_keys_in_secrets(self):
-        if ((env.get('vt_public_apikey') is None or env.get('vt_public_apikey') == "" ) and
-                (env.get('vt_private_apikey') is None or env.get('vt_private_apikey') == "")):
+        if ((envget('vt_public_apikey') is None or envget('vt_public_apikey') == "" ) and
+                (envget('vt_private_apikey') is None or envget('vt_private_apikey') == "")):
             return False
         else:
             return True
@@ -94,10 +94,10 @@ class KeyManager():
             for p in ["public", "private"]:
                 keys[p] = []
                 config_str = 'vt_'+p+'_apikey'
-                if type(env.get(config_str))==list:
-                    keys[p].extend(env.get(config_str))
-                elif isinstance(env.get(config_str),basestring):
-                    keys[p].append(env.get(config_str))
+                if type(envget(config_str))==list:
+                    keys[p].extend(envget(config_str))
+                elif isinstance(envget(config_str),basestring):
+                    keys[p].append(envget(config_str))
             return keys
 
     def init_key_in_document(self, key):

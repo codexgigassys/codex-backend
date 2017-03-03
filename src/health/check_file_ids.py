@@ -28,7 +28,7 @@ def compare(_id,sha1,file_id):
 
 
 def main():
-    collection = db[env["db_metadata_collection"]]
+    collection = db[envget('db_metadata_collection')]
     start = 0
     count = 0
     test = 0
