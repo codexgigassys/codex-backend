@@ -39,6 +39,7 @@ from Utils.InfoExtractor import *
 from Api.last_uploaded import *
 from Api.task import *
 from Api.queue_count import *
+from Api.queue_tasks import *
 from Api.export import *
 from Api.av_count import *
 from Api.cron import *

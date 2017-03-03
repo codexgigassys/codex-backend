@@ -14,6 +14,8 @@ def process_date(str_date):
         return None
     if str_date.isdigit():
         return datetime.datetime.fromtimestamp(int(str_date))
+    elif len(str_date)==20 and str_date[10]=="T":
+        return datetime.datetime.strptime(str_date,"%Y-%m-%dT%H:%M:%SZ")
     elif len(str_date)==19 and str_date[10]==" ":
         return datetime.datetime.strptime(str_date,"%Y-%m-%d %H:%M:%S")
     elif len(str_date)==19 and str_date[10]=="T":
