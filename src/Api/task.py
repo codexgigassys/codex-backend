@@ -29,6 +29,7 @@ import logging
 from Utils.task import save
 from Utils.task import get_task
 from Utils.task import add_task
+from Utils.task import load_task
 
 
 @route('/api/v1/task', method='OPTIONS')
@@ -51,20 +52,36 @@ def api_get_task():
 
 @route('/api/v1/task', method='POST')
 def task():
-    file_hash = request.forms.get('file_hash')
-    vt_av = to_bool(request.forms.get('vt_av'))
-    vt_samples = to_bool(request.forms.get('vt_samples'))
-    process = to_bool(request.forms.get('process'))
-    email = request.forms.get('email')
-    document_name = request.forms.get('document_name')
-    ip = request.environ.get('REMOTE_ADDR')
-    task_id = add_task(process, file_hash, vt_av, vt_samples, email, document_name,ip)
+    requested = {
+            'file_hash': request.forms.get('file_hash'),
+            'vt_av': to_bool(request.forms.get('vt_av')),
+            'vt_samples': to_bool(request.forms.get('vt_samples')),
+            'process': to_bool(request.forms.get('process')),
+            'email': request.forms.get('email'),
+            'document_name': request.forms.get('document_name'),
+            'ip': request.environ.get('REMOTE_ADDR') }
+    task_id = add_task(requested)
     return dumps({"task_id": task_id})
 
 
-def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name="",ip="127.0.0.1"):
+#def generic_task(process, file_hash, vt_av, vt_samples, email, task_id, document_name="",ip="127.0.0.1"):
+def generic_task(task_id):
+    response = load_task(task_id)
+    if response.get('date_end') is not None:
+        logging.error("Task already done. why was this on the queue? task_id="+str(task_id))
+        return response
+
+    process = response['requested']['process']
+    file_hash = response['requested']['file_hash']
+    vt_av = response['requested']['vt_av']
+    vt_samples = response['requested']['vt_samples']
+    email = response['requested']['email']
+    document_name = response['requested'].get('document_name','')
+    ip = response['requested']['ip']
+
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.info("task_id="+str(task_id))
+    logging.info("response['requested']="+str(response['requested']))
     generic_count = 0
     response = {}
     response["date_start"] = datetime.datetime.now()
