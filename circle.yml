@@ -1,0 +1,10 @@
+general:
+  build_dir: src
+
+dependencies:
+  post:
+    - pip install -r pip_test_requirements.txt
+
+test:
+  override:
+    - pytest
