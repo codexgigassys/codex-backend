@@ -45,6 +45,7 @@ echo "Installing pip requirements" && \
 pip install -r /myapp/src/pip_requirements.txt   && \
 pip install -r /myapp/src/pip_yargen_requirements.txt && \
 pip install -r /myapp/src/pip_vt_api_requirements.txt && \
+pip install -r /myapp/src/pip_test_requirements.txt && \
 cd /tmp/yara-3.4.0/ && ./bootstrap.sh && ./configure && \
 cd /tmp/yara-3.4.0/ &&  make && make install && \
 cd /myapp/yara && \
