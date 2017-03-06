@@ -1,12 +1,13 @@
-#http://stackoverflow.com/a/17718729
+# http://stackoverflow.com/a/17718729
 class Ram:
+
     def __init__(self):
         print "ram loaded"
 
-    #returns a float from 0 to 1 with the % of free memory
+    # returns a float from 0 to 1 with the % of free memory
     def free_percent(self):
         mem = self.memory()
-        return float(mem['free'])/float(mem['total'])
+        return float(mem['free']) / float(mem['total'])
 
     def memory(self):
         with open('/proc/meminfo', 'r') as mem:

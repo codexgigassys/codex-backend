@@ -3,9 +3,11 @@
 # See the file 'LICENSE' for copying permission.
 from PlugIns.PlugIn import PlugIn
 
+
 class CypherPlug(PlugIn):
-    def __init__(self,sample=None):
-        PlugIn.__init__(self,sample)
+
+    def __init__(self, sample=None):
+        PlugIn.__init__(self, sample)
 
     def getPath(self):
         return "particular_header.cypher"

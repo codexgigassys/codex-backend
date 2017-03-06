@@ -12,15 +12,15 @@ import logging
 
 class Processor():
 
-    def __init__(self,sample):
-        #self.result=Metadata() # result of processing
-        self.sample=sample # data for analyzing
-        #self.sample.setCalculatedMetadata(self.result)
-        self.version=sample.getStorageVersion() # dictionary of current versions
-        self.result_version=sample.getCalculatedVersion()# up to date versions
-        self.plugins=[] # plugins to execute.
-        self.modules={}# Modules of libraries used by plugins.
-        self.metadata_to_store={}
+    def __init__(self, sample):
+        # self.result=Metadata() # result of processing
+        self.sample = sample  # data for analyzing
+        # self.sample.setCalculatedMetadata(self.result)
+        self.version = sample.getStorageVersion()  # dictionary of current versions
+        self.result_version = sample.getCalculatedVersion()  # up to date versions
+        self.plugins = []  # plugins to execute.
+        self.modules = {}  # Modules of libraries used by plugins.
+        self.metadata_to_store = {}
 
     def __delete__(self):
         pass
@@ -37,68 +37,74 @@ class Processor():
         return self.metadata_to_store
 
     def _executeAllPlugIns(self):
-        for plug in self.plugins :
+        for plug in self.plugins:
             plug.setSample(self.sample)
             plug.setModules(self.modules)
             self._executePlugIn(plug)
 
-    def _addPlugIn(self,plug):
+    def _addPlugIn(self, plug):
         self.plugins.append(plug)
 
-    def _addModule(self,mod):
-        self.modules[mod.getName()]=mod
+    def _addModule(self, mod):
+        self.modules[mod.getName()] = mod
 
     # Execute plugins in a safe way.
-    def _executePlugIn(self,plugin):
-        info_string=plugin.getName()
-        code_version=plugin.getVersion()
-        path=plugin.getPath()
-        if(self._version_is_update(info_string,code_version)):
+    def _executePlugIn(self, plugin):
+        info_string = plugin.getName()
+        code_version = plugin.getVersion()
+        path = plugin.getPath()
+        if(self._version_is_update(info_string, code_version)):
             return 0
-        #compute
+        # compute
         try:
-            logging.debug("Running %s v.%s PlugIn",info_string,str(code_version))
-            #tl=TimeLoger()
-            #tl.startCounter()
-            res=plugin.process()
-            #tl.logTime(info_string)
+            logging.debug("Running %s v.%s PlugIn",
+                          info_string, str(code_version))
+            # tl=TimeLoger()
+            # tl.startCounter()
+            res = plugin.process()
+            # tl.logTime(info_string)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
-            logging.error("Error in %s PlugIn with sample:%s",info_string,self.sample.getID(),exc_info=True)
-            res="ERROR_EXECUTE_PLUGIN"
-            logging.exception("**** Error File: %s ****"%(self.sample.getID(),))
-            logging.info("**** PlugIn    : %s ****"%(info_string,))
-            err=str(traceback.format_exc())
+            logging.error("Error in %s PlugIn with sample:%s",
+                          info_string, self.sample.getID(), exc_info=True)
+            res = "ERROR_EXECUTE_PLUGIN"
+            logging.exception("**** Error File: %s ****" %
+                              (self.sample.getID(),))
+            logging.info("**** PlugIn    : %s ****" % (info_string,))
+            err = str(traceback.format_exc())
             logging.info(err)
-        self._update(plugin,res)
+        self._update(plugin, res)
         return 0
 
     # check if the version of "info string" is up to date.
-    def _version_is_update(self,info_string,code_version):
-        if(self.version==None): return False
-        ver=self.version.get(info_string)
-        if(ver==None): return False
-        if(ver<code_version): return False
+    def _version_is_update(self, info_string, code_version):
+        if(self.version == None):
+            return False
+        ver = self.version.get(info_string)
+        if(ver == None):
+            return False
+        if(ver < code_version):
+            return False
         return True
 
     # saves the result and the version.
-    def _update(self,plugin,res):
-        code_version=plugin.getVersion()
-        name=plugin.getName()
-        info_string=plugin.getPath()
-        self.sample.setCalculatedValue(info_string,res)
-        #self.version[name]=code_version
-        self.result_version[name]=code_version
-        self.metadata_to_store[info_string]=res
+    def _update(self, plugin, res):
+        code_version = plugin.getVersion()
+        name = plugin.getName()
+        info_string = plugin.getPath()
+        self.sample.setCalculatedValue(info_string, res)
+        # self.version[name]=code_version
+        self.result_version[name] = code_version
+        self.metadata_to_store[info_string] = res
         return 0
 
     # returns up to date versions.
     def getVersion(self):
         return self.result_version
 
-    #redefine str()
-    #def __str__(self):
+    # redefine str()
+    # def __str__(self):
     #    string=""
     #    for word in self.result:
     #        #tabs='\t'
@@ -116,5 +122,4 @@ def testCode():
 
 #****************TEST_EXECUTE******************
 from Utils.test import test
-test("-test_Processor",testCode)
-
+test("-test_Processor", testCode)

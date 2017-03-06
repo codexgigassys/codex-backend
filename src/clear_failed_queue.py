@@ -5,7 +5,6 @@ from redis import Redis
 from rq import Queue
 import sys
 from env import envget
-qfail = Queue(sys.argv[1],connection=Redis(host=envget('redis.host')))
+qfail = Queue(sys.argv[1], connection=Redis(host=envget('redis.host')))
 qfail.count
 qfail.empty()
-

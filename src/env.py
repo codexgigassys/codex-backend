@@ -6,7 +6,7 @@ from default_config import env as env_default
 
 
 def envget(option):
-    if option is None or len(option)==0:
+    if option is None or len(option) == 0:
         raise ValueError("empty or  null option string")
     array = option.split('.')
     tmp = env_secrets
@@ -20,5 +20,5 @@ def envget(option):
     for x in array:
         tmp = tmp.get(x)
         if tmp is None:
-            raise ValueError("env variable not found: "+str(option))
+            raise ValueError("env variable not found: " + str(option))
     return tmp

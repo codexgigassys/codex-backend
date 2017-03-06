@@ -4,9 +4,11 @@
 from PlugIns.PlugIn import PlugIn
 #import entropy
 
+
 class TestPlug(PlugIn):
-    def __init__(self,sample=None):
-        PlugIn.__init__(self,sample)
+
+    def __init__(self, sample=None):
+        PlugIn.__init__(self, sample)
 
     def getPath(self):
         return "particular_header.test"

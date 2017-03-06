@@ -5,9 +5,11 @@ from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
 
+
 class CRCCheckPlug(PlugIn):
-    def __init__(self,sample=None):
-        PlugIn.__init__(self,sample)
+
+    def __init__(self, sample=None):
+        PlugIn.__init__(self, sample)
 
     def getPath(self):
         return "particular_header.crc"
@@ -19,10 +21,11 @@ class CRCCheckPlug(PlugIn):
         return 1
 
     def process(self):
-        pelib=self._getLibrary(PEFileModule().getName())
-        if(pelib==None):return ""
+        pelib = self._getLibrary(PEFileModule().getName())
+        if(pelib == None):
+            return ""
 
         crc_claimed = pelib.OPTIONAL_HEADER.CheckSum
-        crc_actual  = pelib.generate_checksum()
-        s="Claimed: 0x%x, Actual: 0x%x" % (crc_claimed,crc_actual)
+        crc_actual = pelib.generate_checksum()
+        s = "Claimed: 0x%x, Actual: 0x%x" % (crc_claimed, crc_actual)
         return self._normalize(s)

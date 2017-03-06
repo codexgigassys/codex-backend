@@ -8,9 +8,11 @@ from Utils.InfoExtractor import *
 import logging
 import entropy
 
+
 class SectionsPlug(PlugIn):
-    def __init__(self,sample=None):
-        PlugIn.__init__(self,sample)
+
+    def __init__(self, sample=None):
+        PlugIn.__init__(self, sample)
 
     def getPath(self):
         return "particular_header.sections"
@@ -22,38 +24,39 @@ class SectionsPlug(PlugIn):
         return 15
 
     def process(self):
-        #print("SECTIONS")
+        # print("SECTIONS")
         #logging.debug("loading pefile")
-        pelib=self._getLibrary(PEFileModule().getName())
-        if(pelib==None):return ""
+        pelib = self._getLibrary(PEFileModule().getName())
+        if(pelib == None):
+            return ""
 
         #logging.debug("iterating sections")
-        ret=[]
-        number=0
+        ret = []
+        number = 0
 
         for section in pelib.sections:
-            #print(section)
-            dic_sec={}
-            dic_sec["name"]=repr(section.Name)
+            # print(section)
+            dic_sec = {}
+            dic_sec["name"] = repr(section.Name)
 
-            dic_sec["size_raw_data"]=int(hex(section.SizeOfRawData),16)
-            dic_sec["virtual_size"]=int(hex(section.Misc_VirtualSize ),16)
-            dic_sec["characteristics"]=hex(section.Characteristics)
+            dic_sec["size_raw_data"] = int(hex(section.SizeOfRawData), 16)
+            dic_sec["virtual_size"] = int(hex(section.Misc_VirtualSize), 16)
+            dic_sec["characteristics"] = hex(section.Characteristics)
 
-            if ( section.__dict__.get('IMAGE_SCN_MEM_WRITE', False)  and
-                    section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False) ):
-                dic_sec["write_executable"]="True"
+            if (section.__dict__.get('IMAGE_SCN_MEM_WRITE', False) and
+                    section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False)):
+                dic_sec["write_executable"] = "True"
             else:
-                dic_sec["write_executable"]="False"
+                dic_sec["write_executable"] = "False"
 
-            data=section.get_data()
+            data = section.get_data()
             #logging.debug("calculating hashes")
-            dic_sec["sha1"]=SHA1(data)
-            dic_sec["sha2"]=SHA256(data)
-            dic_sec["md5"]=MD5(data)
+            dic_sec["sha1"] = SHA1(data)
+            dic_sec["sha2"] = SHA256(data)
+            dic_sec["md5"] = MD5(data)
             #logging.debug("calculating fuzzy")
-            dic_sec["fuzzy_hash"]=getSsdeep(data)
-            dic_sec["entropy"]=entropy.shannon_entropy(data) * 8
+            dic_sec["fuzzy_hash"] = getSsdeep(data)
+            dic_sec["entropy"] = entropy.shannon_entropy(data) * 8
             #logging.debug("finished calculating")
 
             ret.append(dic_sec)

@@ -1,1 +1,1 @@
-__all__ = ["GenericTree","ExecutableTree"]
+__all__ = ["GenericTree", "ExecutableTree"]

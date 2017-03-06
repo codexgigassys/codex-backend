@@ -6,8 +6,9 @@ import traceback
 
 
 class DummyProcessor(Processor):
-    def __init__(self,sample):
-        Processor.__init__(self,sample)
+
+    def __init__(self, sample):
+        Processor.__init__(self, sample)
 
     def __delete__(self):
         Processor.__delete__(self)
@@ -20,25 +21,25 @@ class DummyProcessor(Processor):
         return self.metadata_to_store
 
 
-
 #****************TEST_CODE******************
 import time
 
-def testCode():
-    file="Test_files/test.exe"
-    data=open(file,"rb").read()
 
-    start_time=time.time()
-    dic={}
-    dp=DummyProcessor(data,dic)
+def testCode():
+    file = "Test_files/test.exe"
+    data = open(file, "rb").read()
+
+    start_time = time.time()
+    dic = {}
+    dp = DummyProcessor(data, dic)
     print(dp.process())
     print(str(dic))
-    elapsed=time.time()-start_time
+    elapsed = time.time() - start_time
 
-    print("Time Elapsed: "+str(elapsed*1000)+" ms")
+    print("Time Elapsed: " + str(elapsed * 1000) + " ms")
     print("")
 
 
 #****************TEST_EXECUTE******************
 #from Utils.test import test
-test("-test_PEProcessor",testCode)
+test("-test_PEProcessor", testCode)

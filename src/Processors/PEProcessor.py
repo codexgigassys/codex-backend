@@ -5,21 +5,22 @@ from Processors.Processor import *
 import traceback
 import time
 import string
-#PlugIns
+# PlugIns
 from PlugIns.PE import *
-#Modulos
+# Modulos
 from Modules.PEFileModule import *
 from Modules.MetaDataModule import *
 
+
 class PEProcessor(Processor):
 
-    def __init__(self,sample):
-        Processor.__init__(self,sample)
+    def __init__(self, sample):
+        Processor.__init__(self, sample)
 
     def __delete__(self):
         Processor.__delete__(self)
 
-    #metodo de procesamiento
+    # metodo de procesamiento
     def process(self):
         Processor.process(self)
 
@@ -31,7 +32,7 @@ class PEProcessor(Processor):
         self._addPlugIn(SectionsPlug.SectionsPlug())
         self._addPlugIn(ResourceEntriesPlug.ResourceEntriesPlug())
         self._addPlugIn(CheckEPSectionPlug.CheckEPSectionPlug())
-        #self._addPlugIn(CRCCheckPlug.CRCCheckPlug())
+        # self._addPlugIn(CRCCheckPlug.CRCCheckPlug())
         self._addPlugIn(TimeStampPlug.TimeStampPlug())
         self._addPlugIn(HeadersPlug.HeadersPlug())
         self._addPlugIn(VersionInfoPlug.VersionInfoPlug())
@@ -40,14 +41,13 @@ class PEProcessor(Processor):
         self._addPlugIn(PackerVersionPlug.PackerVersionPlug())
         self._addPlugIn(AVAnalysisPlug.AVAnalysisPlug())
         self._addPlugIn(CheckPackerPlug.CheckPackerPlug())
-        #self._addPlugIn(TestPlug.TestPlug())
+        # self._addPlugIn(TestPlug.TestPlug())
         self._addPlugIn(AddImportsToTreePlug.AddImportsToTreePlug())
         self._addPlugIn(ExportsPlug.ExportsPlug())
 
         self._addPlugIn(CertficatePlug.CertficatePlug())
 
         self._addPlugIn(StringPlug.StringPlug())
-
 
         self._executeAllPlugIns()
 
@@ -57,23 +57,24 @@ class PEProcessor(Processor):
 import time
 from Sample import *
 
-def testCode():
-    file="Test_files/error_de_codificacion_en_nombre_de_libreria"
-    data=open(file,"rb").read()
 
-    start_time=time.time()
-    dic={}
-    sample=Sample()
+def testCode():
+    file = "Test_files/error_de_codificacion_en_nombre_de_libreria"
+    data = open(file, "rb").read()
+
+    start_time = time.time()
+    dic = {}
+    sample = Sample()
     sample.setBinary(data)
-    pe=PEProcessor(sample,dic)
-    res=pe.process()
-    #print(res)
-    #print(res["particular_header"]["sections"])
-    elapsed=time.time()-start_time
+    pe = PEProcessor(sample, dic)
+    res = pe.process()
+    # print(res)
+    # print(res["particular_header"]["sections"])
+    elapsed = time.time() - start_time
     #print("Time Elapsed: "+str(elapsed*1000)+" ms")
-    #print("")
+    # print("")
 
 
 #****************TEST_EXECUTE******************
 #from Utils.test import test
-test("-test_PEProcessor",testCode)
+test("-test_PEProcessor", testCode)

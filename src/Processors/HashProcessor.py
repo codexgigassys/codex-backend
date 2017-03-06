@@ -5,16 +5,17 @@ from Processors.Processor import *
 import traceback
 import time
 import string
-#PlugIns
+# PlugIns
 from PlugIns.PE import *
-#Modulos
+# Modulos
 from Modules.PEFileModule import *
 from Modules.MetaDataModule import *
 
+
 class HashProcessor(Processor):
 
-    def __init__(self,sample):
-        Processor.__init__(self,sample)
+    def __init__(self, sample):
+        Processor.__init__(self, sample)
 
     def __delete__(self):
         Processor.__delete__(self)
@@ -32,23 +33,24 @@ class HashProcessor(Processor):
 import time
 from Sample import *
 
-def testCode():
-    file="Test_files/error_de_codificacion_en_nombre_de_libreria"
-    data=open(file,"rb").read()
 
-    start_time=time.time()
-    dic={}
-    sample=Sample()
+def testCode():
+    file = "Test_files/error_de_codificacion_en_nombre_de_libreria"
+    data = open(file, "rb").read()
+
+    start_time = time.time()
+    dic = {}
+    sample = Sample()
     sample.setBinary(data)
-    pe=PEProcessor(sample,dic)
-    res=pe.process()
+    pe = PEProcessor(sample, dic)
+    res = pe.process()
     print(res)
-    #print(res["particular_header"]["sections"])
-    elapsed=time.time()-start_time
-    print("Time Elapsed: "+str(elapsed*1000)+" ms")
+    # print(res["particular_header"]["sections"])
+    elapsed = time.time() - start_time
+    print("Time Elapsed: " + str(elapsed * 1000) + " ms")
     print("")
 
 
 #****************TEST_EXECUTE******************
 #from Utils.test import test
-test("-test_PEProcessor",testCode)
+test("-test_PEProcessor", testCode)

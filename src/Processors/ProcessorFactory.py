@@ -4,6 +4,7 @@
 from Processors.PEProcessor import *
 from Processors.DummyProcessor import *
 
+
 class ProcessorFactory():
 
     def __init__(self):
@@ -12,23 +13,24 @@ class ProcessorFactory():
     def __delete__(self):
         pass
 
-    def getHashProcessor(self,processor,sample):
+    def getHashProcessor(self, processor, sample):
         return HashProcessor(sample)
 
-    def createProcessor(self,processor,sample):
-        obj=None
-        if(processor=="application/x-dosexec"):
-            obj=PEProcessor(sample)
+    def createProcessor(self, processor, sample):
+        obj = None
+        if(processor == "application/x-dosexec"):
+            obj = PEProcessor(sample)
         else:
-            obj=DummyProcessor(sample)
+            obj = DummyProcessor(sample)
 
         return obj
 
 #****************TEST_CODE******************
+
+
 def testCode():
     pass
 
 #****************TEST_EXECUTE******************
 from Utils.test import test
-test("-test_ProcessorFactory",testCode)
-
+test("-test_ProcessorFactory", testCode)

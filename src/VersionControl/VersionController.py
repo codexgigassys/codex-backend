@@ -5,35 +5,38 @@ import os
 from db_pool import *
 
 # versioning controller of executed plugins.
+
+
 class VersionController:
+
     def __init__(self):
-        self.collection=db_ver.version_container
-        #print(self.collection)
+        self.collection = db_ver.version_container
+        # print(self.collection)
 
     def __delete__(self):
         pass
 
-    def updateVersion(self,file_id,ver_dic):
-        command={"$set":ver_dic}
-        self.collection.update_one({"file_id":file_id},command,upsert=True)
+    def updateVersion(self, file_id, ver_dic):
+        command = {"$set": ver_dic}
+        self.collection.update_one({"file_id": file_id}, command, upsert=True)
 
-    def searchVersion(self,file_id):
-        f=self.collection.find_one({"file_id":file_id})
+    def searchVersion(self, file_id):
+        f = self.collection.find_one({"file_id": file_id})
         return f
 
 
 #****************TEST_CODE******************
 def testCode():
-    db=DBVersion()
-    ver={}
-    for i in range(0,10):
-        ver[str(i)]=i+10
-    #db.updateVersion("0000",ver)
-    lver=db.loadVersion("0000")
-    n=lver["3"]
+    db = DBVersion()
+    ver = {}
+    for i in range(0, 10):
+        ver[str(i)] = i + 10
+    # db.updateVersion("0000",ver)
+    lver = db.loadVersion("0000")
+    n = lver["3"]
     print(type(n))
 
 
 #****************TEST_EXECUTE******************
 from Utils.test import test
-test("-test_VersionController",testCode)
+test("-test_VersionController", testCode)

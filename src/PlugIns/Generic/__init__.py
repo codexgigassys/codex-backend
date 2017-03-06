@@ -1,1 +1,2 @@
-__all__ = ["HashPlug","SizePlug","DescPlug","FuzzyPlug","MimePlug","DatePlug"]
+__all__ = ["HashPlug", "SizePlug", "DescPlug",
+           "FuzzyPlug", "MimePlug", "DatePlug"]

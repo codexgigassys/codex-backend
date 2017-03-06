@@ -4,10 +4,10 @@
 
 from TreeMenu import *
 
-package=__import__("TreeMenu")
-tree=[]
-ids={}
+package = __import__("TreeMenu")
+tree = []
+ids = {}
 for module_name in package.__all__:
-    module=getattr(package, module_name)
+    module = getattr(package, module_name)
     tree.append(module.tree_element)
     ids.update(module.id_element)

@@ -21,8 +21,8 @@ class TestHealth():
         assert len(
             output.split()
         ) == 0, (
-                'Should be zero. (Did you forget an embed?)\n'
-                + "find output=\n" + str(output))
+            'Should be zero. (Did you forget an embed?)\n'
+            + "find output=\n" + str(output))
 
     def test_pep8(self):
         output = self.call_with_output(
@@ -31,11 +31,10 @@ class TestHealth():
         output = output.split()
         result = []
         for line in output:
-            m = re.search('/migrations/', line)
+            m = re.search('(/yara/|/pescanner.py)', line)
             if not m:  # we don't want to check PEP8 on migrations.
                 result.append(line)
 
         assert len(
             result
         ) == 0, 'Should be zero. (PEP8 test failed)\n' + str(result)
-

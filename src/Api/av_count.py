@@ -9,6 +9,7 @@ sys.path.insert(0, path)
 from bson.json_util import dumps
 from db_pool import *
 
+
 @route('/api/v1/av_count', method='GET')
 def av_count():
     count = db.av_analysis.count()

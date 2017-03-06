@@ -5,9 +5,11 @@ from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
 
+
 class CheckEPSectionPlug(PlugIn):
-    def __init__(self,sample=None):
-        PlugIn.__init__(self,sample)
+
+    def __init__(self, sample=None):
+        PlugIn.__init__(self, sample)
 
     def getPath(self):
         return "particular_header.ep"
@@ -19,8 +21,9 @@ class CheckEPSectionPlug(PlugIn):
         return 1
 
     def process(self):
-        pelib=self._getLibrary(PEFileModule().getName())
-        if(pelib==None):return ""
+        pelib = self._getLibrary(PEFileModule().getName())
+        if(pelib == None):
+            return ""
 
         name = ''
         ep = pelib.OPTIONAL_HEADER.AddressOfEntryPoint
@@ -31,5 +34,6 @@ class CheckEPSectionPlug(PlugIn):
                 break
             else:
                 pos += 1
-        s = "%s %s %d/%d" % (hex(ep+pelib.OPTIONAL_HEADER.ImageBase), name, pos, len(pelib.sections))
+        s = "%s %s %d/%d" % (hex(ep + pelib.OPTIONAL_HEADER.ImageBase),
+                             name, pos, len(pelib.sections))
         return self._normalize(s)

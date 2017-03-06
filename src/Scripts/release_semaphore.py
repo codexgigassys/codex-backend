@@ -23,6 +23,6 @@ sys.path.insert(0, path)
 from db_pool import *
 
 
-semaphore = Semaphore(Redis(host=envget('redis.host'),count=1,namespace='example')
-token = semaphore.get_namespaced_key('example')
+semaphore = Semaphore(Redis(host=envget('redis.host'), count=1, namespace='example')
+token=semaphore.get_namespaced_key('example')
 semaphore.signal(token)
