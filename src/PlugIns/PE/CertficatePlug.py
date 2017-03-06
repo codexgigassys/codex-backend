@@ -1,15 +1,10 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
-import sys
-source_path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-sys.path.insert(0, source_path)
+import pathmagic
 from Sample import Sample
 from subprocess import check_output
 import binascii
-
 from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
@@ -35,7 +30,7 @@ class CertficatePlug(PlugIn):
     def process(self):
         raw_certificate_file = "./certPlug.temp"
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         # reset the offset to the table containing the signature
@@ -67,11 +62,11 @@ class CertficatePlug(PlugIn):
             # hmmm, okay we could possibly read this from the PE object
             # but is straightforward to just open the file again
             # as a file object
-            #f = open(a,'rb')
+            # f = open(a,'rb')
             # move to the beginning of signature table
             # f.seek(sigoff)
             # read the signature table
-            #thesig = f.read(siglen)
+            # thesig = f.read(siglen)
             thesig = bin_data[sigoff:(sigoff + siglen)]
             # close the file
             # f.close()
@@ -120,7 +115,7 @@ class CertficatePlug(PlugIn):
                 try:
                     actual = iterator.next().strip()
                     # print(actual)
-                except:
+                except Exception, e:
                     break
                 if(actual.find("Certificate:") == 0):
                     if(len(one_cert) > 0):
@@ -171,7 +166,7 @@ class CertficatePlug(PlugIn):
 
     def process2(self):
         pe = self._getLibrary(PEFileModule().getName())
-        if(pe == None):
+        if(pe is None):
             return ""
         #  get the security directory entry
         address = pe.OPTIONAL_HEADER.DATA_DIRECTORY[

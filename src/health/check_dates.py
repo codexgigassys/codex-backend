@@ -2,11 +2,7 @@
 # date attributes in metadata documents
 # are valid datetime.datetime objects. If they are not
 # the value file_id and date of the offender is printed.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 import datetime
 from bson.objectid import ObjectId
@@ -17,9 +13,9 @@ def fix_date(r):
     str_date = r.get('date')
     if type(str_date) is not unicode:
         print("datenotunicode," + str(r.get('_id')) + "," +
-                str(r.get('file_id')) + "," +
-                str(r.get('date')) + "," +
-                str(type(r.get('date'))))
+              str(r.get('file_id')) + "," +
+              str(r.get('date')) + "," +
+              str(type(r.get('date'))))
         sys.stdout.flush()
         return False
     else:

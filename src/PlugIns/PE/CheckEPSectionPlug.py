@@ -22,7 +22,7 @@ class CheckEPSectionPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         name = ''

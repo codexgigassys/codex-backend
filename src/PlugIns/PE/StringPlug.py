@@ -26,7 +26,7 @@ class StringPlug(PlugIn):
         ret = {}
         data = ""
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             data = self.sample.getBinary()
         else:
             for section in pelib.sections:
@@ -43,20 +43,20 @@ class StringPlug(PlugIn):
             unique_strings.append(k)
 
         mdc = self._getLibrary(MetaDataModule().getName())
-        if(mdc == None):
+        if(mdc is None):
             return ret
 
         searchUsed = {}
         imports = self.sample.getLastValue("particular_header.imports")
-        if(imports != None):
+        if(imports is not None):
             for i in imports:
                 searchUsed[i["lib"]] = True
                 for f in i["functions"]:
                     searchUsed[f] = True
 
         exports = self.sample.getLastValue("particular_header.exports.symbols")
-        if(exports != None):
-            #print("No exports")
+        if(exports is not None):
+            # print("No exports")
             for i in exports:
                 searchUsed[i["name"]] = True
                 if(hasattr(i, "forwarder_dll") and hasattr(i, "forwarder_function")):
@@ -65,7 +65,7 @@ class StringPlug(PlugIn):
 
         version_p = self.sample.getLastValue(
             "particular_header.version.string_file_info")
-        if(version_p != None):
+        if(version_p is not None):
             for k in version_p.keys():
                 searchUsed["'" + str(version_p[k]) + "'"] = True
 
@@ -85,20 +85,20 @@ class StringPlug(PlugIn):
             # print(s)
             # print(searchUsed.get(repr(s).lower()))
             # raw_input()
-            if(searchUsed.get(s) == True):
+            if(searchUsed.get(s) is True):
                 continue
             raw.append(s)
 
             # searching if its an import or not
             r = mdc.searchImportByName(s)
-            if(r != None):
+            if(r is not None):
                 hidden.append(s)
                 continue
             evaluado = eval(s)
 
             # searching dll
             r = mdc.searchDllByName(s)
-            if(r != None):
+            if(r is not None):
                 dll.append(s)
                 continue
 

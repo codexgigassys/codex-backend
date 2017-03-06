@@ -25,7 +25,7 @@ class PlugIn():
 
     def _getLibrary(self, m):
         mod = self.modules.get(m)
-        if(mod == None):
+        if(mod is None):
             return None
         mod.initialize(self.sample)
         lib = mod.getLibrary()
@@ -46,6 +46,6 @@ class PlugIn():
     def _normalize(self, data):  # TODO remove this from here
         try:
             res = repr(hex(data))
-        except:
+        except TypeError:
             res = repr(data)
         return res

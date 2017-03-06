@@ -3,6 +3,7 @@
 # See the file 'LICENSE' for copying permission.
 from Processors.PEProcessor import *
 from Processors.DummyProcessor import *
+from Utils.test import test
 
 
 class ProcessorFactory():
@@ -25,12 +26,13 @@ class ProcessorFactory():
 
         return obj
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def testCode():
     pass
 
-#****************TEST_EXECUTE******************
-from Utils.test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_ProcessorFactory", testCode)

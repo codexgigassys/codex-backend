@@ -25,12 +25,12 @@ class SectionsPlug(PlugIn):
 
     def process(self):
         # print("SECTIONS")
-        #logging.debug("loading pefile")
+        # logging.debug("loading pefile")
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
-        #logging.debug("iterating sections")
+        # logging.debug("iterating sections")
         ret = []
         number = 0
 
@@ -50,14 +50,14 @@ class SectionsPlug(PlugIn):
                 dic_sec["write_executable"] = "False"
 
             data = section.get_data()
-            #logging.debug("calculating hashes")
+            # logging.debug("calculating hashes")
             dic_sec["sha1"] = SHA1(data)
             dic_sec["sha2"] = SHA256(data)
             dic_sec["md5"] = MD5(data)
-            #logging.debug("calculating fuzzy")
+            # logging.debug("calculating fuzzy")
             dic_sec["fuzzy_hash"] = getSsdeep(data)
             dic_sec["entropy"] = entropy.shannon_entropy(data) * 8
-            #logging.debug("finished calculating")
+            # logging.debug("finished calculating")
 
             ret.append(dic_sec)
 

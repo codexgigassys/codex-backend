@@ -1,13 +1,9 @@
+import pathmagic
 from redis import Redis
 from redis_semaphore import Semaphore
 from threading import Thread
 import urllib2
 import time
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from db_pool import *
 import datetime
 import logging
@@ -178,13 +174,13 @@ class KeyManager():
                         fifteen_sec_ago = (
                             datetime.datetime.now() - datetime.timedelta(seconds=15))
 
-                        if(key_data.get('blocked') == False and date_last_used < fifteen_sec_ago):
+                        if(key_data.get('blocked') is False and date_last_used < fifteen_sec_ago):
                             # key is ready to be used
                             logging.debug("not blocked")
                             self.add_one_to_key(key)
                             return {"key": key}
                         else:  # key is not ready to be used.
-                            if key_data.get('blocked') == True:
+                            if key_data.get('blocked') is True:
                                 logging.info(
                                     "KeyManager(): public key " + str(key_data.get('key')) + " is blocked.")
                                 continue
@@ -219,7 +215,7 @@ class KeyManager():
                         init_key_in_document(key)
                         return {"key": key}
                     else:
-                        if key_data.get('blocked') == False:
+                        if key_data.get('blocked') is False:
                             private_keys_vec.append(
                                 {"key": key, "daily": key_data.get('daily')})
                 private_keys_sorted = sorted(

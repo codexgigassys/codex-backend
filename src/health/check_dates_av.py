@@ -3,11 +3,7 @@
 # are valid datetime.datetime objects. If they are not
 # the value sha1 and date of the offender is printed.
 # It tries to fix the issue by using first_seen date.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 import datetime
 from bson.objectid import ObjectId
@@ -18,8 +14,8 @@ def fix_date(r):
     str_date = r.get('date', r.get('first_seen'))
     if type(str_date) is not unicode:
         print("datenotunicode," + str(r.get('_id')) + "," +
-                str(r.get('sha1')) + "," + str(r.get('date')) +
-                "," + str(type(r.get('date'))))
+              str(r.get('sha1')) + "," + str(r.get('date')) +
+              "," + str(type(r.get('date'))))
         sys.stdout.flush()
         return False
     else:
@@ -27,7 +23,7 @@ def fix_date(r):
             date = process_date(str_date)
         except Exception, e:
             print("failed to convert date for " +
-                str(str_date) + " in " + str(r.get('_id')))
+                  str(str_date) + " in " + str(r.get('_id')))
             sys.stdout.flush()
             return False
 
@@ -57,7 +53,8 @@ def main():
                 mis += 1
         if(test >= print_flag):
             test = 0
-            print("count-fix-miss," + str(count) + "," + str(fixed) + "," + str(mis))
+            print("count-fix-miss," + str(count) +
+                  "," + str(fixed) + "," + str(mis))
             sys.stdout.flush()
 
 

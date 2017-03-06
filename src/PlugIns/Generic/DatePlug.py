@@ -20,7 +20,7 @@ class DatePlug(PlugIn):
     def process(self):
         new_date = datetime.datetime.now()
         old_date = self.sample.getLastValue("date")
-        if old_date == None:
+        if old_date is None:
             return new_date
 
         if new_date < old_date:

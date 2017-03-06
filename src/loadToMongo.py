@@ -3,10 +3,8 @@
 # See the file 'LICENSE' for copying permission.
 # Tool to load malware into the mongo database.
 import os
-# path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','codex_library'))
 import sys
 import getopt
-#sys.path.insert(0, path)
 from PackageControl.PackageController import *
 from Utils.Functions import recursive_read
 import hashlib
@@ -14,7 +12,6 @@ import traceback
 from Sample import *
 import datetime
 from Ram import *
-#from IPython import embed
 from Launcher import *
 
 
@@ -54,7 +51,7 @@ def load_to_mongo2(folder_path):
             file_id = hashlib.sha1(data).hexdigest()
             print "loading to db: " + str(file_id)
             res = pc.searchFile(file_id)
-            if(res == None):
+            if(res is None):
                 pc.append(file_id, data)
                 sample = Sample()
                 sample.setID(file_id)

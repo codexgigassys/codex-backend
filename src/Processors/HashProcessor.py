@@ -10,6 +10,7 @@ from PlugIns.PE import *
 # Modulos
 from Modules.PEFileModule import *
 from Modules.MetaDataModule import *
+from Sample import *
 
 
 class HashProcessor(Processor):
@@ -29,9 +30,7 @@ class HashProcessor(Processor):
         self._executeAllPlugIns()
         return self.metadata_to_store
 
-#****************TEST_CODE******************
-import time
-from Sample import *
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -51,6 +50,8 @@ def testCode():
     print("")
 
 
-#****************TEST_EXECUTE******************
-#from Utils.test import test
+# ****************TEST_EXECUTE******************
+# from Utils.test import test
+
+
 test("-test_PEProcessor", testCode)

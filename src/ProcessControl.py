@@ -18,7 +18,7 @@ class ProcessControl():
 
     def execute(self, obj, function_to_execute, data):
         self.semaphore.acquire()
-        #print("Launching new process")
+        # print("Launching new process")
         p = Process(target=processCall, args=(
             self.semaphore, obj, function_to_execute, data))
         p.start()
@@ -27,7 +27,7 @@ class ProcessControl():
         for i in range(self.forks_number):
             self.semaphore.acquire()
 
-#test##############################################
+# test##############################################
 
 
 def test():

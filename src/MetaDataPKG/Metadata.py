@@ -25,7 +25,7 @@ class Metadata():
         for p in path:
             try:
                 root = root.get(p)
-                if(root == None):
+                if(root is None):
                     return None
             except KeyboardInterrupt:
                 raise KeyboardInterrupt
@@ -40,7 +40,7 @@ class Metadata():
         root = self.data
         for p in path[:-1]:
             n = root.get(p)
-            if (n != None):
+            if (n is not None):
                 root = n
             else:
                 aux = {}

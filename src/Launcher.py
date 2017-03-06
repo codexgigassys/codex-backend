@@ -2,7 +2,6 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 # Funciones para realizar los analisis
-
 import os
 import time
 from czipfile import ZipFile
@@ -15,6 +14,10 @@ from Utils.TimeLogger import TimeLogger
 from Sample import *
 import logging
 from env import envget
+from pymongo import MongoClient
+import gridfs
+from Utils.test import test
+import time
 
 
 class Launcher():
@@ -35,7 +38,7 @@ class Launcher():
             sample.setMetaController(self.mdc)
             sample.setVersionController(self.vc)
             category = sample.getCategory()
-            if(category == None):
+            if(category is None):
                 category = Cataloger().catalog(sample.getBinary())
                 logging.debug(
                     "Category not found in DB, categorized as %s", str(category))
@@ -71,7 +74,7 @@ class Launcher():
         sample.setVersionController(self.vc)
 
         category = sample.getCategory()
-        if(category == None):
+        if(category is None):
             category = Cataloger().catalog(sample.getBinary())
             logging.debug(
                 "Category not found in DB, categorized as %s", str(category))
@@ -102,18 +105,14 @@ class Launcher():
         return 0
 
 
-#****************TEST_CODE******************
-from pymongo import MongoClient
-import gridfs
-from Utils.test import test
-import time
+# ****************TEST_CODE******************
 
 
 def testCode():
     from Utils.Functions import recursive_read
     object = "./Test_files/"
     files = recursive_read(object)
-    if(files == None):
+    if(files is None):
         sys.exit()
     lc = Launcher()
     for fp in files:
@@ -125,7 +124,7 @@ def testCode():
         print("")
     print("")
 
-#-----------------------------------------------
+# -----------------------------------------------
 
 
 def testCode2():
@@ -149,7 +148,7 @@ def testCode2():
             reset = 0
     print(str(count) + " processed")
 
-#----------------------------------------------
+# ----------------------------------------------
 
 
 def testCode3():
@@ -177,11 +176,11 @@ def testCode3():
         fd3.seek(int(data1[1]))
         datafin = fd3.read(int(data1[2]))
         # end=time.time()
-        #print("search :"+str((end-start)*10000))
+        # print("search :"+str((end-start)*10000))
         # start=time.time()
         lc.launchFileAnalitics((data[0], datafin))
         # end=time.time()
-        #print("analize :"+str((end-start)*10000))
+        # print("analize :"+str((end-start)*10000))
         # print("")
         reset += 1
         count += 1
@@ -191,7 +190,7 @@ def testCode3():
 
     print(str(count) + " processed")
 
-#----------------------------------------------
+# ----------------------------------------------
 
 
 def testCode4():
@@ -214,7 +213,7 @@ def testCode4():
             reset = 0
     print(str(count) + " processed")
 
-#----------------------------------------------
+# ----------------------------------------------
 
 
 def testCode5():
@@ -228,7 +227,7 @@ def testCode5():
     # print(sample.getCalculatedVersion())
     # print(sample.getStorageVersion())
 
-#----------------------------------------------
+# ----------------------------------------------
 
 
 def testCode6():
@@ -257,5 +256,7 @@ def testCode6():
     print(str(count) + " processed")
 
 
-#****************TEST_EXECUTE******************
+# ****************TEST_EXECUTE******************
+
+
 test("-test_Launcher", testCode6)

@@ -3,11 +3,7 @@
 # are valid sha1 hashes. If they are not
 # the value of _id, and file_id of the offender is printed.
 # and the document gets deleted.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 from bson.objectid import ObjectId
 

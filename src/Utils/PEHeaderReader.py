@@ -3,6 +3,11 @@
 # See the file 'LICENSE' for copying permission.
 import pefile
 import math
+import os
+import sys
+import shutil
+import time
+from test import test
 
 
 class PEHeaderReader():
@@ -18,10 +23,10 @@ class PEHeaderReader():
             print str(e)
             return None
 
-        #~ try:
-            #~ self.pe=pefile.PE(data=data,fast_load=False)
-        #~ except:
-            #~ self.pe=pefile.PE(data=data,fast_load=True)
+        #  try:
+            #  self.pe=pefile.PE(data=data,fast_load=False)
+        #  except:
+            #  self.pe=pefile.PE(data=data,fast_load=True)
 
     def get_import_size(self):
         # self.pe.parse_data_directories() # si it has fast load.
@@ -61,12 +66,12 @@ class PEHeaderReader():
             # print(hex(section.Characteristics))
             if (section.__dict__.get('IMAGE_SCN_MEM_WRITE', False) and
                     section.__dict__.get('IMAGE_SCN_MEM_EXECUTE', False)):
-                #print("Write Exe")
+                # print("Write Exe")
                 w_e += 1
                 w_real_sum += real
                 w_virtual_sum += virtual
 
-            #print (section.Name, real,virtual,rate)
+            # print (section.Name, real,virtual,rate)
         # print("")
 
         return real, virtual, w_e, w_real_sum, w_virtual_sum
@@ -82,7 +87,7 @@ class PEHeaderReader():
                 return ("IMG_ROM")
             else:
                 return "UNKNOWN"
-        except:
+        except pefile.PEFormatError:
             return "FORMAT"
 
         return None
@@ -116,11 +121,7 @@ class PEHeaderReader():
     def load(self):
         self.pe.parse_data_directories()
 
-#****************TEST_CODE******************
-import os
-import sys
-import shutil
-import time
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -148,6 +149,7 @@ def testCode():
     print("Elapsed time: " + str(elapsed))
 
 
-#****************TEST_EXECUTE******************
-from test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_PEHeaderReader", testCode)

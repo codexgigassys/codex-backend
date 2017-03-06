@@ -1,12 +1,8 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
+import pathmagic
 from pymongo import MongoClient
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 import ssdeep
 from env import envget
 
@@ -26,7 +22,7 @@ def searchFuzzy(fuzz, limit, thresh):
         res = -1
         try:
             res = ssdeep.compare(a["fuzzy_hash"], fuzz)
-        except:
+        except InternalError:
             print(str(res) + "------" +
                   str(a["fuzzy_hash"]) + "-----" + str(a["file_id"]))
             continue

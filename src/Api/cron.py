@@ -1,10 +1,6 @@
+import pathmagic
 from bottle import route, request, response
 from Utils.Functions import jsonize, change_date_to_str
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from PackageControl.PackageController import *
 from KeyManager.KeyManager import *
 

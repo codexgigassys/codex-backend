@@ -5,6 +5,7 @@ import hashlib
 import magic
 import ssdeep
 import logging
+from test import test
 
 
 def MIME_TYPE(data, mime=True):
@@ -34,7 +35,7 @@ def getSsdeep(data):
         logging.exception(str(e))
         return ''
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -49,6 +50,7 @@ def testCode():
     print("Size:      " + str(inf.size()))
     print("Info:      " + str(inf.MIME_TYPE(False)))
 
-#****************TEST_EXECUTE******************
-from test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_InfoExtractor", testCode)

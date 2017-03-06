@@ -22,7 +22,7 @@ class CRCCheckPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         crc_claimed = pelib.OPTIONAL_HEADER.CheckSum

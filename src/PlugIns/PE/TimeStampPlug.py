@@ -22,14 +22,14 @@ class TimeStampPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         val = pelib.FILE_HEADER.TimeDateStamp
         ts = '0x%-8X' % (val)
         try:
             ts += ' [%s UTC]' % time.asctime(time.gmtime(val))
-        except:
+        except Exception, e:
             ts += ' [SUSPICIOUS]'
 
         return self._normalize(ts)

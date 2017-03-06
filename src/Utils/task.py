@@ -1,8 +1,4 @@
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from MetaControl.MetaController import *
 from Utils.Functions import change_date_to_str
 from Utils.Functions import add_error

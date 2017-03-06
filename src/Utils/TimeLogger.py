@@ -2,6 +2,7 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 import time
+from test import test
 
 
 class TimeLogger():
@@ -28,7 +29,7 @@ class TimeLogger():
             ret = ret + (str(l) + " -> " + str(self.log_dic[l])) + "\n"
         return ret
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -55,6 +56,7 @@ def testCode():
     print("")
     print(str(tl2))
 
-#****************TEST_EXECUTE******************
-from test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_TimeLoger", testCode)

@@ -3,7 +3,7 @@
 # See the file 'LICENSE' for copying permission.
 import os
 from db_pool import *
-
+from Utils.test import test
 # versioning controller of executed plugins.
 
 
@@ -27,7 +27,7 @@ class VersionController:
         return f
 
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 def testCode():
     db = DBVersion()
     ver = {}
@@ -39,6 +39,5 @@ def testCode():
     print(type(n))
 
 
-#****************TEST_EXECUTE******************
-from Utils.test import test
+# ****************TEST_EXECUTE******************
 test("-test_VersionController", testCode)

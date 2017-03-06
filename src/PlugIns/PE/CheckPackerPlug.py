@@ -22,7 +22,7 @@ class CheckPackerPlug(PlugIn):
         entropy = self.sample.getLastValue("file_entropy")
         sections = self.sample.getLastValue("sections")
         imports = self.sample.getLastValue("imports")
-        if(entropy == None or sections == None or imports == None):
+        if(entropy is None or sections is None or imports is None):
             return "Unknown"
         flags = 0
 

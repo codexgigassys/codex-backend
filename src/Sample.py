@@ -58,20 +58,20 @@ class Sample:
         return self.version_calculada
 
     def getStorageVersion(self):
-        if(self.version_storeada != None):
+        if(self.version_storeada is not None):
             return self.version_storeada
         if(self.version_try_to_load):
             self.version_try_to_load = False
-            if(self.vc == None):
+            if(self.vc is None):
                 return None
             self.version_storeada = self.vc.searchVersion(self.sample_id)
         return self.version_storeada
 
     def getCategory(self):
-        if(self.category != None):
+        if(self.category is not None):
             return self.category
         st = self.getStorageVersion()
-        if(st == None):
+        if(st is None):
             return None
         self.category = st.get("category")
         return self.category
@@ -87,11 +87,11 @@ class Sample:
 
     def getLastValue(self, key):
         val = self.metadata_calculada.getValue(key)
-        if(val != None):
+        if(val is not None):
             return val
         if(self.metadata_try_to_load):
             self.metadata_try_to_load = False
-            if(self.mc == None):
+            if(self.mc is None):
                 return None
             self.metadata_storeada.setData(self.mc.read(self.sample_id))
         val = self.metadata_storeada.getValue(key)
@@ -119,7 +119,7 @@ class Sample:
     def getStorageMetadata(self):
         if(self.metadata_try_to_load):
             self.metadata_try_to_load = False
-            if(self.mc == None):
+            if(self.mc is None):
                 return None
             self.metadata_storeada.setData(self.mc.read(self.sample_id))
         return self.metadata_storeada
@@ -152,12 +152,12 @@ class Sample:
         self.binary_try = True
 
     def getBinary(self):
-        if(self.binary != None):
+        if(self.binary is not None):
             return self.binary
         if(not self.binary_try_to_load):
             return None
         self.binary_try_to_load = False
-        if(self.pc == None):
+        if(self.pc is None):
             # we use a temporary PackageController so we don't leave a mongo
             # cursor open.
             tmp_pc = PackageController()

@@ -7,7 +7,7 @@ class Module():
 
     def __init__(self, lib=None):
         self.library = lib
-        if(lib == None):
+        if(lib is None):
             self.already_initialized = False
         else:
             self.already_initialized = True

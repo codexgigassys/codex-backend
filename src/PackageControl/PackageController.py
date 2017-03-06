@@ -1,14 +1,10 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
+import pathmagic
 import hashlib
 import gridfs
 import logging
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from db_pool import *
 
 # Writes binaries on the DB
@@ -46,8 +42,8 @@ class PackageController():
             logging.warning("PackageController: invalid file_id:" +
                             str(file_id) + "(len=" + str(len(file_id)) + ")")
             f = None
-        if f == None:
-            if envget('temporal_files_db') == False:
+        if f is None:
+            if envget('temporal_files_db') is False:
                 return None
             else:
                 if(len(file_id) == 40):
@@ -58,7 +54,7 @@ class PackageController():
                     f = None
                     logging.warning(
                         "PackageController tmp: invalid file_id" + str(file_id))
-                if f == None:
+                if f is None:
                     return None
         return f.read()
 
@@ -67,12 +63,12 @@ class PackageController():
             raise ValueError("not a valid md5")
         f = self.collection.find_one({"md5": md5})
         if f is None:
-            if envget('temporal_files_db') == False:
+            if envget('temporal_files_db') is False:
                 logging.debug("md5_to_sha1= none")
                 return None
             else:
                 f = self.collection_tmp.find_one({"md5": md5})
-                if f == None:
+                if f is None:
                     logging.debug("md5_to_sha1= none")
                     return None
         return f["filename"]
@@ -100,19 +96,19 @@ class PackageController():
     # (Check if it is being used)
     def searchFile(self, file_id):
         ret = self.fs.find_one({"filename": file_id})
-        if(ret == None):
-            if(envget('temporal_files_db') == False):
+        if(ret is None):
+            if(envget('temporal_files_db') is False):
                 return None
             else:
                 ret = self.fs_temp.find_one({"filename": file_id})
-                if(ret == None):
+                if(ret is None):
                     return None
-        if(ret.metadata is not None and ret.metadata.get("vt_blocked") == True):
+        if(ret.metadata is not None and ret.metadata.get("vt_blocked") is True):
             return 1
         else:
             return 0
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -121,7 +117,7 @@ def testCode():
     for dato in ["test_vt1", "test_vt2"]:
         hs = hashlib.sha1(dato).hexdigest()
         res = pc.searchFile(hs)
-        if(res == None):
+        if(res is None):
             print("appending: " + dato)
             if(dato == "test_vt1"):
                 pc.append(hs, dato, True)
@@ -135,16 +131,17 @@ def testCode():
     for dato in ["test_vt1", "test_vt2", "test_vt3"]:
         hs = hashlib.sha1(dato).hexdigest()
         res = pc.searchFile(hs)
-        if(res == None):
+        if(res is None):
             print("File does not exist: " + dato)
         if(res == 0):
             print(dato + " File already exist:" + str(res))
         if(res == 1):
             print(dato + " blocked:" + str(res))
 
-#****************TEST_EXECUTE******************
-#from Utils.test import test
+# ****************TEST_EXECUTE******************
+# from Utils.test import test
 # test("-test_PackageController",testCode)
+
 
 if __name__ == "__main__":
     testCode()

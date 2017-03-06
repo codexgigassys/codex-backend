@@ -3,6 +3,7 @@
 # See the file 'LICENSE' for copying permission.
 from Processors.Processor import *
 import traceback
+import time
 
 
 class DummyProcessor(Processor):
@@ -21,8 +22,7 @@ class DummyProcessor(Processor):
         return self.metadata_to_store
 
 
-#****************TEST_CODE******************
-import time
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -40,6 +40,8 @@ def testCode():
     print("")
 
 
-#****************TEST_EXECUTE******************
-#from Utils.test import test
+# ****************TEST_EXECUTE******************
+# from Utils.test import test
+
+
 test("-test_PEProcessor", testCode)

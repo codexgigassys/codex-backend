@@ -2,11 +2,7 @@
 # from the meta_container collection.
 # ObjectId's to be deleted should be in ids.txt
 # one id per line.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 from bson.objectid import ObjectId
 

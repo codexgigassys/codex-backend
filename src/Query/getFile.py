@@ -1,13 +1,9 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
+import pathmagic
 from pymongo import MongoClient
 import gridfs
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from env import envget
 
 # file_id="906f21f436b0dbb2c9cf37b80a90cdeb061ced3d"
@@ -18,7 +14,7 @@ client = MongoClient(envget('files.host'), envget('files.port'))
 db = client[envget('db_files_name')]
 fs = gridfs.GridFS(db)
 f = fs.find_one({"filename": file_id})
-if(f == None):
+if(f is None):
     print("File does not exist.")
     exit(0)
 data = f.read()

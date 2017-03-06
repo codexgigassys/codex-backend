@@ -1,13 +1,8 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
-import sys
-source_path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-sys.path.insert(0, source_path)
+import pathmagic
 from Sample import Sample
-
 from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
@@ -29,7 +24,7 @@ class ImportsPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         try:
@@ -61,6 +56,7 @@ class ImportsPlug(PlugIn):
             d.append(dic_ent)
 
         return d
+
 
 if __name__ == "__main__":
     data = open(source_path + "/Test_files/test.exe", "rb").read()

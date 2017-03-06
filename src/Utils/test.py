@@ -20,9 +20,9 @@ def test(TEST, function):
                 print(traceback.format_exc())
                 print("")
                 print("###### End of log ######")
-            #raw_input("Press a key...")
+            # raw_input("Press a key...")
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def probando():
@@ -32,5 +32,7 @@ def probando():
 def testCode():
     test("-test_test", probando)
 
-#****************TEST_EXECUTE******************
+# ****************TEST_EXECUTE******************
+
+
 test("-test_test", testCode)

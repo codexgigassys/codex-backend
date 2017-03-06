@@ -1,11 +1,7 @@
+import pathmagic
 from bottle import route
 from bottle import request
 from bottle import static_file
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from MetaControl.MetaController import *
 from Utils.Functions import clean_hash
 from Utils.Functions import id_generator

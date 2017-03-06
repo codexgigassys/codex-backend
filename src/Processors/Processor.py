@@ -8,6 +8,7 @@ from Utils.TimeLogger import TimeLogger
 import traceback
 from PlugIns.Generic import *
 import logging
+from Utils.test import test
 
 
 class Processor():
@@ -65,7 +66,7 @@ class Processor():
             # tl.logTime(info_string)
         except KeyboardInterrupt:
             raise KeyboardInterrupt
-        except:
+        except Exception, e:
             logging.error("Error in %s PlugIn with sample:%s",
                           info_string, self.sample.getID(), exc_info=True)
             res = "ERROR_EXECUTE_PLUGIN"
@@ -79,10 +80,10 @@ class Processor():
 
     # check if the version of "info string" is up to date.
     def _version_is_update(self, info_string, code_version):
-        if(self.version == None):
+        if(self.version is None):
             return False
         ver = self.version.get(info_string)
-        if(ver == None):
+        if(ver is None):
             return False
         if(ver < code_version):
             return False
@@ -116,10 +117,11 @@ class Processor():
     #    return string
 
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 def testCode():
     pass
 
-#****************TEST_EXECUTE******************
-from Utils.test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_Processor", testCode)

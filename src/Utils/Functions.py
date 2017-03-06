@@ -2,8 +2,8 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 import os
+import sys
 from db_pool import *
-#from IPython import embed
 import re
 import datetime
 import subprocess
@@ -17,6 +17,8 @@ import string
 import random
 import re
 import logging
+import time
+import traceback
 
 
 def get_eset_sig_from_scan(scans):
@@ -73,7 +75,7 @@ def number_of_jobs_on_queue(queue_name):
 def is_iterable(s):
     try:
         iter(s)
-    except:
+    except TypeError:
         return False
     return True
 
@@ -238,7 +240,7 @@ def process_file(file_hash, force=False):
     logging.debug("process_file(" + str(file_hash) + ")")
     pc = PackageController()
     res = pc.getFile(file_hash)
-    if res == None:
+    if res is None:
         logging.warning(
             "Error: process_file(" + str(file_hash) + "): pc.getFile returned None")
         return None
@@ -365,21 +367,21 @@ def add_error(resp_dict, error_code, error_message):
 
 
 def cursor_to_dict(f1, retrieve):
-    l = []
+    results = []
     for f in f1:
-        l.append(f)
+        results.append(f)
 
     ret = []
-    for a in l:
+    for a in results:
         dic = {}
         for key in retrieve.keys():
             steps = key.split('.')
             partial_res = a
             for step in steps:
                 partial_res = partial_res.get(step)
-                if partial_res == None:
+                if partial_res is None:
                     break
-                if type(partial_res) == type([]):
+                if isinstance(partial_res, list):
                     partial_res = None
                     break
 
@@ -387,10 +389,10 @@ def cursor_to_dict(f1, retrieve):
             if (legend_to_show == "file_id"):
                 legend_to_show = "sha1"
 
-            if (legend_to_show == "TimeDateStamp" and partial_res != None):
+            if (legend_to_show == "TimeDateStamp" and partial_res is not None):
                 partial_res = time.strftime(
                     "%Y-%m-%d %H:%M:%S", time.gmtime(int(eval(partial_res), 16)))
-            if (legend_to_show == "timeDateStamp" and partial_res != None):
+            if (legend_to_show == "timeDateStamp" and partial_res is not None):
                 partial_res = time.strftime(
                     "%Y-%m-%d %H:%M:%S", time.gmtime(partial_res))
 
@@ -400,9 +402,7 @@ def cursor_to_dict(f1, retrieve):
     return ret
 
 
-#****************TEST_CODE******************
-import os
-import time
+# ****************TEST_CODE******************
 
 TEST = "-test_Functions"
 
@@ -438,15 +438,13 @@ def testCode():
     pass
 
 
-#***********************TEST***************************
-import sys
-import traceback
+# ***********************TEST***************************
 if(len(sys.argv) >= 2):
     if(sys.argv[1] == TEST):
         try:
             print("######## Test of " + str(sys.argv[0]) + " ########")
             testCode()
 
-        except:
+        except Exception, e:
             print(traceback.format_exc())
         raw_input("Press a key...")

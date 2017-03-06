@@ -27,7 +27,10 @@ class TestHealth():
     def test_pep8(self):
         output = self.call_with_output(
             ["find", ".", "-type", "f", "-name", "*.py",
-             "-exec", "pycodestyle", "-q", "{}", ";"])
+             "-exec", "pycodestyle", "--max-line-length=400",
+             "--ignore=E121,E123,E126,E226,E24,E704,W503,E741",
+             "--exclude=XMLCreator.py,pescanner.py,/yara/",
+             "-q", "{}", ";"])
         output = output.split()
         result = []
         for line in output:

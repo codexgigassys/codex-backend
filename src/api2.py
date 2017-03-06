@@ -3,7 +3,6 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 from gevent import monkey
-monkey.patch_all()
 import gevent
 import os
 import json
@@ -17,7 +16,6 @@ from czipfile import ZipFile
 import subprocess
 from Sample import *
 from bottle import route, request, response, run, hook, get, HTTPError, BaseRequest, static_file, response
-BaseRequest.MEMFILE_MAX = 2147483646
 from PackageControl.PackageController import *
 from MetaControl.MetaController import *
 from Launcher import *
@@ -49,6 +47,9 @@ import cgi
 from KeyManager.KeyManager import KeyManager
 import logging
 
+
+monkey.patch_all()
+BaseRequest.MEMFILE_MAX = 2147483646
 tmp_folder = "/tmp/mass_download/"
 
 
@@ -176,7 +177,7 @@ def get_metadata():
 
     mdc = MetaController()
     res = mdc.read(file_hash)
-    if res == None:
+    if res is None:
         log_event("metadata", file_hash)
     return dumps(change_date_to_str(res))
 
@@ -191,10 +192,10 @@ def logs():
 
     fieldnames = ("datetime", "message", "hash", "comments")
     reader = csv.DictReader(csvfile, fieldnames)
-    l = [row for row in reader]
-    l = l[::-1]
-    l = l[0:100]
-    out = json.dumps(l)
+    lines = [row for row in reader]
+    lines = lines[::-1]
+    lines = lines[0:100]
+    out = json.dumps(lines)
     return out
 
 
@@ -206,7 +207,7 @@ def api_process_file():
         return jsonize({'message': 'Invalid hash format (use sha1)'})
 
     res = process_file(file_hash, True)
-    if res == None:
+    if res is None:
         response.status = 404
         return jsonize("File not found in the database")
 
@@ -315,7 +316,7 @@ def get_file():
     pc = PackageController()
     res = pc.searchFile(file_hash)
 
-    if res == None:
+    if res is None:
         response.status = 404
         return jsonize({'message': 'File not found in the database'})
     if res == 1:
@@ -340,7 +341,7 @@ def upload_file(data_bin):
     pc = PackageController()
     file_id = hashlib.sha1(data_bin).hexdigest()
     res = pc.searchFile(file_id)
-    if(res == None):  # File not found. Add it to the package.
+    if(res is None):  # File not found. Add it to the package.
         pc.append(file_id, data_bin)
         logging.info("upload_file(). Added: %s" % (file_id,))
         log_event("file added", str(file_id))
@@ -356,7 +357,7 @@ def upload_file(data_bin):
 
 @route('/api/v1/file/add', method='POST')
 def add_file():
-    #tags = request.forms.get('name')
+    # tags = request.forms.get('name')
     upload = request.files.get('file')
     form_date = request.forms.get('file_date')
     try:  # validate
@@ -410,7 +411,7 @@ def yara():
 
         pc = PackageController()
         res = pc.searchFile(file_hash)
-        if res == None:
+        if res is None:
             response.status = 404
             # needs a better fix
             return jsonize({'message': 'File not found in the database'})
@@ -423,7 +424,7 @@ def yara():
             fd.close()
     yara_cli_output = call_with_output(["python", envget(
         'yara-script2'), "--opcodes", "--excludegood", "--nosimple", "-z", "5", "-m", folder_path, "-o", yara_output_file])
-    #yara_cli_output = call_with_output(["python",envget('yara-script1'),"-f","exe","-a","Codex Gigas","-r",yara_output_file, folder_path+"/"])
+    # yara_cli_output = call_with_output(["python",envget('yara-script1'),"-f","exe","-a","Codex Gigas","-r",yara_output_file, folder_path+"/"])
 # yara_output_file += ".yar" # because the script yara-script2 is ugly and
 # saves the file to x.yar.yar
     if os.path.isfile(yara_output_file) is False:
@@ -487,7 +488,7 @@ def api_batch_process_debug_file():
                           str(hash_id) + " in vt")
             add_response = SearchModule.add_file_from_vt(hash_id)
             sha1 = add_response.get('hash')
-            if(sha1 == None):
+            if(sha1 is None):
                 logging.debug("process_debug(): sha1 is None: " + str(hash_id))
                 not_found.append(hash_id)
                 continue
@@ -558,7 +559,7 @@ def check_lib():
     mdc = MetaController()
     res = mdc.searchDllByName("'" + lib.lower() + "'")
 
-    if(res != None):
+    if(res is not None):
         return jsonize({"valid": True})
     else:
         return jsonize({"valid": False})
@@ -570,7 +571,7 @@ def check_imp():
     mdc = MetaController()
     res = mdc.searchImportByName("'" + imp.lower() + "'")
 
-    if(res != None):
+    if(res is not None):
         return jsonize({"valid": True})
     else:
         return jsonize({"valid": False})

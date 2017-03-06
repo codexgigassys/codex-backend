@@ -1,13 +1,7 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
-import sys
-source_path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-sys.path.insert(0, source_path)
-
-
+import pathmagic
 from PlugIns.PlugIn import PlugIn
 from Modules.PEFileModule import PEFileModule
 import pefile
@@ -30,7 +24,7 @@ class ExportsPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         ret = {}
@@ -66,7 +60,7 @@ class ExportsPlug(PlugIn):
             symbol["ordinal"] = export.ordinal
             symbol["name"] = str(export.name).lower()
             symbol["RVA"] = export.address
-            if(export.forwarder != None):
+            if(export.forwarder is not None):
                 if(export.forwarder.find('.') != -1):
                     symbol["forwarder_dll"] = repr(
                         str(export.forwarder).lower().split('.')[0] + ".dll")
@@ -87,6 +81,7 @@ class ExportsPlug(PlugIn):
         ret["symbols"] = symbols
 
         return ret
+
 
 if __name__ == "__main__":
     data = open(source_path + "/Test_files/kernel32.dll", "rb").read()

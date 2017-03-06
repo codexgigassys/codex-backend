@@ -21,7 +21,7 @@ def read_from_dictionary(source, dic):
     for p in path:
         try:
             root = root.get(p)
-            if(root == None):
+            if(root is None):
                 return None
         except Exception, e:
             print str(e)
@@ -182,7 +182,7 @@ def parse_vt_response(json_response):
                       'additional_info.first_seen_itw', 'scan_date']
     for register in date_registers:
         vt_date = read_from_dictionary(register, json_response)
-        if vt_date != None:
+        if vt_date is not None:
             break
 
     try:
@@ -251,7 +251,7 @@ def get_vt_av_result(file_id, priority="low"):
             return {"status": "error", "error_message": "Error in av_analysis. HTTP status 200, but response_code=" + str(parsed_response.get('response_code')), "response": parsed_response}
     elif response.status_code == 204:
         logging.info("get_vt_av_result-->204")
-        #raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
+        # raise ValueError("Out of credits when trying to download av_result. Someone else is using the same API key?")
         key_manager.log_operation_result(apikey.get(
             'key'), "av_analysis", 'out_of_credits')
         return {"status": "out_of_credits", "response": None}
@@ -286,7 +286,7 @@ def get_av_result(file_id, priority="low"):
     analysis_result = mdc.search_av_analysis(file_id)
     added = False
     status = None
-    if analysis_result == None:
+    if analysis_result is None:
         logging.info("Searching analysis of %s in VT" % file_id)
         vt_av_result = get_vt_av_result(file_id, priority)
         status = vt_av_result.get('status')
@@ -318,7 +318,7 @@ def get_av_result(file_id, priority="low"):
 
 def save_file_from_vt(hash_id):
     downloaded_file = download_from_virus_total(hash_id)
-    if(downloaded_file == None):
+    if(downloaded_file is None):
         return {"status": "unknown", "hash": None}
     if downloaded_file.get('status') == "out_of_credits":
         return {"status": "out_of_credits", "hash": None}
@@ -329,7 +329,7 @@ def save_file_from_vt(hash_id):
         file_id = hashlib.sha1(data_bin).hexdigest()
         pc = PackageController()
         res = pc.searchFile(file_id)
-        if(res == None):  # File not found. Add it to the package.
+        if(res is None):  # File not found. Add it to the package.
             pc.append(file_id, data_bin, True)
             return {"status": "added", "hash": file_id}
         else:
@@ -340,7 +340,7 @@ def save_file_from_vt(hash_id):
 def test():
     file_id = "8260795f47f284889488c375bed2996e"
     data = download_from_virus_total(file_id)
-    if(data == None):
+    if(data is None):
         print("File not found OK")
     else:
         print("File not found ERROR")
@@ -360,6 +360,7 @@ def test2():
     # hash="8260795f47f284889488c375bed2996e" # does not exist
     res = get_av_result(hash)
     print(res)
+
 
 if __name__ == "__main__":
     test2()

@@ -1,19 +1,16 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
+import pathmagic
 import math
 import traceback
 import logging
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
 from db_pool import *
-#from IPython import embed
 from Utils.ProcessDate import process_date
 import datetime
-
+from Utils.test import test
+from pymongo.errors import WriteError
+from pymongo.errors import BulkWriteError
 # Saves and reads metadata to/from the db.
 
 
@@ -34,12 +31,12 @@ class MetaController():
         if file_id is None:
             return None
         f = self.collection.find_one({"file_id": file_id})
-        if(f == None):
+        if(f is None):
             return None
 
         # Antivirus stuff is in another collection
         av_analysis = self.search_av_analysis(file_id)
-        if(av_analysis != None):
+        if(av_analysis is not None):
             # we don't want all VT metadata to get displayed.
             f["av_analysis"] = {your_key: av_analysis.get(your_key) for your_key in [
                 "scans", "positives", "total", "scan_date"]}
@@ -52,7 +49,7 @@ class MetaController():
         try:
             self.collection.update_one(
                 {"file_id": file_id}, command, upsert=True)
-        except:
+        except WriteError:
             logging.exception("MetaController() write(). file_id=" +
                               str(file_id) + "\ncommand=" + str(command))
             # print(command)
@@ -72,14 +69,14 @@ class MetaController():
                 execute_bool = True
                 bulk.find({"function_name": imp_name.lower(),
                            "dll_name": dll_name.lower()}).upsert().update(command)
-                #print("**** Error Imports Tree ****")
+                # print("**** Error Imports Tree ****")
                 # err=str(traceback.format_exc())
                 # print(err)
                 # return -1
         try:
             if(execute_bool):
                 bulk.execute({'w': 0})
-        except:
+        except BulkWriteError:
             logging.exception("MetaController(): " +
                               str("**** Error Imports Tree ****"))
             # err=str(traceback.format_exc())
@@ -127,13 +124,13 @@ class MetaController():
             return None
         else:
             date = meta.get('date')
-            if(type(date) == type(datetime.datetime.now())):
+            if(isinstance(date, datetime.datetime)):
                 return date
             else:
                 try:
                     date = datetime.datetime.strptime(
                         date, "%Y-%m-%d %H:%M:%S")
-                except:
+                except ValueError:
                     date = None
                 return date
 
@@ -151,7 +148,7 @@ class MetaController():
         command = {"$set": analysis_result}
         try:
             self.av_coll.update_one({"sha1": file_id}, command, upsert=True)
-        except:
+        except WriteError:
             logging.exception("**** Error File: %s ****" % (file_id,))
             # print(command)
             # err=str(traceback.format_exc())
@@ -160,13 +157,12 @@ class MetaController():
         self.save_first_seen(file_id, analysis_result.get('date'))
         return 0
 
-#****************TEST_CODE******************
+# ****************TEST_CODE******************
 
 
 def testCode():
     pass
 
 
-#****************TEST_EXECUTE******************
-from Utils.test import test
+# ****************TEST_EXECUTE******************
 test("-test_MetaController", testCode)

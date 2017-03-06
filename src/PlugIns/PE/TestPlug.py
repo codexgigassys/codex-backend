@@ -2,7 +2,7 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 from PlugIns.PlugIn import PlugIn
-#import entropy
+# import entropy
 
 
 class TestPlug(PlugIn):

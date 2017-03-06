@@ -2,11 +2,7 @@
 # documents and searchs for a hash that do not
 # have a version_container document. Once found, it
 # process it.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 from Utils.Functions import process_file
 from IPython import embed
@@ -38,6 +34,7 @@ def main():
             test = 0
             print "count-miss," + str(count) + "," + str(mis)
     print "count-miss," + str(count) + "," + str(mis)
+
 
 if __name__ == "__main__":
     main()

@@ -29,8 +29,8 @@ class PEFileModule(Module):
                 pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY'],
                 pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_RESOURCE']])
 
-        except:
-            #print("parse fail")
+        except pefile.PEFormatError:
+            # print("parse fail")
             self.library = None
             # print(traceback.format_exc())
             logging.error("Error parsing pefileModule with sample:%s",

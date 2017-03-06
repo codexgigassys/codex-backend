@@ -1,11 +1,7 @@
 # Copyright (C) 2016 Deloitte Argentina.
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
-import os
-import sys
 import logging
-path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, path)
 from Utils.Functions import process_file, valid_hash, clean_hash, get_file_id
 from PackageControl.PackageController import *
 

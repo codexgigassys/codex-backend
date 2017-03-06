@@ -23,7 +23,7 @@ class ResourceEntriesPlug(PlugIn):
 
     def process(self):
         pelib = self._getLibrary(PEFileModule().getName())
-        if(pelib == None):
+        if(pelib is None):
             return ""
 
         ret = []
@@ -35,7 +35,7 @@ class ResourceEntriesPlug(PlugIn):
                 else:
                     name = "%s" % pefile.RESOURCE_TYPE.get(
                         resource_type.struct.Id)
-                if name == None:
+                if name is None:
                     name = "%d" % resource_type.struct.Id
                 if hasattr(resource_type, 'directory'):
                     for resource_id in resource_type.directory.entries:
@@ -46,8 +46,8 @@ class ResourceEntriesPlug(PlugIn):
                                         resource_lang.data.struct.OffsetToData, resource_lang.data.struct.Size)
                                     # fd=open(name,'wb')
                                     # fd.write(data)
-                                    #(data)
-                                except:
+                                    # (data)
+                                except pefile.PEFormatError:
                                     return "corrupt"
                                 filetype = MIME_TYPE(data, False)
                                 lang = pefile.LANG.get(

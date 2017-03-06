@@ -74,9 +74,9 @@ def searchFull(search, limit=0, retrieve={}, collection="meta_container"):
             partial_res = a
             for step in steps:
                 partial_res = partial_res.get(step)
-                if partial_res == None:
+                if partial_res is None:
                     break
-                if type(partial_res) == type([]):
+                if isinstance(partial_res, list):
                     partial_res = None
                     break
 
@@ -84,10 +84,10 @@ def searchFull(search, limit=0, retrieve={}, collection="meta_container"):
             if (legend_to_show == "file_id"):
                 legend_to_show = "sha1"
 
-            if (legend_to_show == "TimeDateStamp" and partial_res != None):
+            if (legend_to_show == "TimeDateStamp" and partial_res is not None):
                 partial_res = time.strftime(
                     "%Y-%m-%d %H:%M:%S", time.gmtime(int(eval(partial_res), 16)))
-            if (legend_to_show == "timeDateStamp" and partial_res != None):
+            if (legend_to_show == "timeDateStamp" and partial_res is not None):
                 partial_res = time.strftime(
                     "%Y-%m-%d %H:%M:%S", time.gmtime(partial_res))
 
@@ -211,7 +211,7 @@ def search_by_id(data, limit, columns=[], search_on_vt=False):
             logging.debug("search_by_id() -> save_file_from_vt()")
             add_response = save_file_from_vt(hash_for_search)
             sha1 = add_response.get('hash')
-            if sha1 == None:
+            if sha1 is None:
                 return []
             process_file(sha1)
             query = {"file_id": sha1}
@@ -245,7 +245,7 @@ def search_by_id(data, limit, columns=[], search_on_vt=False):
     if(len(av_collection_query_list) > 0):
         av_query = {"$and": av_collection_query_list}
 
-    #res= ["2fa9672b7507f0e983897cfd18b24d3810bb2160","hashfile2"]
+    # res= ["2fa9672b7507f0e983897cfd18b24d3810bb2160","hashfile2"]
 
     if(len(av_collection_query_list) == 0):
         return []

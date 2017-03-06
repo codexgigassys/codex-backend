@@ -2,6 +2,8 @@
 # This file is part of CodexGigas - https://github.com/codexgigassys/
 # See the file 'LICENSE' for copying permission.
 from Utils.InfoExtractor import *
+from Utils.test import test
+import os
 
 
 class Cataloger():
@@ -21,8 +23,7 @@ class Cataloger():
         return mime
 
 
-#****************TEST_CODE******************
-import os
+# ****************TEST_CODE******************
 
 
 def testCode():
@@ -34,6 +35,7 @@ def testCode():
     print(res)
 
 
-#****************TEST_EXECUTE******************
-from Utils.test import test
+# ****************TEST_EXECUTE******************
+
+
 test("-test_Cataloger", testCode)

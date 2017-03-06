@@ -1,13 +1,9 @@
 # AV analysis downloaded with vt public key have no first_seen
 # We should use the last scan date to get an aproximation
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
-
 from MetaControl.MetaController import *
+from pymongo.errors import WriteError
 
 
 # Walk through a dictionary structure
@@ -17,7 +13,7 @@ def read_from_dictionary(source, dic):
     for p in path:
         try:
             root = root.get(p)
-            if(root == None):
+            if(root is None):
                 return None
         except Exception, e:
             print str(e)
@@ -40,7 +36,7 @@ def main():
             print("Count: %s" % count)
         file_id = analysis.get('sha1')
         date_stored = analysis.get('date')
-        if(date_stored != None):
+        if(date_stored is not None):
             # mdc.save_first_seen(file_id,date_stored) #Uncoment to copy all av
             # dates to meta dates
             continue
@@ -50,7 +46,7 @@ def main():
                           'additional_info.first_seen_itw', 'scan_date']
         for register in date_registers:
             vt_date = read_from_dictionary(register, analysis)
-            if vt_date != None:
+            if vt_date is not None:
                 break
 
         try:
@@ -64,7 +60,7 @@ def main():
         command = {"$set": {"date": new_date}}
         try:
             collection.update_one({"sha1": file_id}, command, upsert=False)
-        except:
+        except WriteError:
             print("**** Error File: %s ****" % (file_id,))
             print(command)
             err = str(traceback.format_exc())

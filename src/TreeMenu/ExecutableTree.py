@@ -16,10 +16,10 @@ tree_element = {"name": "Portable Executable", "children": [
         {"name": "Section name", "id": 15, "type": "string", "example": ".text\\x00\\x00\\x00", "children": [], "searchable":True, "projectable":False, "call_func": "", "lower": False},
         {"name": "Section size of RAW data", "id": 16, "type": "number", "example": "78336", "children": [], "searchable":True, "projectable":False, "call_func": ""},
         {"name": "Section virtual size", "id": 17, "type": "number", "example": "81920", "children": [], "searchable":True, "projectable":False, "call_func": ""},
-        #{"name":"Section characteristics","id":18,"type":"string","example":"0xe0000020","children":[],"searchable":True,"projectable":False},
+        # {"name":"Section characteristics","id":18,"type":"string","example":"0xe0000020","children":[],"searchable":True,"projectable":False},
         {"name": "Section entropy", "id": 19, "type": "string", "example": "7.9886263288849335", "children": [], "searchable":True, "projectable":False, "call_func": ""},
         {"name": "Section write executable", "id": 20, "type": "checkbox", "example": "True", "children": [], "searchable":True, "projectable":False, "call_func": ""},
-        #{"name":"Section fast fuzzy","id":21,"type":"string","example":"Not Implemented","children":[],"searchable":True,"projectable":False}
+        # {"name":"Section fast fuzzy","id":21,"type":"string","example":"Not Implemented","children":[],"searchable":True,"projectable":False}
     ]},
     {"name": "Headers", "children": [
         {"name": "Optional header", "children": [

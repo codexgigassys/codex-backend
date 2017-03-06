@@ -2,11 +2,7 @@
 # file_id attributes in metadata documents
 # are valid sha1 hashes. If they are not
 # the value file_id and sha1 of the offender is printed.
-import os
-path = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'))
-import sys
-sys.path.insert(0, path)
+import pathmagic
 from db_pool import *
 
 

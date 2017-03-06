@@ -21,12 +21,12 @@ class AddImportsToTreePlug(PlugIn):
 
     def process(self):
         imports = self.sample.getLastValue("particular_header.imports")
-        if(imports == None):
+        if(imports is None):
             return "no_imports"
         if(len(imports) == 0):
             return "no_imports"
         mdc = self._getLibrary(MetaDataModule().getName())
-        if(mdc == None):
+        if(mdc is None):
             return "not_added"
         if(mdc.writeImportsTree(imports) == 0):
             return "added"
