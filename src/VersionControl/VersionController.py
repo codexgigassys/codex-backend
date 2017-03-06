@@ -17,6 +17,8 @@ class VersionController:
         pass
 
     def updateVersion(self, file_id, ver_dic):
+        if len(file_id) != 40:
+            raise ValueError("VersionController: file_id not sha1")
         command = {"$set": ver_dic}
         self.collection.update_one({"file_id": file_id}, command, upsert=True)
 
