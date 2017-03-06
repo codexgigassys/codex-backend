@@ -7,6 +7,7 @@ from MetaControl.MetaController import *
 from Utils.Functions import change_date_to_str
 from Utils.Functions import add_error
 from Utils.Functions import id_generator
+from Utils.Functions import check_hashes
 from rq import Queue
 from redis import Redis
 import datetime
@@ -55,3 +56,13 @@ def save(document):
 def load_task(task_id):
     mc = MetaController()
     return mc.read_task(task_id)
+
+def count_valid_hashes_in_task(task_id):
+    task = get_task(task_id)
+    file_hash = task.get('requested',{}).get('file_hash')
+    if file_hash is None:
+       return 0
+    output = check_hashes(file_hash)
+    if output.get('hashes') is None:
+        return 0
+    return len(output.get('hashes'))

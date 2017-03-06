@@ -13,6 +13,7 @@ from redis import Redis
 import re
 import datetime
 from Utils.ProcessDate import process_date
+from Utils.task import count_valid_hashes_in_task
 
 
 # Returns a json like
@@ -44,6 +45,7 @@ def get_tasks_on_queue(queue_name):
         if task_id is None:
             continue
         task['task_id'] = task_id.group(0)
+        task['hashes'] = count_valid_hashes_in_task(task['task_id'])
         tasks.append(task)
     return tasks
 
