@@ -58,6 +58,8 @@ def number_of_jobs_on_queue(queue_name):
     command = ["bash", "-c", "rq info --url redis://" + envget('redis.host') + ":" + str(envget(
         'redis.port')) + " --raw | grep -E -e \"^queue " + queue_name + " [0-9]+$\" | sed \"s/queue " + queue_name + " //g\" | tr -d \"\\n\""]
     output = call_with_output(command)
+    if(type(output) == str and len(output) == 0):
+        return 0
     logging.debug("output=" + str(output))
     if output == '':
         return 0
