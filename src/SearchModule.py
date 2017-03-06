@@ -257,7 +257,7 @@ def search_by_id(data, limit, columns=[], search_on_vt=False):
         if limit == 0:
             av_res = av_coll.find(av_query, {"sha1": 1})
         else:
-            av_res = av_coll.find(av_query, {"sha1": 1}).limit(limit)
+            av_res = av_coll.find(av_query, {"sha1": 1}).limit(limit*2)
         lista_av = []
         for f in av_res:
             lista_av.append(f)
